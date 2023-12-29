@@ -1,6 +1,6 @@
 import { Container } from "@mantine/core";
 import AdminLoginHeader from "./components/AdminLoginHeader";
-import LoginForm from "../giris/components/LoginForm";
+import LoginForm from "../components/LoginForm";
 
 export default function AdminLoginPage() {
   return (
