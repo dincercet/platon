@@ -4,6 +4,7 @@ node_modules/
 .git/
 prisma/migrations/
 yarn.lock
-firebase.config.js
 .env.local
 .env
+firebaseClientConfig.js
+firebaseAdminConfig.json

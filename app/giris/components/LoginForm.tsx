@@ -5,7 +5,7 @@ import {
   browserSessionPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import auth from "firebase.config.js";
+import auth from "firebase.init.js";
 import { setCookies } from "../actions/setCookies";
 import { redirect } from "next/navigation";
 import {
@@ -21,6 +21,7 @@ import {
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
+import getUserRole from "../actions/getUserRole";
 
 //form types
 type FormValues = {
@@ -55,8 +56,8 @@ export default function LoginForm() {
     const password = form.values.password;
     const remember = form.values.remember;
 
-    //if 'remember me' is checked, set persistence
-    if (remember) {
+    //if 'remember me' is not checked, change local persistence to session persistence
+    if (!remember) {
       try {
         await setPersistence(auth, browserSessionPersistence);
       } catch (e) {
@@ -81,12 +82,29 @@ export default function LoginForm() {
       //action call to set cookies
       await setCookies(idToken);
 
+      //action call to get role
+      const role = await getUserRole(email);
+
+      //if 'remember me' is checked, set email and role in local storage, else set in session storage
+      if (remember) {
+        window.localStorage.setItem("email", email);
+        role === "USER"
+          ? window.localStorage.setItem("role", "user")
+          : window.localStorage.setItem("role", "admin");
+      } else {
+        window.sessionStorage.setItem("email", email);
+        role === "USER"
+          ? window.sessionStorage.setItem("role", "user")
+          : window.sessionStorage.setItem("role", "admin");
+      }
+
       console.log("user: ", user);
       console.log("event: ", e);
     } catch (e) {
       console.log(e);
     }
 
+    //redirect to home
     redirect("/");
   }
 
@@ -127,7 +145,7 @@ export default function LoginForm() {
           </Anchor>
         </Group>
 
-        <Button fullWidth mt="xl">
+        <Button type="submit" fullWidth mt="xl">
           Giriş Yap
         </Button>
       </form>
