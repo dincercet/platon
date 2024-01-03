@@ -11,46 +11,62 @@ import auth from "firebase.init";
 import { IconUserCircle, IconLogout } from "@tabler/icons-react";
 import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
 
+//decide which storage is used for auth info
+function getStorage() {
+  var storage;
+  if (window.localStorage.getItem("loggedIn") === "true") {
+    storage = window.localStorage;
+  } else {
+    storage = window.sessionStorage;
+  }
+  return storage;
+}
+
+//Header component for navigation (used in root layout)
 export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
+
+  //Component states
   const [opened, { toggle }] = useDisclosure(false);
   const [active, setActive] = useState(pathname);
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    //todo: solve localstorage not present error
-    localStorage.getItem("loggedIn") === "true" ||
-      sessionStorage.getItem("loggedIn") === "true"
-      ? true
-      : false,
-  );
+  //Auth states
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState("");
 
   useEffect(() => {
+    //window object available only after mount
+    const storage = getStorage();
+
     try {
+      //client call to firebase for logged in status
       onAuthStateChanged(auth, async (currentUser) => {
         if (currentUser) {
+          //logged in
           console.log("user: (Header)", currentUser.email);
+
           setIsLoggedIn(true);
-          if (
-            window.localStorage.getItem("role") === "user" ||
-            window.sessionStorage.getItem("role") === "user"
-          ) {
+
+          if (storage.getItem("role") === "user") {
             setRole("user");
-          } else if (
-            window.localStorage.getItem("role") === "admin" ||
-            window.sessionStorage.getItem("role") === "admin"
-          ) {
+          } else if (storage.getItem("role") === "admin") {
             setRole("admin");
           }
         } else {
+          //logged out
+          console.log("logged out");
+
           try {
+            //delete auth related cookies
             await deleteAuthCookies();
           } catch {
             console.log("couldn't delete cookies");
           }
 
-          window.localStorage.clear();
-          window.sessionStorage.clear();
+          //clear auth info from storage
+          storage.removeItem("loggedIn");
+          storage.removeItem("email");
+          storage.removeItem("role");
 
           setRole("");
           setIsLoggedIn(false);
@@ -61,28 +77,24 @@ export default function Header() {
     }
   }, [isLoggedIn]);
 
+  //logout via Logout Button (will trigger useEffect as well)
   async function handleLogout() {
     try {
+      //client call to firebase for logout
       await signOut(auth);
     } catch {
       console.log("firebase sign out error");
       return;
     }
 
-    try {
-      await deleteAuthCookies();
-    } catch {
-      console.log("couldn't delete cookies");
-    }
-
-    window.localStorage.clear();
-    window.sessionStorage.clear();
-
     setRole("");
     setIsLoggedIn(false);
   }
 
   //todo: restrict login page to logged in users
+  //todo: fix missing render of ProfileButton on login
+
+  //if logged in, return a ProfileButton based on role, otherwise return Login Button
   function ProfileButton() {
     if (!isLoggedIn) {
       return (
@@ -98,62 +110,64 @@ export default function Header() {
           </a>
         </Link>
       );
-    } else if (role === "user") {
-      return (
-        <Menu shadow="md" width={200}>
-          <Menu.Target>
-            <Button className={`${classes.link} ${classes.login_link}`}>
-              Öğrenci Paneli
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item
-              leftSection={
-                <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
-              }
-              onClick={() => router.push("/panel")}
-            >
-              Panelim
-            </Menu.Item>
-            <Menu.Item
-              leftSection={
-                <IconLogout style={{ width: rem(14), height: rem(14) }} />
-              }
-              onClick={handleLogout}
-            >
-              Çıkış Yap
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-      );
-    } else if (role === "admin") {
-      return (
-        <Menu shadow="md" width={200}>
-          <Menu.Target>
-            <Button className={`${classes.link} ${classes.login_link}`}>
-              Admin Paneli
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item
-              leftSection={
-                <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
-              }
-              onClick={() => router.push("/admin")}
-            >
-              Panelim
-            </Menu.Item>
-            <Menu.Item
-              leftSection={
-                <IconLogout style={{ width: rem(14), height: rem(14) }} />
-              }
-              onClick={handleLogout}
-            >
-              Çıkış Yap
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-      );
+    } else {
+      if (role === "user") {
+        return (
+          <Menu shadow="md" width={200}>
+            <Menu.Target>
+              <Button className={`${classes.link} ${classes.login_link}`}>
+                Öğrenci Paneli
+              </Button>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={
+                  <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
+                }
+                onClick={() => router.push("/panel")}
+              >
+                Panelim
+              </Menu.Item>
+              <Menu.Item
+                leftSection={
+                  <IconLogout style={{ width: rem(14), height: rem(14) }} />
+                }
+                onClick={handleLogout}
+              >
+                Çıkış Yap
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        );
+      } else if (role === "admin") {
+        return (
+          <Menu shadow="md" width={200}>
+            <Menu.Target>
+              <Button className={`${classes.link} ${classes.login_link}`}>
+                Admin Paneli
+              </Button>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={
+                  <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
+                }
+                onClick={() => router.push("/admin")}
+              >
+                Panelim
+              </Menu.Item>
+              <Menu.Item
+                leftSection={
+                  <IconLogout style={{ width: rem(14), height: rem(14) }} />
+                }
+                onClick={handleLogout}
+              >
+                Çıkış Yap
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        );
+      }
     }
   }
 
