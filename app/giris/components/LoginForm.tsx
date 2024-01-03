@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import auth from "firebase.init.js";
 import { setCookies } from "../actions/setCookies";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Text,
   TextInput,
@@ -31,6 +31,8 @@ type FormValues = {
 };
 
 export default function LoginForm() {
+  const router = useRouter();
+
   //validate via zod
   const schema = z.object({
     email: z
@@ -51,10 +53,10 @@ export default function LoginForm() {
   });
 
   //handle form submit
-  async function handleSignIn(e: React.FormEvent) {
-    const email = form.values.email;
-    const password = form.values.password;
-    const remember = form.values.remember;
+  async function handleLogin(values: FormValues) {
+    const email = values.email;
+    const password = values.password;
+    const remember = values.remember;
 
     //if 'remember me' is not checked, change local persistence to session persistence
     if (!remember) {
@@ -87,30 +89,31 @@ export default function LoginForm() {
 
       //if 'remember me' is checked, set email and role in local storage, else set in session storage
       if (remember) {
+        window.localStorage.setItem("loggedIn", "true");
         window.localStorage.setItem("email", email);
         role === "USER"
           ? window.localStorage.setItem("role", "user")
           : window.localStorage.setItem("role", "admin");
       } else {
+        window.sessionStorage.setItem("loggedIn", "true");
         window.sessionStorage.setItem("email", email);
         role === "USER"
           ? window.sessionStorage.setItem("role", "user")
           : window.sessionStorage.setItem("role", "admin");
       }
 
-      console.log("user: ", user);
-      console.log("event: ", e);
+      console.log("user: (LoginForm) ", user.email);
     } catch (e) {
-      console.log(e);
+      console.log("error firebase signInWithEmailAndPassword");
     }
 
     //redirect to home
-    redirect("/");
+    router.push("/");
   }
 
   return (
     <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-      <form onSubmit={(e) => handleSignIn(e)}>
+      <form onSubmit={form.onSubmit((values) => handleLogin(values))}>
         <TextInput
           label="E-posta"
           placeholder="E-postanız"

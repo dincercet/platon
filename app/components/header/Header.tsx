@@ -5,7 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { MantineLogo } from "@mantinex/mantine-logo";
 import classes from "./Header.module.css";
 import Link from "next/link";
-import { redirect, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "firebase.init";
 import { IconUserCircle, IconLogout } from "@tabler/icons-react";
@@ -13,15 +13,23 @@ import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [opened, { toggle }] = useDisclosure(false);
   const [active, setActive] = useState(pathname);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    //todo: solve localstorage not present error
+    localStorage.getItem("loggedIn") === "true" ||
+      sessionStorage.getItem("loggedIn") === "true"
+      ? true
+      : false,
+  );
   const [role, setRole] = useState("");
 
   useEffect(() => {
     try {
       onAuthStateChanged(auth, async (currentUser) => {
         if (currentUser) {
+          console.log("user: (Header)", currentUser.email);
           setIsLoggedIn(true);
           if (
             window.localStorage.getItem("role") === "user" ||
@@ -94,13 +102,7 @@ export default function Header() {
       return (
         <Menu shadow="md" width={200}>
           <Menu.Target>
-            <Button
-              className={`${classes.link} ${classes.login_link}`}
-              data-active={active === "/giris" || undefined}
-              onClick={() => {
-                setActive("/giris");
-              }}
-            >
+            <Button className={`${classes.link} ${classes.login_link}`}>
               Öğrenci Paneli
             </Button>
           </Menu.Target>
@@ -109,7 +111,7 @@ export default function Header() {
               leftSection={
                 <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
               }
-              onClick={() => redirect("/panel")}
+              onClick={() => router.push("/panel")}
             >
               Panelim
             </Menu.Item>
@@ -128,13 +130,7 @@ export default function Header() {
       return (
         <Menu shadow="md" width={200}>
           <Menu.Target>
-            <Button
-              className={`${classes.link} ${classes.login_link}`}
-              data-active={active === "/giris" || undefined}
-              onClick={() => {
-                setActive("/giris");
-              }}
-            >
+            <Button className={`${classes.link} ${classes.login_link}`}>
               Admin Paneli
             </Button>
           </Menu.Target>
@@ -143,7 +139,7 @@ export default function Header() {
               leftSection={
                 <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
               }
-              onClick={() => redirect("/admin")}
+              onClick={() => router.push("/admin")}
             >
               Panelim
             </Menu.Item>
