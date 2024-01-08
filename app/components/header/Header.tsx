@@ -47,6 +47,7 @@ export default function Header() {
 
           setIsLoggedIn(true);
 
+          //todo: check if setRole not enough here
           if (storage.getItem("role") === "user") {
             setRole("user");
           } else if (storage.getItem("role") === "admin") {
@@ -75,7 +76,7 @@ export default function Header() {
     } catch {
       console.log("error firebase onAuthStateChanged");
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, role]);
 
   //logout via Logout Button (will trigger useEffect as well)
   async function handleLogout() {
@@ -96,6 +97,8 @@ export default function Header() {
 
   //if logged in, return a ProfileButton based on role, otherwise return Login Button
   function ProfileButton() {
+    console.log("ProfileButton role: ", role);
+
     if (!isLoggedIn) {
       return (
         <Link href={"/giris"} passHref legacyBehavior>
@@ -213,7 +216,6 @@ export default function Header() {
         </Group>
 
         <ProfileButton />
-
         <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
       </Container>
     </header>
