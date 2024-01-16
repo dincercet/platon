@@ -3,10 +3,12 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+//todo: revise return types
+
 //return user role based on email
 export default async function getUserRole(
   email: string | undefined,
-): Promise<string> {
+): Promise<string | undefined> {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -14,9 +16,8 @@ export default async function getUserRole(
       },
       select: { role: true },
     });
-    return user.role;
+    return user?.role;
   } catch (e) {
-    console.log(e);
-    return "error fetching role";
+    throw new Error("error fetching role");
   }
 }

@@ -1,14 +1,11 @@
-import { getApps, initializeApp } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
-import serviceAccountKey from "./firebaseAdminConfig.json";
-
-const alreadyCreatedApps = getApps();
+var admin = require("firebase-admin");
+var serviceAccountKey = require("./firebaseAdminConfig.json");
 
 //check if already initialized
-const app =
-  alreadyCreatedApps.length === 0
-    ? initializeApp(serviceAccountKey)
-    : alreadyCreatedApps[0];
+!admin.apps.length
+  ? admin.initializeApp({
+      credential: admin.credential.cert(serviceAccountKey),
+    })
+  : admin.app();
 
-const auth = getAuth(app);
-export default auth;
+module.exports = admin;

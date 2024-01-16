@@ -21,7 +21,7 @@ import {
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
-import getUserRole from "../actions/getUserRole";
+import getUserRole from "app/actions/getUserRole";
 
 //form types
 type FormValues = {
