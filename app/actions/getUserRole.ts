@@ -18,6 +18,6 @@ export default async function getUserRole(
     });
     return user?.role;
   } catch (e) {
-    throw new Error("error fetching role");
+    console.error("error fetching role", e);
   }
 }

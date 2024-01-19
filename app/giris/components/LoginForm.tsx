@@ -84,6 +84,7 @@ export default function LoginForm() {
       //action call to set cookies
       await setCookies(idToken);
 
+      //todo: change it to api fetch
       //action call to get role
       const role = await getUserRole(email);
 

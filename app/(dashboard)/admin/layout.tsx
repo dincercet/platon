@@ -1,8 +1,8 @@
 import isAdminAuth from "./actions/isAdminAuth";
 import { redirect } from "next/navigation";
 
-//todo: convert into async
-export default function AdminLayout({
+//todo: convert into async?
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ export default function AdminLayout({
   //todo: test with a user account
 
   //if auth fails redirect
-  if (!isAdminAuth()) {
+  if (!(await isAdminAuth())) {
     redirect("/");
   }
 

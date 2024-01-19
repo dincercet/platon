@@ -13,15 +13,15 @@ export default async function isAdminAuth(): Promise<boolean> {
     try {
       var user = await admin.auth().verifyIdToken(idToken);
     } catch (e) {
-      console.log(e, "token verification failed");
+      console.error("token verification failed", e);
       return false;
     }
     console.log("email: ", user.email);
     //get user role from db
     try {
       var role = await getUserRole(user.email);
-    } catch {
-      console.log("couldn't get user role");
+    } catch (e) {
+      console.error("couldn't get user role", e);
       return false;
     }
     console.log("role: ", role);
@@ -29,7 +29,7 @@ export default async function isAdminAuth(): Promise<boolean> {
     return role === "ADMIN" ? true : false;
   } else {
     //token not found
-    console.log("no token");
+    console.error("no token");
     return false;
   }
 }
