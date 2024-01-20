@@ -21,7 +21,6 @@ import {
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
-import getUserRole from "app/actions/getUserRole";
 
 //form types
 type FormValues = {
@@ -63,7 +62,8 @@ export default function LoginForm() {
       try {
         await setPersistence(auth, browserSessionPersistence);
       } catch (e) {
-        console.log(e);
+        console.error("error firebase setPersistence", e);
+        return;
       }
     }
 
@@ -76,37 +76,66 @@ export default function LoginForm() {
       );
 
       // signed in
-      const { user } = userCredential;
+      var { user } = userCredential;
+    } catch (e) {
+      console.error("error firebase signInWithEmailAndPassword", e);
+      return;
+    }
 
+    try {
       //get idToken for further authentication
-      const idToken = await user.getIdToken();
+      var idToken = await user.getIdToken();
+    } catch (e) {
+      console.error("error firebase getIdToken", e);
+      return;
+    }
 
+    try {
       //action call to set cookies
       await setCookies(idToken);
-
-      //todo: change it to api fetch
-      //action call to get role
-      const role = await getUserRole(email);
-
-      //if 'remember me' is checked, set email and role in local storage, else set in session storage
-      if (remember) {
-        window.localStorage.setItem("loggedIn", "true");
-        window.localStorage.setItem("email", email);
-        role === "USER"
-          ? window.localStorage.setItem("role", "user")
-          : window.localStorage.setItem("role", "admin");
-      } else {
-        window.sessionStorage.setItem("loggedIn", "true");
-        window.sessionStorage.setItem("email", email);
-        role === "USER"
-          ? window.sessionStorage.setItem("role", "user")
-          : window.sessionStorage.setItem("role", "admin");
-      }
-
-      console.log("user: (LoginForm) ", user.email);
     } catch (e) {
-      console.log("error firebase signInWithEmailAndPassword");
+      console.error("error setting cookies", e);
+      return;
     }
+
+    try {
+      //fetch role from /giris/api
+      const roleRes = await fetch("api/getUserRole", {
+        method: "GET",
+      });
+
+      //parse the body
+      var roleResData = await roleRes.json();
+
+      //if res not ok, show the error returned from api
+      if (!roleRes.ok) {
+        console.error(roleResData.error);
+        return;
+      }
+    } catch (e) {
+      //any other error
+      console.error("unknown role fetch error", e);
+      return;
+    }
+
+    const role = roleResData.role;
+
+    //if 'remember me' is checked, set email and role in local storage, else set in session storage
+    if (remember) {
+      window.localStorage.setItem("loggedIn", "true");
+      window.localStorage.setItem("email", email);
+      role === "USER"
+        ? window.localStorage.setItem("role", "user")
+        : window.localStorage.setItem("role", "admin");
+    } else {
+      window.sessionStorage.setItem("loggedIn", "true");
+      window.sessionStorage.setItem("email", email);
+      role === "USER"
+        ? window.sessionStorage.setItem("role", "user")
+        : window.sessionStorage.setItem("role", "admin");
+    }
+
+    console.log("user: (LoginForm) ", user.email);
 
     //redirect to home
     router.push("/");

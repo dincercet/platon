@@ -17,6 +17,7 @@ export default async function isAdminAuth(): Promise<boolean> {
       return false;
     }
     console.log("email: ", user.email);
+
     //get user role from db
     try {
       var role = await getUserRole(user.email);
@@ -25,6 +26,7 @@ export default async function isAdminAuth(): Promise<boolean> {
       return false;
     }
     console.log("role: ", role);
+
     //if admin return true
     return role === "ADMIN" ? true : false;
   } else {
