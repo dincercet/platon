@@ -61,9 +61,11 @@ export default function LoginForm() {
     if (!remember) {
       try {
         await setPersistence(auth, browserSessionPersistence);
+        //delete later
+        console.log("persistence set to session");
       } catch (e) {
         console.error("error firebase setPersistence", e);
-        return;
+        throw new Error("error firebase setPersistence");
       }
     }
 
@@ -79,15 +81,15 @@ export default function LoginForm() {
       var { user } = userCredential;
     } catch (e) {
       console.error("error firebase signInWithEmailAndPassword", e);
-      return;
+      throw new Error("error firebase signInWithEmailAndPassword");
     }
 
     try {
-      //get idToken for further authentication
-      var idToken = await user.getIdToken();
+      //get idToken for further authentication (force refresh: true)
+      var idToken = await user.getIdToken(true);
     } catch (e) {
       console.error("error firebase getIdToken", e);
-      return;
+      throw new Error("error firebase getIdToken");
     }
 
     try {
@@ -95,12 +97,12 @@ export default function LoginForm() {
       await setCookies(idToken);
     } catch (e) {
       console.error("error setting cookies", e);
-      return;
+      throw new Error("error setting cookies");
     }
 
     try {
       //fetch role from /giris/api
-      const roleRes = await fetch("api/getUserRole", {
+      const roleRes = await fetch(`api/getUserRole?email=${email}`, {
         method: "GET",
       });
 
@@ -110,12 +112,12 @@ export default function LoginForm() {
       //if res not ok, show the error returned from api
       if (!roleRes.ok) {
         console.error(roleResData.error);
-        return;
+        throw new Error(roleResData.error);
       }
     } catch (e) {
       //any other error
       console.error("unknown role fetch error", e);
-      return;
+      throw new Error("unknown role fetch error");
     }
 
     const role = roleResData.role;
@@ -135,6 +137,7 @@ export default function LoginForm() {
         : window.sessionStorage.setItem("role", "admin");
     }
 
+    //delete later
     console.log("user: (LoginForm) ", user.email);
 
     //redirect to home

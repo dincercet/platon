@@ -4,8 +4,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 //return user role based on email
-export default async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const email = request.nextUrl.searchParams.get("email");
+
   try {
     //if email param is present
     if (email) {
