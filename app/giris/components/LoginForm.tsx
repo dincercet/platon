@@ -85,7 +85,7 @@ export default function LoginForm() {
     }
 
     try {
-      //get idToken for further authentication (force refresh: true)
+      //get idToken for further authentication (force token auto refresh: true)
       var idToken = await user.getIdToken(true);
     } catch (e) {
       console.error("error firebase getIdToken", e);
@@ -137,11 +137,21 @@ export default function LoginForm() {
         : window.sessionStorage.setItem("role", "admin");
     }
 
+    //is storage being set too late? (after redirect and storage.get, there seems to be nothing set yet) look into it
     //delete later
-    console.log("user: (LoginForm) ", user.email);
+    console.log(
+      "storage: (LoginForm) ",
+      "local: ",
+      window.localStorage.getItem("loggedIn"),
+      "session: ",
+      window.sessionStorage.getItem("loggedIn"),
+    );
 
     //redirect to home
     router.push("/");
+
+    //force refresh because root layout doesn't update on navigation
+    router.refresh();
   }
 
   return (

@@ -13,7 +13,7 @@ import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
 
 //decide which storage is used for auth info
 function getStorage() {
-  var storage;
+  let storage;
   if (window.localStorage.getItem("loggedIn") === "true") {
     storage = window.localStorage;
   } else {
@@ -43,7 +43,7 @@ export default function Header() {
       onAuthStateChanged(auth, async (currentUser) => {
         if (currentUser) {
           //logged in
-          console.log("user: (Header)", currentUser.email);
+          console.log("user: (onAuthStateChanged)", currentUser.email);
 
           setIsLoggedIn(true);
 
@@ -53,15 +53,16 @@ export default function Header() {
           } else if (storage.getItem("role") === "admin") {
             setRole("admin");
           }
+          console.log("role: (onAuthStateChanged)", role);
         } else {
-          //logged out
-          console.log("logged out");
+          //logout
 
           try {
             //delete auth related cookies
             await deleteAuthCookies();
           } catch {
-            console.log("couldn't delete cookies");
+            console.error("couldn't delete cookies");
+            return;
           }
 
           //clear auth info from storage
@@ -71,10 +72,12 @@ export default function Header() {
 
           setRole("");
           setIsLoggedIn(false);
+
+          console.log("logged out");
         }
       });
     } catch {
-      console.log("error firebase onAuthStateChanged");
+      console.error("error firebase onAuthStateChanged");
     }
   }, [isLoggedIn, role]);
 
@@ -97,7 +100,7 @@ export default function Header() {
 
   //if logged in, return a ProfileButton based on role, otherwise return Login Button
   function ProfileButton() {
-    console.log("ProfileButton role: ", role);
+    console.log("role: (ProfileButton)", role);
 
     if (!isLoggedIn) {
       return (
