@@ -1,9 +1,8 @@
 import "@mantine/core/styles.css";
 import React from "react";
 import type { Metadata } from "next";
-import { Container, MantineProvider, ColorSchemeScript } from "@mantine/core";
+import { MantineProvider, ColorSchemeScript } from "@mantine/core";
 import { theme } from "../theme";
-import Header from "./components/header/Header";
 
 export const metadata: Metadata = {
   title: "Platon Bilisim Egitim",
@@ -26,10 +25,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <MantineProvider theme={theme}>
-          <Header />
-          <Container> {children}</Container>
-        </MantineProvider>
+        <MantineProvider theme={theme}>{children}</MantineProvider>
       </body>
     </html>
   );

@@ -36,55 +36,38 @@ export default function Header() {
     //window object available only after mount
     const storage = getStorage();
 
-    console.log("storage= ", storage);
-    //storage is not set yet, find out the issue (async storage?)
-    //
     try {
       //client call to firebase for logged in status
       onAuthStateChanged(auth, async (currentUser) => {
         if (currentUser) {
           //logged in
-          console.log("user: (onAuthStateChanged)", currentUser.email);
 
           setIsLoggedIn(true);
 
-          //todo: check if setRole not enough here
           if (storage.getItem("role") === "user") {
             setRole("user");
           } else if (storage.getItem("role") === "admin") {
             setRole("admin");
           }
-          console.log("role: (onAuthStateChanged)", role);
+
+          //delete later(check rerender count)
+          console.log("role (onAuthStateChanged): ", role);
         } else {
-          //logout
-
-          try {
-            //todo: return accurate error from action
-            //delete auth related cookies
-            await deleteAuthCookies();
-          } catch {
-            console.error("couldn't delete cookies");
-            return;
+          //logout: if not already logged out, call the logout handler
+          if (!storage.getItem("loggedIn")) {
+            await handleLogout(storage);
           }
-
-          //clear auth info from storage
-          storage.removeItem("loggedIn");
-          storage.removeItem("email");
-          storage.removeItem("role");
-
-          setRole("");
-          setIsLoggedIn(false);
-
-          console.log("logged out");
         }
       });
     } catch {
       console.error("error firebase onAuthStateChanged");
     }
-  }, [isLoggedIn, role]);
+    //todo: add role to dependency array?
+    //it will cause rerender when setRole is called
+  }, []);
 
-  //logout via Logout Button (will trigger useEffect as well)
-  async function handleLogout() {
+  //logout
+  async function handleLogout(storage?: Storage) {
     try {
       //client call to firebase for logout
       await signOut(auth);
@@ -93,17 +76,32 @@ export default function Header() {
       return;
     }
 
+    try {
+      //todo: return accurate error from action
+      //delete auth related cookies
+      await deleteAuthCookies();
+    } catch {
+      console.error("couldn't delete cookies");
+      return;
+    }
+
+    //clear auth info from storage
+    if (storage) {
+      storage.removeItem("loggedIn");
+      storage.removeItem("email");
+      storage.removeItem("role");
+    }
+
     setRole("");
     setIsLoggedIn(false);
+
+    console.log("logged out");
   }
 
   //todo: restrict login page to logged in users
-  //todo: fix missing render of ProfileButton on login
 
   //if logged in, return a ProfileButton based on role, otherwise return Login Button
   function ProfileButton() {
-    console.log("role: (ProfileButton)", role);
-
     if (!isLoggedIn) {
       return (
         <Link href={"/giris"} passHref legacyBehavior>
@@ -140,7 +138,7 @@ export default function Header() {
                 leftSection={
                   <IconLogout style={{ width: rem(14), height: rem(14) }} />
                 }
-                onClick={handleLogout}
+                onClick={async () => await handleLogout()}
               >
                 Çıkış Yap
               </Menu.Item>
@@ -168,7 +166,7 @@ export default function Header() {
                 leftSection={
                   <IconLogout style={{ width: rem(14), height: rem(14) }} />
                 }
-                onClick={handleLogout}
+                onClick={async () => await handleLogout()}
               >
                 Çıkış Yap
               </Menu.Item>

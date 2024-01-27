@@ -69,6 +69,7 @@ export default function LoginForm() {
       }
     }
 
+    let user;
     try {
       //client side call to firebase
       const userCredential = await signInWithEmailAndPassword(
@@ -78,15 +79,16 @@ export default function LoginForm() {
       );
 
       // signed in
-      var { user } = userCredential;
+      user = userCredential.user;
     } catch (e) {
       console.error("error firebase signInWithEmailAndPassword", e);
       throw new Error("error firebase signInWithEmailAndPassword");
     }
 
+    let idToken;
     try {
       //get idToken for further authentication (force token auto refresh: true)
-      var idToken = await user.getIdToken(true);
+      idToken = await user.getIdToken(true);
     } catch (e) {
       console.error("error firebase getIdToken", e);
       throw new Error("error firebase getIdToken");
@@ -100,6 +102,7 @@ export default function LoginForm() {
       throw new Error("error setting cookies");
     }
 
+    let roleResData;
     try {
       //fetch role from /giris/api
       const roleRes = await fetch(`api/getUserRole?email=${email}`, {
@@ -107,7 +110,7 @@ export default function LoginForm() {
       });
 
       //parse the body
-      var roleResData = await roleRes.json();
+      roleResData = await roleRes.json();
 
       //if res not ok, show the error returned from api
       if (!roleRes.ok) {
@@ -151,12 +154,18 @@ export default function LoginForm() {
     router.push("/");
 
     //force refresh because root layout doesn't update on navigation
-    router.refresh();
+    //router.refresh();
   }
 
   return (
     <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-      <form onSubmit={form.onSubmit((values) => handleLogin(values))}>
+      <form
+        onSubmit={form.onSubmit((values, e) => {
+          console.log("event ", e);
+          e?.preventDefault();
+          handleLogin(values);
+        })}
+      >
         <TextInput
           label="E-posta"
           placeholder="E-postanız"
