@@ -14,12 +14,10 @@ import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
 //decide which storage is used for auth info
 function getStorage() {
   let storage;
-  if (window.localStorage.getItem("loggedIn") === "true") {
-    storage = window.localStorage;
-  } else {
-    storage = window.sessionStorage;
-  }
-  return storage;
+  return (storage =
+    window.localStorage.getItem("loggedIn") === "true"
+      ? window.localStorage
+      : window.sessionStorage);
 }
 
 //Header component for navigation (used in root layout)
@@ -38,6 +36,9 @@ export default function Header() {
     //window object available only after mount
     const storage = getStorage();
 
+    console.log("storage= ", storage);
+    //storage is not set yet, find out the issue (async storage?)
+    //
     try {
       //client call to firebase for logged in status
       onAuthStateChanged(auth, async (currentUser) => {
@@ -58,6 +59,7 @@ export default function Header() {
           //logout
 
           try {
+            //todo: return accurate error from action
             //delete auth related cookies
             await deleteAuthCookies();
           } catch {
