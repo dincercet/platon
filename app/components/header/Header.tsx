@@ -1,6 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Container, Group, Burger, Menu, rem, Button } from "@mantine/core";
+import {
+  Container,
+  Group,
+  Burger,
+  Menu,
+  rem,
+  UnstyledButton,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { MantineLogo } from "@mantinex/mantine-logo";
 import classes from "./Header.module.css";
@@ -10,6 +17,8 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "firebase.init";
 import { IconUserCircle, IconLogout } from "@tabler/icons-react";
 import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
+import { setAuthCookies } from "app/actions/setAuthCookies";
+import cx from "clsx";
 
 //decide which storage is used for auth info
 function getStorage() {
@@ -50,7 +59,26 @@ export default function Header() {
             setRole("admin");
           }
 
-          //delete later(check rerender count)
+          let idToken;
+          try {
+            //firebase tokens will expire in 1 hour. For that reason we need to get a refreshed token and update the cookies constantly.
+            //(force token refresh: true)
+            idToken = await currentUser.getIdToken(true);
+          } catch (e) {
+            console.error("error firebase getIdToken", e);
+            throw new Error("error firebase getIdToken");
+          }
+
+          try {
+            //todo: too many setAuthCookies calls will happen. Try to minimize.
+            //action call to set auth cookies
+            await setAuthCookies(idToken);
+          } catch (e) {
+            console.error("error setting auth cookies", e);
+            throw new Error("error setting auth cookies");
+          }
+
+          //delete later(check useEffect call count)
           console.log("role (onAuthStateChanged): ", role);
         } else {
           //logout: if not already logged out, call the logout handler
@@ -62,11 +90,9 @@ export default function Header() {
     } catch {
       console.error("error firebase onAuthStateChanged");
     }
-    //todo: add role to dependency array?
-    //it will cause rerender when setRole is called
-  }, []);
+  }, [isLoggedIn, role]);
 
-  //logout
+  //logout handler
   async function handleLogout(storage?: Storage) {
     try {
       //client call to firebase for logout
@@ -106,7 +132,7 @@ export default function Header() {
       return (
         <Link href={"/giris"} passHref legacyBehavior>
           <a
-            className={`${classes.link} ${classes.login_link}`}
+            className={cx(classes.link, classes.login_link)}
             data-active={active === "/giris" || undefined}
             onClick={() => {
               setActive("/giris");
@@ -121,16 +147,23 @@ export default function Header() {
         return (
           <Menu shadow="md" width={200}>
             <Menu.Target>
-              <Button className={`${classes.link} ${classes.login_link}`}>
+              <UnstyledButton
+                className={cx(classes.link, classes.login_link)}
+                data-active={active === "/panel" || undefined}
+              >
                 Öğrenci Paneli
-              </Button>
+              </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Item
+                component={Link}
+                href="/panel"
                 leftSection={
                   <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
                 }
-                onClick={() => router.push("/panel")}
+                onClick={() => {
+                  setActive("/panel");
+                }}
               >
                 Panelim
               </Menu.Item>
@@ -149,16 +182,23 @@ export default function Header() {
         return (
           <Menu shadow="md" width={200}>
             <Menu.Target>
-              <Button className={`${classes.link} ${classes.login_link}`}>
+              <UnstyledButton
+                className={cx(classes.link, classes.login_link)}
+                data-active={active === "/admin" || undefined}
+              >
                 Admin Paneli
-              </Button>
+              </UnstyledButton>
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Item
+                component={Link}
+                href="/admin"
                 leftSection={
                   <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
                 }
-                onClick={() => router.push("/admin")}
+                onClick={() => {
+                  setActive("/admin");
+                }}
               >
                 Panelim
               </Menu.Item>

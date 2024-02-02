@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import auth from "firebase.init.js";
-import { setCookies } from "../actions/setCookies";
+import { setAuthCookies } from "app/actions/setAuthCookies";
 import { useRouter } from "next/navigation";
 import {
   Text,
@@ -87,7 +87,7 @@ export default function LoginForm() {
 
     let idToken;
     try {
-      //get idToken for further authentication (force token auto refresh: true)
+      //get idToken for further authentication (force token refresh: true)
       idToken = await user.getIdToken(true);
     } catch (e) {
       console.error("error firebase getIdToken", e);
@@ -96,10 +96,10 @@ export default function LoginForm() {
 
     try {
       //action call to set cookies
-      await setCookies(idToken);
+      await setAuthCookies(idToken);
     } catch (e) {
-      console.error("error setting cookies", e);
-      throw new Error("error setting cookies");
+      console.error("error setting auth cookies", e);
+      throw new Error("error setting auth cookies");
     }
 
     let roleResData;
