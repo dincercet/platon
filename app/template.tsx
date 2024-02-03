@@ -9,7 +9,7 @@ export default function RootTemplate({
   return (
     <div>
       <Header />
-      <Container>{children}</Container>
+      <Container display="flex">{children}</Container>
     </div>
   );
 }
