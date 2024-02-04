@@ -1,5 +1,5 @@
 .navbar {
-  width: rem(60px);
+  width: rem(40px);
   height: rem(750px);
   display: flex;
   flex-direction: column;
@@ -7,14 +7,9 @@
     light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
 }
 
-.navbarMain {
-  flex: 1;
-  margin-top: 1rem;
-}
-
 .link {
-  width: rem(50px);
-  height: rem(50px);
+  width: rem(35px);
+  height: rem(35px);
   border-radius: var(--mantine-radius-md);
   display: flex;
   align-items: center;

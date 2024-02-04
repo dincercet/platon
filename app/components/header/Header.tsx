@@ -12,7 +12,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { MantineLogo } from "@mantinex/mantine-logo";
 import classes from "./Header.module.css";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "firebase.init";
 import { IconUserCircle, IconLogout } from "@tabler/icons-react";
@@ -32,7 +32,6 @@ function getStorage() {
 //Header component for navigation (used in root layout)
 export default function Header() {
   const pathname = usePathname();
-  const router = useRouter();
 
   //Component states
   const [opened, { toggle }] = useDisclosure(false);

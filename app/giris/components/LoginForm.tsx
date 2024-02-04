@@ -140,28 +140,14 @@ export default function LoginForm() {
         : window.sessionStorage.setItem("role", "admin");
     }
 
-    //is storage being set too late? (after redirect and storage.get, there seems to be nothing set yet) look into it
-    //delete later
-    console.log(
-      "storage: (LoginForm) ",
-      "local: ",
-      window.localStorage.getItem("loggedIn"),
-      "session: ",
-      window.sessionStorage.getItem("loggedIn"),
-    );
-
     //redirect to home
     router.push("/");
-
-    //force refresh because root layout doesn't update on navigation
-    //router.refresh();
   }
 
   return (
     <Paper withBorder shadow="md" p={30} mt={30} radius="md">
       <form
         onSubmit={form.onSubmit((values, e) => {
-          console.log("event ", e);
           e?.preventDefault();
           handleLogin(values);
         })}

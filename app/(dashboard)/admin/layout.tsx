@@ -2,7 +2,7 @@
 import isAdminAuth from "./actions/isAdminAuth";
 import { redirect } from "next/navigation";
 import { Navbar } from "./components/Navbar";
-import { Container } from "@mantine/core";
+import { Container, rem } from "@mantine/core";
 
 //todo: convert into async?
 export default async function AdminLayout({
@@ -24,8 +24,9 @@ export default async function AdminLayout({
   //else continue rendering
   return (
     <>
-      <Navbar />
-      <Container> {children}</Container>
+      <Container pl={rem(3)}>
+        <Navbar /> {children}
+      </Container>
     </>
   );
 }

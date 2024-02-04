@@ -1,5 +1,4 @@
 import Header from "./components/header/Header";
-import { Container } from "@mantine/core";
 
 export default function RootTemplate({
   children,
@@ -9,7 +8,7 @@ export default function RootTemplate({
   return (
     <div>
       <Header />
-      <Container display="flex">{children}</Container>
+      <>{children}</>
     </div>
   );
 }

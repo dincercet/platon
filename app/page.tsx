@@ -1,3 +1,9 @@
+import { Container } from "@mantine/core";
+
 export default function HomePage() {
-  return <p>Home page</p>;
+  return (
+    <Container>
+      <p>Home page</p>
+    </Container>
+  );
 }
