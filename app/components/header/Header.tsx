@@ -78,7 +78,7 @@ export default function Header() {
           }
 
           //delete later(check useEffect call count)
-          console.log("role (onAuthStateChanged): ", role);
+          console.log("(useEffect onAuthStateChanged executed)");
         } else {
           //logout: if not already logged out, call the logout handler
           if (!storage.getItem("loggedIn")) {
@@ -89,15 +89,15 @@ export default function Header() {
     } catch {
       console.error("error firebase onAuthStateChanged");
     }
-  }, [isLoggedIn, role]);
+  }, [isLoggedIn]);
 
   //logout handler
   async function handleLogout(storage?: Storage) {
     try {
       //client call to firebase for logout
       await signOut(auth);
-    } catch {
-      console.log("firebase sign out error");
+    } catch (e) {
+      console.error("firebase sign out error", e);
       return;
     }
 

@@ -24,7 +24,7 @@ export default async function AdminLayout({
   //else continue rendering
   return (
     <>
-      <Container pl={rem(3)}>
+      <Container display="flex" pl={rem(3)}>
         <Navbar /> {children}
       </Container>
     </>

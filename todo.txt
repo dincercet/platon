@@ -3,6 +3,11 @@
 
 header:
 - fix the responsiveness and make the burger button work. Will need a drawer on small screens. 
+- remove anasayfa and add Hakkimizda instead.
+- change the logo and make clickable for homepage
 
 panel:
 - check if the container component causes the layout.tsx to be rendered on the client. (security risk)
+
+actions:
+- revise cookie (need restriction for binge requests, and accurate error return) 

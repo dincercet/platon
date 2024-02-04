@@ -37,8 +37,12 @@ export default function LoginForm() {
     email: z
       .string()
       .min(1, { message: "E-posta girmediniz." })
-      .email("E-posta formatı hatalı."),
-    password: z.string().min(1, { message: "Şifre girmediniz." }),
+      .max(100, { message: "E-posta en fazla 100 karakter olmalıdır." })
+      .email({ message: "E-posta formatı hatalı." }),
+    password: z
+      .string()
+      .min(1, { message: "Şifre girmediniz." })
+      .max(100, { message: "Şifre en fazla 100 karakter olmalıdır." }),
   });
 
   //mantine form hook
@@ -148,7 +152,7 @@ export default function LoginForm() {
     <Paper withBorder shadow="md" p={30} mt={30} radius="md">
       <form
         onSubmit={form.onSubmit((values, e) => {
-          e?.preventDefault();
+          e.preventDefault();
           handleLogin(values);
         })}
       >

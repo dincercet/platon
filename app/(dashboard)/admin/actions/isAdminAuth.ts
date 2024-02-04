@@ -1,3 +1,4 @@
+"server only";
 var admin = require("firebase-admin.init");
 import getUserRole from "app/actions/getUserRole";
 import { cookies } from "next/headers";
@@ -13,15 +14,22 @@ export default async function isAdminAuth(): Promise<boolean> {
     try {
       var user = await admin.auth().verifyIdToken(idToken);
     } catch (e) {
-      console.error("token verification failed", e);
+      console.error("firebase: token verification failed", e);
       return false;
     }
 
     //get user role from db
+    let role;
     try {
-      var role = await getUserRole(user.email);
+      const result = await getUserRole(user.email);
+      if (result.success) {
+        role = result.role;
+      } else {
+        //error returned from getUserRole
+        console.error(result.error);
+      }
     } catch (e) {
-      console.error("couldn't get user role", e);
+      console.error("getUserRole action: couldn't get user role", e);
       return false;
     }
 

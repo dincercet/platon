@@ -1,15 +1,27 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+
+//create zod schema
+const schema = z.object({
+  email: z.string().min(1).max(100).email(),
+});
 
 //return user role based on email
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const email = request.nextUrl.searchParams.get("email");
 
-  try {
-    //if email param is present
-    if (email) {
+  //validation result
+  const validation = schema.safeParse({ email: email });
+
+  if (!validation.success) {
+    //validation error
+
+    return NextResponse.json({ error: "Email is invalid." }, { status: 400 });
+  } else {
+    try {
       //retrieve role from db
       const user = await prisma.user.findUnique({
         where: {
@@ -17,14 +29,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         },
         select: { role: true },
       });
+
+      //success
       return NextResponse.json({ role: user?.role }, { status: 200 });
-    } else {
-      //if no email param is present
-      return NextResponse.json({ error: "no email provided" }, { status: 400 });
+    } catch (e) {
+      //db error
+      console.error("error fetching role", e);
+      return NextResponse.json(
+        { error: "Database error: Couldn't fetch role" },
+        { status: 500 },
+      );
     }
-  } catch (e) {
-    //db error
-    console.error("error fetching role", e);
-    return NextResponse.json({ error: "error fetching role" }, { status: 500 });
   }
 }
