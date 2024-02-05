@@ -21,11 +21,13 @@ export default async function AdminLayout({
     redirect("/");
   }
 
+  //todo: check if second container is necessary
   //else continue rendering
   return (
     <>
       <Container display="flex" pl={rem(3)}>
-        <Navbar /> {children}
+        <Navbar />
+        {children}
       </Container>
     </>
   );

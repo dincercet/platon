@@ -22,7 +22,7 @@ export default async function getUserRole(
   } else {
     try {
       //fetch user role based on email
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: {
           email: email,
         },
@@ -30,7 +30,7 @@ export default async function getUserRole(
       });
 
       //fetching role success
-      return { success: true, role: user.role };
+      return { success: true, role: user?.role };
     } catch (e) {
       //fetching role error
       console.error("prisma error: failed fetching role", e);
