@@ -13,6 +13,10 @@ const schema = z.object({
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const email = request.nextUrl.searchParams.get("email");
 
+  //if no email provided
+  if (!email)
+    return NextResponse.json({ error: "Email is missing." }, { status: 400 });
+
   //validation result
   const validation = schema.safeParse({ email: email });
 
@@ -23,7 +27,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   } else {
     try {
       //retrieve role from db
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: {
           email: email,
         },

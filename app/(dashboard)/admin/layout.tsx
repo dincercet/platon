@@ -16,12 +16,16 @@ export default async function AdminLayout({
   //does it mean this layout will also be rendered on the client?
   //if so, will have to consider security risk.
 
-  //if auth fails redirect
-  if (!(await isAdminAuth())) {
+  try {
+    //if auth fails redirect
+    if (!(await isAdminAuth())) {
+      redirect("/");
+    }
+  } catch (e) {
+    console.error("isAdminAuth error", e);
     redirect("/");
   }
 
-  //todo: check if second container is necessary
   //else continue rendering
   return (
     <>

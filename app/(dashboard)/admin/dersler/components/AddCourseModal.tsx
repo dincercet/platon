@@ -1,8 +1,9 @@
 "use client";
-import { Stack, Button, Modal, TextInput } from "@mantine/core";
+import { Text, Stack, Button, Modal, TextInput } from "@mantine/core";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
+import addCourse from "../actions/addCourse";
 
 type FormValues = {
   name: string;
@@ -34,6 +35,23 @@ export default function AddCourseModal(props: {
     validate: zodResolver(schema),
   });
 
+  async function handleAddCourse(values: FormValues) {
+    let res;
+    try {
+      //addCourse action call
+      res = await addCourse(values.name, values.description);
+      if (!res.success) {
+        //error returned from addCourse action
+        console.error(res.error);
+      }
+      //close the modal
+      close();
+    } catch (e) {
+      console.error("unknown error addCourse", e);
+      close();
+    }
+  }
+
   return (
     <Modal
       opened={props.opened}
@@ -42,9 +60,26 @@ export default function AddCourseModal(props: {
       centered
     >
       <Stack>
-        <TextInput label="Ders ismi" />
-        <TextInput label="Ders açıklaması" />
-        <Button>Ekle</Button>
+        <form
+          onSubmit={form.onSubmit((values, e) => {
+            e?.preventDefault();
+            handleAddCourse(values);
+          })}
+        >
+          <TextInput label="Ders ismi" />
+
+          <Text size="sm" c="red">
+            {form.errors.name}
+          </Text>
+
+          <TextInput label="Ders açıklaması" />
+
+          <Text size="sm" c="red">
+            {form.errors.description}
+          </Text>
+
+          <Button>Ekle</Button>
+        </form>
       </Stack>
     </Modal>
   );
