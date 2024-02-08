@@ -29,8 +29,9 @@ export default async function getUserRole(
         select: { role: true },
       });
 
-      //fetching role success
-      return { success: true, role: user?.role };
+      //if user not null, return role
+      if (!user) return { success: false, error: "User not found." };
+      else return { success: true, role: user.role };
     } catch (e) {
       //fetching role error
       console.error("prisma error: failed fetching role", e);

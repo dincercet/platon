@@ -1,4 +1,4 @@
-"server only";
+"use server";
 var admin = require("firebase-admin.init");
 import getUserRole from "app/actions/getUserRole";
 import { cookies } from "next/headers";

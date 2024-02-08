@@ -11,3 +11,6 @@ panel:
 
 actions:
 - revise cookie (need restriction for binge requests, and accurate error return) 
+
+form validations:
+try without error Text fields and with form.isValid() and change others (loginform, editcourse) if it works in AddCourseModal component

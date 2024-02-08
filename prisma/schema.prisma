@@ -11,9 +11,9 @@ generator client {
 
 model users {
   id          Int                   @id @default(autoincrement())
-  email       String                @unique
-  first_name  String
-  last_name   String
+  email       String                @unique @db.VarChar(150)
+  first_name  String                @db.VarChar(100)
+  last_name   String                @db.VarChar(100)
   created_at  DateTime              @default(now())
   role        roles                 @default(STUDENT)
   schedule    curriculum_schedules? @relation(fields: [schedule_id], references: [id])
@@ -27,8 +27,8 @@ enum roles {
 
 model courses {
   id          Int                  @id @default(autoincrement())
-  name        String
-  description String?
+  name        String               @db.VarChar(150)
+  description String               @db.VarChar(500)
   visible     Boolean              @default(false)
   curriculums course_curriculums[]
 }
@@ -45,7 +45,7 @@ model course_curriculums {
 model curriculum_weeks {
   id            Int                @id @default(autoincrement())
   week_no       Int
-  description   String
+  description   String             @db.VarChar(500)
   curriculum    course_curriculums @relation(fields: [curriculum_id], references: [id])
   curriculum_id Int
 }

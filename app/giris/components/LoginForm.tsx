@@ -34,7 +34,7 @@ const schema = z.object({
   email: z
     .string()
     .min(1, { message: "E-posta girmediniz." })
-    .max(100, { message: "E-posta en fazla 100 karakter olmalıdır." })
+    .max(150, { message: "E-posta en fazla 150 karakter olmalıdır." })
     .email({ message: "E-posta formatı hatalı." }),
   password: z
     .string()
@@ -153,7 +153,8 @@ export default function LoginForm() {
       <form
         onSubmit={form.onSubmit((values, e) => {
           e?.preventDefault();
-          handleLogin(values);
+          form.validate();
+          if (form.isValid()) handleLogin(values);
         })}
       >
         <TextInput

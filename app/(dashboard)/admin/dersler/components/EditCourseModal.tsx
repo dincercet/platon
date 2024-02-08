@@ -3,7 +3,7 @@ import { Text, Stack, Button, Modal, TextInput, Textarea } from "@mantine/core";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
-import addCourse from "../actions/addCourse";
+import editCourse from "../actions/editCourse";
 
 type FormValues = {
   name: string;
@@ -22,37 +22,38 @@ const schema = z.object({
     .max(500, { message: "Ders açıklaması 500 karakterden uzun olamaz." }),
 });
 
-//return true if form is valid
-const isValid = (values: FormValues) =>
-  schema.safeParse({ name: values.name, description: values.description })
-    .success;
-
-export default function AddCourseModal(props: {
+export default function EditCourseModal(props: {
   opened: boolean;
   close: () => void;
+  values: { courseId: number; courseName: string; courseDescription: string };
 }) {
   //mantine form hook
   const form = useForm<FormValues>({
     initialValues: {
-      name: "",
-      description: "",
+      //initial values passed as props
+      name: props.values.courseName,
+      description: props.values.courseDescription,
     },
     validate: zodResolver(schema),
   });
 
-  async function handleAddCourse(values: FormValues) {
+  async function handleEditCourse(values: FormValues) {
     let res;
     try {
-      //addCourse action call
-      res = await addCourse(values.name, values.description);
+      //editCourse action call (id passed as prop)
+      res = await editCourse(
+        props.values.courseId,
+        values.name,
+        values.description,
+      );
       if (!res.success) {
-        //error returned from addCourse action
+        //error returned from editCourse action
         console.error(res.error);
       }
       //close the modal
       props.close();
     } catch (e) {
-      console.error("unknown error addCourse", e);
+      console.error("unknown error editCourse", e);
       props.close();
     }
   }
@@ -61,7 +62,7 @@ export default function AddCourseModal(props: {
     <Modal
       opened={props.opened}
       onClose={props.close}
-      title="Ders Ekle"
+      title="Ders Düzenle"
       centered
     >
       <Stack>
@@ -69,22 +70,21 @@ export default function AddCourseModal(props: {
           onSubmit={form.onSubmit((values, e) => {
             e?.preventDefault();
             form.validate();
-            console.log("is valid: ", form.isValid());
-            if (form.isValid()) handleAddCourse(values);
+            if (form.isValid()) handleEditCourse(values);
           })}
         >
           <TextInput label="Ders ismi" {...form.getInputProps("name")} />
-          {/* <Text size="sm" c="red"> */}
-          {/*   {form.errors.name} */}
-          {/* </Text> */}
+          <Text size="sm" c="red">
+            {form.errors.name}
+          </Text>
 
           <Textarea
             label="Ders açıklaması"
             {...form.getInputProps("description")}
           />
-          {/* <Text size="sm" c="red"> */}
-          {/*   {form.errors.description} */}
-          {/* </Text> */}
+          <Text size="sm" c="red">
+            {form.errors.description}
+          </Text>
 
           <Button type="submit">Ekle</Button>
         </form>

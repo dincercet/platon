@@ -1,3 +1,4 @@
+"use server";
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
 import isAdminAuth from "../../actions/isAdminAuth";
@@ -13,12 +14,12 @@ export default async function addCourse(
 
   //create zod schema
   const schema = z.object({
-    name: z.string().min(1).max(100),
-    description: z.string().min(1).max(300),
+    name: z.string().min(1).max(150),
+    description: z.string().min(1).max(500),
   });
 
   //validation result
-  const validation = schema.safeParse({ name, description });
+  const validation = schema.safeParse({ name: name, description: description });
 
   if (!validation.success) {
     //validation failed

@@ -1,3 +1,4 @@
+"server only";
 import Header from "./components/header/Header";
 
 export default function RootTemplate({
@@ -6,9 +7,9 @@ export default function RootTemplate({
   children: React.ReactNode;
 }) {
   return (
-    <div>
+    <>
       <Header />
-      <>{children}</>
-    </div>
+      {children}
+    </>
   );
 }

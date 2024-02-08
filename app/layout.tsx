@@ -1,7 +1,8 @@
+"server only";
 import "@mantine/core/styles.css";
 import React from "react";
 import type { Metadata } from "next";
-import { MantineProvider, ColorSchemeScript } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { theme } from "../theme";
 
 export const metadata: Metadata = {
@@ -17,7 +18,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <ColorSchemeScript defaultColorScheme="auto" />
         <link rel="shortcut icon" href="/favicon.svg" />
         <meta
           name="viewport"

@@ -19,8 +19,10 @@ export async function GET(): Promise<NextResponse> {
     //retrieve courses from db
     const courses = await prisma.courses.findMany();
 
-    //success
-    return NextResponse.json({ courses: courses }, { status: 200 });
+    //if courses not null, return courses
+    if (!courses)
+      return NextResponse.json({ error: "No courses found" }, { status: 404 });
+    else return NextResponse.json({ courses: courses }, { status: 200 });
   } catch (e) {
     //db error
     console.error("error fetching courses", e);

@@ -1,3 +1,4 @@
+"use server";
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
 import isAdminAuth from "../../actions/isAdminAuth";
@@ -10,21 +11,21 @@ export default async function editCourse(
   description: string,
 ): Promise<{ success: boolean; error?: string }> {
   //check authorization
-  try {
-    if (!(await isAdminAuth()))
-      return { success: false, error: "Unauthorized." };
-  } catch (e) {
-    console.error("isAdminAuth error", e);
-  }
+  if (!(await isAdminAuth())) return { success: false, error: "Unauthorized." };
+
   //create zod schema
   const schema = z.object({
     id: z.number().min(0),
-    name: z.string().min(1).max(100),
-    description: z.string().min(1).max(300),
+    name: z.string().min(1).max(150),
+    description: z.string().min(1).max(500),
   });
 
   //validation result
-  const validation = schema.safeParse({ name, description });
+  const validation = schema.safeParse({
+    id: id,
+    name: name,
+    description: description,
+  });
 
   if (!validation.success) {
     //validation failed

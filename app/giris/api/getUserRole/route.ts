@@ -34,8 +34,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         select: { role: true },
       });
 
-      //success
-      return NextResponse.json({ role: user?.role }, { status: 200 });
+      //if user not null, return role
+      if (!user)
+        return NextResponse.json({ error: "User not found." }, { status: 404 });
+      else return NextResponse.json({ role: user.role }, { status: 200 });
     } catch (e) {
       //db error
       console.error("error fetching role", e);
