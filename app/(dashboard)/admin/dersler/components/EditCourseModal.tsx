@@ -1,5 +1,5 @@
 "use client";
-import { Text, Stack, Button, Modal, TextInput, Textarea } from "@mantine/core";
+import { Stack, Button, Modal, TextInput, Textarea } from "@mantine/core";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
@@ -40,7 +40,7 @@ export default function EditCourseModal(props: {
   async function handleEditCourse(values: FormValues) {
     let res;
     try {
-      //editCourse action call (id passed as prop)
+      //editCourse action call (id received as prop)
       res = await editCourse(
         props.values.courseId,
         values.name,
@@ -69,22 +69,18 @@ export default function EditCourseModal(props: {
         <form
           onSubmit={form.onSubmit((values, e) => {
             e?.preventDefault();
+            //validate the form, form.errors will be set if validation fails
             form.validate();
+            //if valid, continue
             if (form.isValid()) handleEditCourse(values);
           })}
         >
           <TextInput label="Ders ismi" {...form.getInputProps("name")} />
-          <Text size="sm" c="red">
-            {form.errors.name}
-          </Text>
 
           <Textarea
             label="Ders açıklaması"
             {...form.getInputProps("description")}
           />
-          <Text size="sm" c="red">
-            {form.errors.description}
-          </Text>
 
           <Button type="submit">Ekle</Button>
         </form>

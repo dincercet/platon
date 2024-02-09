@@ -1,5 +1,5 @@
 "use client";
-import { Text, Stack, Button, Modal, TextInput, Textarea } from "@mantine/core";
+import { Stack, Button, Modal, TextInput, Textarea } from "@mantine/core";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
@@ -21,11 +21,6 @@ const schema = z.object({
     .min(1, { message: "Ders açıklaması zorunludur." })
     .max(500, { message: "Ders açıklaması 500 karakterden uzun olamaz." }),
 });
-
-//return true if form is valid
-const isValid = (values: FormValues) =>
-  schema.safeParse({ name: values.name, description: values.description })
-    .success;
 
 export default function AddCourseModal(props: {
   opened: boolean;
@@ -68,23 +63,18 @@ export default function AddCourseModal(props: {
         <form
           onSubmit={form.onSubmit((values, e) => {
             e?.preventDefault();
+            //validate the form, form.errors will be set if validation fails
             form.validate();
-            console.log("is valid: ", form.isValid());
+            //if valid, continue
             if (form.isValid()) handleAddCourse(values);
           })}
         >
           <TextInput label="Ders ismi" {...form.getInputProps("name")} />
-          {/* <Text size="sm" c="red"> */}
-          {/*   {form.errors.name} */}
-          {/* </Text> */}
 
           <Textarea
             label="Ders açıklaması"
             {...form.getInputProps("description")}
           />
-          {/* <Text size="sm" c="red"> */}
-          {/*   {form.errors.description} */}
-          {/* </Text> */}
 
           <Button type="submit">Ekle</Button>
         </form>

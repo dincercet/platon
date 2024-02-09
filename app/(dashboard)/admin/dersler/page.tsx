@@ -1,69 +1,65 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionControl,
-  AccordionPanel,
-  Stack,
-  Group,
-  Button,
-  Flex,
-  rem,
-  Center,
-} from "@mantine/core";
+import { Accordion, Button, Flex, rem, Center, Radio } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconEdit } from "@tabler/icons-react";
 import AddCourseModal from "./components/AddCourseModal";
 import EditCourseModal from "./components/EditCourseModal";
 
+//todo: load the initial courses for courses state (will be blocking hydration if not done correctly)
+// async function initialFetchCourses() {
+//   const res = await fetch("dersler/api/getCourses", { method: "GET" });
+//   const resParsed = await res.json();
+//   return resParsed.courses.length ? resParsed.courses : [];
+// }
+
 export default function CoursesPage() {
+  //handlers to open and close modals
   const [addCourseOpened, addCourseHandlers] = useDisclosure(false);
   const [editCourseOpened, editCourseHandlers] = useDisclosure(false);
-  const [courses, setCourses] = useState([]);
-  const [editCourseValues, setEditCourseValues] = useState({
-    courseId: 0,
-    courseName: "",
-    courseDescription: "",
-  });
+
+  //array of courses fetched
+  const [courses, setCourses] = useState<any[]>([]);
+  //the values to be passed to EditCourseModal
+  const [selectedCourse, setSelectedCourse] = useState(0);
 
   useEffect(() => {
     fetchCourses();
-    console.log("fetchCourses called");
-  }, [addCourseHandlers.close, addCourseHandlers.open]);
+    console.log("useEffect: fetchCourses called");
+    //todo: fix the parameters for execution when new course added or edited
+  }, []);
 
+  //call to getCourses api, then set courses state
   async function fetchCourses() {
     const res = await fetch("dersler/api/getCourses", { method: "GET" });
     const resParsed = await res.json();
     if (resParsed.courses.length > 0) setCourses(resParsed.courses);
   }
 
+  //an accordion array to list courses
   const coursesList = courses.map(
-    (course: { id: number; name: string; description: string }) => {
+    (course: { id: number; name: string; description: string }, index) => {
       return (
-        <AccordionItem key={course.id} value={course.name}>
+        <Accordion.Item key={course.id} value={course.name}>
           <Center>
-            <AccordionControl>{course.name}</AccordionControl>
-            <Button
-              variant="outline"
+            <Radio
+              value={`${index}`}
               onClick={() => {
-                setEditCourseValues({
-                  courseId: course.id,
-                  courseName: course.name,
-                  courseDescription: course.description,
-                });
-                editCourseHandlers.open();
+                setSelectedCourse(index);
+                console.log(selectedCourse);
+                console.log(courses[selectedCourse]);
               }}
-            >
-              <IconEdit />
-            </Button>
+            />
+            <Accordion.Control>{course.name}</Accordion.Control>
           </Center>
-          <AccordionPanel>{course.description}</AccordionPanel>
-        </AccordionItem>
+          <Accordion.Panel>{course.description}</Accordion.Panel>
+        </Accordion.Item>
       );
     },
   );
 
+  //AddCourseModal opens a modal to add course, EditCourseModal opens a modal to edit corresponding course
+  //EditCourseModal and Accordion only rendered if any courses fetched
   return (
     <>
       <AddCourseModal
@@ -73,7 +69,17 @@ export default function CoursesPage() {
       <EditCourseModal
         opened={editCourseOpened}
         close={editCourseHandlers.close}
-        values={editCourseValues}
+        values={
+          courses.length > 0
+            ? {
+                //make this component rerender when courses state is updated.
+                //because EditCourseModal doesn't receive fresh 'values' props when courses are fetched
+                courseId: courses[selectedCourse].id,
+                courseName: courses[selectedCourse].name,
+                courseDescription: courses[selectedCourse].description,
+              }
+            : { courseId: 0, courseName: "aa", courseDescription: "aaa" }
+        }
       />
       <Flex direction="column" m={rem(8)}>
         <Button
@@ -82,7 +88,21 @@ export default function CoursesPage() {
         >
           Ders Ekle
         </Button>
-        {courses && <Accordion>{coursesList}</Accordion>}
+
+        {courses && (
+          <Accordion>
+            <Radio.Group>{coursesList}</Radio.Group>
+          </Accordion>
+        )}
+
+        <Button
+          variant="outline"
+          onClick={() => {
+            editCourseHandlers.open();
+          }}
+        >
+          <IconEdit />
+        </Button>
       </Flex>
     </>
   );
