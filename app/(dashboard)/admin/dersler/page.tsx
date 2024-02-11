@@ -19,9 +19,11 @@ export default function CoursesPage() {
   const [editCourseOpened, editCourseHandlers] = useDisclosure(false);
 
   //array of courses fetched
-  const [courses, setCourses] = useState<any[]>([]);
+  const [courses, setCourses] = useState<
+    { id: number; name: string; description: string; visible: boolean }[]
+  >([]);
   //the values to be passed to EditCourseModal
-  const [selectedCourse, setSelectedCourse] = useState(0);
+  const [selectedCourse, setSelectedCourse] = useState<number>(0);
 
   useEffect(() => {
     fetchCourses();
@@ -65,22 +67,19 @@ export default function CoursesPage() {
       <AddCourseModal
         opened={addCourseOpened}
         close={addCourseHandlers.close}
+        fetchCourses={fetchCourses}
       />
-      <EditCourseModal
-        opened={editCourseOpened}
-        close={editCourseHandlers.close}
-        values={
-          courses.length > 0
-            ? {
-                //make this component rerender when courses state is updated.
-                //because EditCourseModal doesn't receive fresh 'values' props when courses are fetched
-                courseId: courses[selectedCourse].id,
-                courseName: courses[selectedCourse].name,
-                courseDescription: courses[selectedCourse].description,
-              }
-            : { courseId: 0, courseName: "aa", courseDescription: "aaa" }
-        }
-      />
+      {courses.length > 0 && (
+        <EditCourseModal
+          key={courses[selectedCourse].id}
+          opened={editCourseOpened}
+          close={editCourseHandlers.close}
+          courseId={courses[selectedCourse].id}
+          courseName={courses[selectedCourse].name}
+          courseDescription={courses[selectedCourse].description}
+          fetchCourses={fetchCourses}
+        />
+      )}
       <Flex direction="column" m={rem(8)}>
         <Button
           leftSection={<IconPlus size={16} />}
@@ -89,7 +88,7 @@ export default function CoursesPage() {
           Ders Ekle
         </Button>
 
-        {courses && (
+        {courses.length > 0 && (
           <Accordion>
             <Radio.Group>{coursesList}</Radio.Group>
           </Accordion>

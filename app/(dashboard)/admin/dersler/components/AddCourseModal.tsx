@@ -1,4 +1,3 @@
-"use client";
 import { Stack, Button, Modal, TextInput, Textarea } from "@mantine/core";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
@@ -22,9 +21,14 @@ const schema = z.object({
     .max(500, { message: "Ders açıklaması 500 karakterden uzun olamaz." }),
 });
 
-export default function AddCourseModal(props: {
+export default function AddCourseModal({
+  opened,
+  close,
+  fetchCourses,
+}: {
   opened: boolean;
   close: () => void;
+  fetchCourses: () => Promise<void>;
 }) {
   //mantine form hook
   const form = useForm<FormValues>({
@@ -45,20 +49,18 @@ export default function AddCourseModal(props: {
         console.error(res.error);
       }
       //close the modal
-      props.close();
+      close();
+
+      //update the parent state 'courses'
+      await fetchCourses();
     } catch (e) {
       console.error("unknown error addCourse", e);
-      props.close();
+      close();
     }
   }
 
   return (
-    <Modal
-      opened={props.opened}
-      onClose={props.close}
-      title="Ders Ekle"
-      centered
-    >
+    <Modal opened={opened} onClose={close} title="Ders Ekle" centered>
       <Stack>
         <form
           onSubmit={form.onSubmit((values, e) => {

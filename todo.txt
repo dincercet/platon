@@ -5,12 +5,29 @@ header:
 - fix the responsiveness and make the burger button work. Will need a drawer on small screens. 
 - remove anasayfa and add Hakkimizda instead.
 - change the logo and make clickable for homepage
+- why is onAuthStateChanged called 3 times on every useEffect execution?
 
 panel:
 - check if the container component causes the layout.tsx to be rendered on the client. (security risk)
 
 actions:
 - revise cookie (need restriction for binge requests, and accurate error return) 
+- revise if any action should be called within a startTransition
 
-form validations:
-try without error Text fields and with form.isValid() and change others (loginform, editcourse) if it works in AddCourseModal component
+token expiration:
+- token expires when site is left for a while, so when admin panel is directly opened, it will first redirect to homepage and then refresh token.
+
+loginpage:
+- login page is reachable for logged in users, restrict it.
+
+admin:
+  navbar ui:
+  -hide the navbar for small devices? (low priority)
+  courses ui:
+  -check responsiveness
+  -radio buttons look ugly within accordion
+  -edit symbol is not explanatory enough
+  -add toggle for visibility in the homepage
+  courses:
+  -add delete function but only allow it if it is not connected to a student schedule, consider making it 'legacy' if it is connected to a student schedule
+   consider if 'visibility' is required if 'legacy' is implemented

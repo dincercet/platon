@@ -9,7 +9,6 @@ import auth from "firebase.init.js";
 import { setAuthCookies } from "app/actions/setAuthCookies";
 import { useRouter } from "next/navigation";
 import {
-  Text,
   TextInput,
   PasswordInput,
   Checkbox,
@@ -163,9 +162,6 @@ export default function LoginForm() {
           required
           {...form.getInputProps("email")}
         />
-        <Text size="sm" c="red">
-          {form.errors.email}
-        </Text>
 
         <PasswordInput
           label="Şifre"
@@ -174,9 +170,6 @@ export default function LoginForm() {
           mt="md"
           {...form.getInputProps("password")}
         />
-        <Text size="sm" c="red">
-          {form.errors.password}
-        </Text>
 
         <Group justify="space-between" mt="lg">
           <Checkbox

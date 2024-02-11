@@ -1,4 +1,3 @@
-"use client";
 import { Stack, Button, Modal, TextInput, Textarea } from "@mantine/core";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
@@ -22,17 +21,27 @@ const schema = z.object({
     .max(500, { message: "Ders açıklaması 500 karakterden uzun olamaz." }),
 });
 
-export default function EditCourseModal(props: {
+export default function EditCourseModal({
+  opened,
+  close,
+  courseId,
+  courseName,
+  courseDescription,
+  fetchCourses,
+}: {
   opened: boolean;
   close: () => void;
-  values: { courseId: number; courseName: string; courseDescription: string };
+  courseId: number;
+  courseName: string;
+  courseDescription: string;
+  fetchCourses: () => Promise<void>;
 }) {
   //mantine form hook
   const form = useForm<FormValues>({
     initialValues: {
       //initial values passed as props
-      name: props.values.courseName,
-      description: props.values.courseDescription,
+      name: courseName,
+      description: courseDescription,
     },
     validate: zodResolver(schema),
   });
@@ -41,30 +50,24 @@ export default function EditCourseModal(props: {
     let res;
     try {
       //editCourse action call (id received as prop)
-      res = await editCourse(
-        props.values.courseId,
-        values.name,
-        values.description,
-      );
+      res = await editCourse(courseId, values.name, values.description);
       if (!res.success) {
         //error returned from editCourse action
         console.error(res.error);
       }
       //close the modal
-      props.close();
+      close();
+
+      //update the parent state 'courses'
+      await fetchCourses();
     } catch (e) {
       console.error("unknown error editCourse", e);
-      props.close();
+      close();
     }
   }
 
   return (
-    <Modal
-      opened={props.opened}
-      onClose={props.close}
-      title="Ders Düzenle"
-      centered
-    >
+    <Modal opened={opened} onClose={close} title="Ders Düzenle" centered>
       <Stack>
         <form
           onSubmit={form.onSubmit((values, e) => {
@@ -82,7 +85,7 @@ export default function EditCourseModal(props: {
             {...form.getInputProps("description")}
           />
 
-          <Button type="submit">Ekle</Button>
+          <Button type="submit">Güncelle</Button>
         </form>
       </Stack>
     </Modal>
