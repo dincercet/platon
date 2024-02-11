@@ -28,6 +28,12 @@ admin:
   -radio buttons look ugly within accordion
   -edit symbol is not explanatory enough
   -add toggle for visibility in the homepage
+  -modal ui needs refactoring
   courses:
   -add delete function but only allow it if it is not connected to a student schedule, consider making it 'legacy' if it is connected to a student schedule
    consider if 'visibility' is required if 'legacy' is implemented
+  -consider adding server side props for initial courses state (route segment config on nextjs docs: getStaticProps equivalent of app router)
+  -modal will throw error if courses state is an empty array. Must fix.
+  -sort courses by dateCreated (or id desc?)
+
+

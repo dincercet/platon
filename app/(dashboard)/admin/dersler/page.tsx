@@ -20,7 +20,7 @@ export default function CoursesPage() {
 
   //array of courses fetched
   const [courses, setCourses] = useState<
-    { id: number; name: string; description: string; visible: boolean }[]
+    { id: number; name: string; description: string; legacy: boolean }[]
   >([]);
   //the values to be passed to EditCourseModal
   const [selectedCourse, setSelectedCourse] = useState<number>(0);
@@ -48,8 +48,6 @@ export default function CoursesPage() {
               value={`${index}`}
               onClick={() => {
                 setSelectedCourse(index);
-                console.log(selectedCourse);
-                console.log(courses[selectedCourse]);
               }}
             />
             <Accordion.Control>{course.name}</Accordion.Control>
