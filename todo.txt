@@ -35,5 +35,5 @@ admin:
   -consider adding server side props for initial courses state (route segment config on nextjs docs: getStaticProps equivalent of app router)
   -modal will throw error if courses state is an empty array. Must fix.
   -sort courses by dateCreated (or id desc?)
-
+  -render modals conditionally (flush states on close)
 

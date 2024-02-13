@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export default async function addCurriculum(
   courseId: number,
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; curriculumId?: number; error?: string }> {
   //check authorization
   if (!(await isAdminAuth())) return { success: false, error: "Unauthorized." };
 
@@ -28,13 +28,15 @@ export default async function addCurriculum(
     //validation successful
 
     try {
-      //create an entry in courses table
-      await prisma.course_curriculums.create({
+      //create an entry in course_curriculums table
+      const addedCurriculum = await prisma.course_curriculums.create({
         data: { course_id: courseId },
+        select: { id: true },
       });
 
-      //successful
-      return { success: true };
+      return addedCurriculum.id
+        ? { success: true, curriculumId: addedCurriculum.id } //successful
+        : { success: false, error: "Failed to add curriculum." }; //no added curriculum returned
     } catch (e) {
       //database error
       console.error("prisma error: failed to add curriculum", e);

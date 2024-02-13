@@ -9,12 +9,19 @@ export default function Page() {
   //handlers to open and close modals
   const [addCurriculumOpened, addCurriculumHandlers] = useDisclosure(false);
 
+  //get curriculum data next
+
   return (
     <>
-      <AddCurriculumModal
-        opened={addCurriculumOpened}
-        close={addCurriculumHandlers.close}
-      />
+      {
+        //to unmount modal when modal is closed
+        addCurriculumOpened && (
+          <AddCurriculumModal
+            opened={addCurriculumOpened}
+            close={addCurriculumHandlers.close}
+          />
+        )
+      }
 
       <Flex direction="column" m={rem(8)}>
         <Button
