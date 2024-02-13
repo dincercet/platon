@@ -1,4 +1,5 @@
 - add error.ts files for fallback because even the panel errors fallback to the default root error page.
+- add loading state for fetching data
 - create an error dump file for production, for now it is console.error only.
 
 header:
@@ -24,16 +25,13 @@ admin:
   navbar ui:
   -hide the navbar for small devices? (low priority)
   courses ui:
-  -check responsiveness
-  -radio buttons look ugly within accordion
-  -edit symbol is not explanatory enough
   -add toggle for visibility in the homepage
-  -modal ui needs refactoring
   courses:
   -add delete function but only allow it if it is not connected to a student schedule, consider making it 'legacy' if it is connected to a student schedule
    consider if 'visibility' is required if 'legacy' is implemented
   -consider adding server side props for initial courses state (route segment config on nextjs docs: getStaticProps equivalent of app router)
-  -modal will throw error if courses state is an empty array. Must fix.
+  -try with empty courses list for errors
   -sort courses by dateCreated (or id desc?)
-  -render modals conditionally (flush states on close)
+
+-incorporate useMemo, useCallback, React.memo, into existing code where needed.
 

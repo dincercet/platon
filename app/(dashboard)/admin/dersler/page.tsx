@@ -22,8 +22,12 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState<
     { id: number; name: string; description: string; legacy: boolean }[]
   >([]);
+
   //the values to be passed to EditCourseModal
   const [selectedCourse, setSelectedCourse] = useState<number>(0);
+
+  //enable button when true
+  const [isCourseSelected, setIsCourseSelected] = useState(false);
 
   useEffect(() => {
     fetchCourses();
@@ -33,21 +37,35 @@ export default function CoursesPage() {
 
   //call to getCourses api, then set courses state
   async function fetchCourses() {
-    const res = await fetch("dersler/api/getCourses", { method: "GET" });
-    const resParsed = await res.json();
-    if (resParsed.courses.length > 0) setCourses(resParsed.courses);
+    try {
+      const res = await fetch("dersler/api/getCourses", { method: "GET" });
+      const resParsed = await res.json();
+
+      if (!res.ok) {
+        //error returned from api
+        console.error(resParsed.error);
+        return;
+      }
+
+      //set courses state based on retrieved courses
+      if (resParsed.courses.length > 0) setCourses(resParsed.courses);
+    } catch (e) {
+      console.error("error fetching courses", e);
+    }
   }
 
   //an accordion array to list courses
-  const coursesList = courses.map(
+  const courseList = courses.map(
     (course: { id: number; name: string; description: string }, index) => {
       return (
         <Accordion.Item key={course.id} value={course.name}>
           <Center>
             <Radio
               value={`${index}`}
+              mr={rem(8)}
               onClick={() => {
                 setSelectedCourse(index);
+                setIsCourseSelected(true);
               }}
             />
             <Accordion.Control>{course.name}</Accordion.Control>
@@ -62,12 +80,17 @@ export default function CoursesPage() {
   //EditCourseModal and Accordion only rendered if any courses fetched
   return (
     <>
-      <AddCourseModal
-        opened={addCourseOpened}
-        close={addCourseHandlers.close}
-        fetchCourses={fetchCourses}
-      />
-      {courses.length > 0 && (
+      {
+        //conditional to unmount modal when modal is closed
+        addCourseOpened && (
+          <AddCourseModal
+            opened={addCourseOpened}
+            close={addCourseHandlers.close}
+            fetchCourses={fetchCourses}
+          />
+        )
+      }
+      {editCourseOpened && (
         <EditCourseModal
           key={courses[selectedCourse].id}
           opened={editCourseOpened}
@@ -81,19 +104,22 @@ export default function CoursesPage() {
       <Flex direction="column" m={rem(8)}>
         <Button
           leftSection={<IconPlus size={16} />}
+          mb={rem(8)}
           onClick={addCourseHandlers.open}
         >
           Ders Ekle
         </Button>
 
-        {courses.length > 0 && (
+        {courseList.length > 0 && (
           <Accordion>
-            <Radio.Group>{coursesList}</Radio.Group>
+            <Radio.Group>{courseList}</Radio.Group>
           </Accordion>
         )}
 
         <Button
           variant="outline"
+          disabled={!isCourseSelected}
+          mt={rem(8)}
           onClick={() => {
             editCourseHandlers.open();
           }}

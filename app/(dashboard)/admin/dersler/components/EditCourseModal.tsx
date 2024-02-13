@@ -68,26 +68,28 @@ export default function EditCourseModal({
 
   return (
     <Modal opened={opened} onClose={close} title="Ders Düzenle" centered>
-      <Stack>
-        <form
-          onSubmit={form.onSubmit((values, e) => {
-            e?.preventDefault();
-            //validate the form, form.errors will be set if validation fails
-            form.validate();
-            //if valid, continue
-            if (form.isValid()) handleEditCourse(values);
-          })}
-        >
+      <form
+        onSubmit={form.onSubmit((values, e) => {
+          e?.preventDefault();
+          //validate the form, form.errors will be set if validation fails
+          form.validate();
+          //if valid, continue
+          if (form.isValid()) handleEditCourse(values);
+        })}
+      >
+        <Stack>
           <TextInput label="Ders ismi" {...form.getInputProps("name")} />
 
           <Textarea
             label="Ders açıklaması"
+            autosize
+            minRows={3}
             {...form.getInputProps("description")}
           />
 
           <Button type="submit">Güncelle</Button>
-        </form>
-      </Stack>
+        </Stack>
+      </form>
     </Modal>
   );
 }

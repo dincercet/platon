@@ -7,6 +7,7 @@ import {
   Textarea,
   Group,
   Accordion,
+  ActionIcon,
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { z } from "zod";
@@ -31,9 +32,11 @@ const addWeekSchema = z.object({
 export default function AddCurriculumModal({
   opened,
   close,
+  fetchCurriculums,
 }: {
   opened: boolean;
   close: () => void;
+  fetchCurriculums: () => Promise<void>;
 }) {
   //array of courses fetched
   const [courses, setCourses] = useState<
@@ -41,7 +44,7 @@ export default function AddCurriculumModal({
   >([]);
 
   //selected course id to pass into addCurriculum to create empty curriculum (keeps it as string to set the 'NativeSelect' component value)
-  const [selectedCourseId, setSelectedCourseId] = useState("");
+  const [selectedCourseId, setSelectedCourseId] = useState(0);
 
   //set to true after empty curriculum is created
   const [isCurriculumInitiated, setIsCurriculumInitiated] = useState(false);
@@ -54,15 +57,6 @@ export default function AddCurriculumModal({
     { weekNo: number; weekDescription: string }[]
   >([]);
 
-  // //mantine form hook (try for course selection)
-  const form = useForm();
-  // const form = useForm<FormValues>({
-  //   initialValues: {
-  //     courses: [],
-  //   },
-  //   validate: zodResolver(schema),
-  // });
-
   //mantine form hook (After course is selected, the form to add a week is displayed)
   const addWeekForm = useForm<AddWeekFormValues>({
     initialValues: { weekNo: 1, weekDescription: "" },
@@ -71,19 +65,36 @@ export default function AddCurriculumModal({
 
   useEffect(() => {
     fetchCourses();
+    console.log("useEffect fetchCourses called");
   }, []);
 
   //call to getCourses api, then set courses state
   async function fetchCourses() {
-    const res = await fetch("mufredatlar/api/getCourses", { method: "GET" });
-    const resParsed = await res.json();
-    if (resParsed.courses.length > 0) setCourses(resParsed.courses);
+    try {
+      const res = await fetch("mufredatlar/api/getCourses", { method: "GET" });
+      const resParsed = await res.json();
+
+      if (!res.ok) {
+        //error returned from api
+        console.error(resParsed.error);
+        return;
+      }
+
+      //set courses state based on retrieved courses
+      if (resParsed.courses.length > 0) {
+        setCourses(resParsed.courses);
+
+        setSelectedCourseId(resParsed.courses[0].id);
+      }
+    } catch (e) {
+      console.error("error fetching courses", e);
+    }
   }
 
   async function handleInitiateCurriculum() {
     try {
       //addCurriculum action call
-      const res = await addCurriculum(parseInt(selectedCourseId));
+      const res = await addCurriculum(selectedCourseId);
       if (!res.success || !res.curriculumId) {
         //error returned from addCurriculum action
         console.error(res.error);
@@ -139,25 +150,28 @@ export default function AddCurriculumModal({
   });
 
   return (
-    <Modal opened={opened} onClose={close} title="Müfredat Ekle" centered>
+    <Modal
+      opened={opened}
+      onClose={() => {
+        close();
+        fetchCurriculums();
+      }}
+      title="Müfredat Ekle"
+      centered
+    >
       <Stack>
         <form
-          onSubmit={form.onSubmit((values, e) => {
+          onSubmit={(e) => {
             e?.preventDefault();
-            console.log("select values: ", values);
             handleInitiateCurriculum();
-            // //validate the form, form.errors will be set if validation fails
-            // form.validate();
-            // //if valid, continue
-            // if (form.isValid()) handleAddCurriculum();
-          })}
+          }}
         >
           <Group>
             <NativeSelect
               label="Dersi Seçiniz"
-              value={selectedCourseId}
+              value={selectedCourseId.toString()}
               onChange={(event) =>
-                setSelectedCourseId(event.currentTarget.value)
+                setSelectedCourseId(parseInt(event.currentTarget.value))
               }
               disabled={!courses.length || isCurriculumInitiated}
               data={courses.map((course) => {
@@ -183,7 +197,6 @@ export default function AddCurriculumModal({
           <form
             onSubmit={addWeekForm.onSubmit((values, e) => {
               e?.preventDefault();
-              console.log("week values: ", values);
               //validate the form, form.errors will be set if validation fails
               addWeekForm.validate();
               //if valid, continue
@@ -196,9 +209,9 @@ export default function AddCurriculumModal({
               }
               label={addWeekForm.values.weekNo + ". Hafta"}
               rightSection={
-                <Button type="submit">
-                  <IconPlus size={14} />
-                </Button>
+                <ActionIcon type="submit" variant="outline">
+                  <IconPlus size={16} />
+                </ActionIcon>
               }
               autosize
               minRows={3}
