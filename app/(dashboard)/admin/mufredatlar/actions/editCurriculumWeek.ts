@@ -5,25 +5,22 @@ import isAdminAuth from "../../actions/isAdminAuth";
 
 const prisma = new PrismaClient();
 
-export default async function addCurriculumWeek(
-  curriculumId: number,
-  weekNo: number,
+export default async function editCurriculumWeek(
+  weekId: number,
   weekDescription: string,
-): Promise<{ success: boolean; weekId?: number; error?: string }> {
+): Promise<{ success: boolean; error?: string }> {
   //check authorization
   if (!(await isAdminAuth())) return { success: false, error: "Unauthorized." };
 
   //create zod schema
   const schema = z.object({
-    curriculumId: z.number().min(0),
-    weekNo: z.number().min(0),
+    weekId: z.number().min(0),
     weekDescription: z.string().min(1).max(500),
   });
 
   //validation result
   const validation = schema.safeParse({
-    curriculumId: curriculumId,
-    weekNo: weekNo,
+    weekId: weekId,
     weekDescription: weekDescription,
   });
 
@@ -37,24 +34,20 @@ export default async function addCurriculumWeek(
 
     try {
       //create an entry in curriculum_weeks table
-      const addedWeek = await prisma.curriculum_weeks.create({
+      await prisma.curriculum_weeks.update({
+        where: { id: weekId },
         data: {
-          week_no: weekNo,
           description: weekDescription,
-          curriculum_id: curriculumId,
         },
-        select: { id: true },
       });
 
-      return addedWeek.id
-        ? { success: true, weekId: addedWeek.id } //successful
-        : { success: false, error: "Failed to add curriculum week." }; //no week id returned
+      return { success: true }; //successful
     } catch (e) {
       //database error
-      console.error("prisma error: failed to add curriculum week", e);
+      console.error("prisma error: failed to edit curriculum week", e);
       return {
         success: false,
-        error: "Database error: Failed to add curriculum week.",
+        error: "Database error: Failed to edit curriculum week.",
       };
     }
   }

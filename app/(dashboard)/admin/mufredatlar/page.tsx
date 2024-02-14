@@ -11,12 +11,14 @@ import {
   Group,
 } from "@mantine/core";
 import AddCurriculumModal from "./components/AddCurriculumModal";
+import EditCurriculumModal from "./components/EditCurriculumModal";
 import { IconPlus, IconEdit } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 export default function Page() {
   //handlers to open and close modals
   const [addCurriculumOpened, addCurriculumHandlers] = useDisclosure(false);
+  const [editCurriculumOpened, editCurriculumHandlers] = useDisclosure(false);
 
   //array of curriculums, and array of weeks within each curriculum
   const [curriculums, setCurriculums] = useState<
@@ -156,6 +158,14 @@ export default function Page() {
           />
         )
       }
+      {editCurriculumOpened && (
+        <EditCurriculumModal
+          opened={editCurriculumOpened}
+          close={editCurriculumHandlers.close}
+          fetchCurriculums={fetchCurriculums}
+          curriculum={curriculums[selectedCurriculum]}
+        />
+      )}
 
       <Flex direction="column" m={rem(8)}>
         <Button
@@ -177,7 +187,7 @@ export default function Page() {
           disabled={!isCurriculumSelected}
           mt={rem(8)}
           onClick={() => {
-            //editCurriculumHandlers.open();
+            editCurriculumHandlers.open();
           }}
         >
           <IconEdit />
