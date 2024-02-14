@@ -10,14 +10,14 @@ generator client {
 //note that this schema is defined in snake_case instead of the prisma default PascalCase
 
 model users {
-  id          Int                   @id @default(autoincrement())
-  email       String                @unique @db.VarChar(150)
-  first_name  String                @db.VarChar(100)
-  last_name   String                @db.VarChar(100)
-  created_at  DateTime              @default(now())
-  role        roles                 @default(STUDENT)
-  schedule    curriculum_schedules? @relation(fields: [schedule_id], references: [id])
-  schedule_id Int?
+  id         Int                 @id @default(autoincrement())
+  email      String              @unique @db.VarChar(150)
+  first_name String              @db.VarChar(100)
+  last_name  String              @db.VarChar(100)
+  created_at DateTime            @default(now())
+  role       roles               @default(STUDENT)
+  period     curriculum_periods? @relation(fields: [period_id], references: [id])
+  period_id  Int?
 }
 
 enum roles {
@@ -34,12 +34,13 @@ model courses {
 }
 
 model course_curriculums {
-  id         Int                    @id @default(autoincrement())
-  created_at DateTime               @default(now())
-  course     courses                @relation(fields: [course_id], references: [id])
+  id         Int                  @id @default(autoincrement())
+  created_at DateTime             @default(now())
+  legacy     Boolean              @default(false)
+  course     courses              @relation(fields: [course_id], references: [id])
   course_id  Int
   weeks      curriculum_weeks[]
-  schedules  curriculum_schedules[]
+  periods    curriculum_periods[]
 }
 
 model curriculum_weeks {
@@ -50,10 +51,10 @@ model curriculum_weeks {
   curriculum_id Int
 }
 
-//schedules are linked to curriculums instead of courses,
-//because courses stay the same, but different schedules may have a new curriculum
+//periods are linked to curriculums instead of courses,
+//because courses stay the same, but different periods may have a new curriculum
 
-model curriculum_schedules {
+model curriculum_periods {
   id            Int                @id @default(autoincrement())
   begins_at     DateTime
   ends_at       DateTime
@@ -62,10 +63,10 @@ model curriculum_schedules {
   users         users[]
 }
 
-//schedule_files (todo)
+//period_files (todo)
 //id
 //week_no
 //file_url
-//schedule_id (foreign key)
+//period_id (foreign key)
 
-//schedule_announcements? 
+//period_announcements? 

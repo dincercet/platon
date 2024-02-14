@@ -24,14 +24,18 @@ loginpage:
 admin:
   navbar ui:
   -hide the navbar for small devices? (low priority)
-  courses ui:
-  -add toggle for visibility in the homepage
+
   courses:
   -add delete function but only allow it if it is not connected to a student schedule, consider making it 'legacy' if it is connected to a student schedule
-   consider if 'visibility' is required if 'legacy' is implemented
   -consider adding server side props for initial courses state (route segment config on nextjs docs: getStaticProps equivalent of app router)
   -try with empty courses list for errors
-  -sort courses by dateCreated (or id desc?)
+  -sort by newest
+
+  curriculums:
+  -add delete function if there is no students, make it legacy if there are students
+  -sort by newest and display whether legacy
+
 
 -incorporate useMemo, useCallback, React.memo, into existing code where needed.
+
 

@@ -47,7 +47,7 @@ const navbarLinks = [
   { icon: IconHome2, label: "Ana Sayfa", path: "/admin" },
   { icon: IconBooks, label: "Dersler", path: "/admin/dersler" },
   { icon: IconCalendarTime, label: "Müfredatlar", path: "/admin/mufredatlar" },
-  { icon: IconSchoolBell, label: "Tarihler", path: "/admin/tarihler" },
+  { icon: IconSchoolBell, label: "Dönemler", path: "/admin/donemler" },
   { icon: IconSchool, label: "Öğrenciler", path: "/admin/ogrenciler" },
 ];
 
