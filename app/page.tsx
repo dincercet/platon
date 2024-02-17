@@ -1,9 +1,11 @@
-import { Container } from "@mantine/core";
+import { Container, Flex, rem, Text } from "@mantine/core";
 
-export default function HomePage() {
+export default function Page() {
   return (
-    <Container>
-      <p>Home page</p>
-    </Container>
+    <Flex direction="column" m={rem(8)}>
+      <Container>
+        <Text>Anasayfa</Text>
+      </Container>
+    </Flex>
   );
 }

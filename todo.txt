@@ -1,3 +1,6 @@
+08.12 bsslangic - 18.03 bitis - 8 mart sunum, 15 mart dosya teslim
+fr39 haftalik faaliyet, 5 gun 5 satir 14 hafta - fr42 isyeri degerlendirme 7. ve 14. hafta - fr122 70 sayfa rapor.
+
 - add error.ts files for fallback because even the panel errors fallback to the default root error page.
 - add loading state for fetching data
 - create an error dump file for production, for now it is console.error only.

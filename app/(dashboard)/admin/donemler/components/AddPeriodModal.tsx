@@ -1,33 +1,14 @@
 import { useEffect, useState } from "react";
-import {
-  Stack,
-  Button,
-  Modal,
-  NativeSelect,
-  Textarea,
-  Group,
-  Accordion,
-  ActionIcon,
-} from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
+import { Stack, Button, Modal, NativeSelect } from "@mantine/core";
 import { DatesProvider, DatePickerInput } from "@mantine/dates";
 import "dayjs/locale/tr";
 import { z } from "zod";
-import { useForm } from "@mantine/form";
-import { zodResolver } from "mantine-form-zod-resolver";
-import { useDisclosure } from "@mantine/hooks";
+import addPeriod from "../actions/addPeriod";
 
-type AddWeekFormValues = {
-  weekNo: number;
-  weekDescription: string;
-};
-
-//validate addWeekForm via zod
-const addWeekSchema = z.object({
-  weekDescription: z
-    .string()
-    .min(1, { message: "Hafta açıklaması zorunludur." })
-    .max(500, { message: "Hafta açıklaması 500 karakterden uzun olamaz." }),
+//check if date is valid
+const dateSchema = z.object({
+  beginsAt: z.date(),
+  endsAt: z.date(),
 });
 
 export default function AddPeriodModal({
@@ -90,6 +71,31 @@ export default function AddPeriodModal({
     }
   }
 
+  async function handleAddPeriod() {
+    if (
+      !dateSchema.safeParse({ beginsAt: dateValues[0], endsAt: dateValues[1] })
+        .success
+    )
+      //if date is not valid, return
+      return;
+
+    try {
+      //addPeriod action call (passing curriculumId and dates)
+      const res = await addPeriod(selectedCurriculumId, [
+        dateValues[0]!,
+        dateValues[1]!,
+      ]);
+      if (!res.success) {
+        //error returned from addCurriculum action
+        console.error(res.error);
+        return;
+      }
+    } catch (e) {
+      console.error("unknown error addCurriculum", e);
+      close();
+    }
+  }
+
   //construct the NativeSelect label
   const getCurriculumDate = (createdAt: Date) => {
     const months = [
@@ -122,12 +128,12 @@ export default function AddPeriodModal({
       title="Yeni Dönem"
       centered
     >
-      <Stack>
-        <form
-          onSubmit={(e) => {
-            e?.preventDefault();
-          }}
-        >
+      <form
+        onSubmit={(e) => {
+          e?.preventDefault();
+        }}
+      >
+        <Stack>
           <NativeSelect
             label="Müfredatı Seçiniz"
             value={selectedCurriculumId.toString()}
@@ -153,14 +159,13 @@ export default function AddPeriodModal({
               type="range"
               value={dateValues}
               onChange={setDateValues}
-              // defaultValue={[new Date(), null]}
-              minDate={new Date()}
+              defaultValue={[new Date(), null]}
             />
           </DatesProvider>
 
           <Button type="submit">Dönemi Ekle</Button>
-        </form>
-      </Stack>
+        </Stack>
+      </form>
     </Modal>
   );
 }

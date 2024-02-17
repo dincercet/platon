@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   Container,
   Group,
@@ -9,7 +10,6 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { MantineLogo } from "@mantinex/mantine-logo";
 import classes from "./Header.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -219,20 +219,17 @@ export default function Header() {
   return (
     <header className={classes.header}>
       <Container size="md" className={classes.inner}>
-        <MantineLogo size={28} />
+        <Link href={"/"}>
+          <Image
+            src="/platon-logo.png"
+            height={32}
+            width={99}
+            alt="Platon Logo"
+            className={classes.logo}
+          />
+        </Link>
 
         <Group gap={5} visibleFrom="xs">
-          <Link href={"/"} passHref legacyBehavior>
-            <a
-              className={classes.link}
-              data-active={active === "/" || undefined}
-              onClick={() => {
-                setActive("/");
-              }}
-            >
-              Ana Sayfa
-            </a>
-          </Link>
           <Link href={"/egitimler"} passHref legacyBehavior>
             <a
               className={classes.link}
@@ -244,6 +241,19 @@ export default function Header() {
               Eğitimler
             </a>
           </Link>
+
+          <Link href={"/hakkimizda"} passHref legacyBehavior>
+            <a
+              className={classes.link}
+              data-active={active === "/hakkimizda" || undefined}
+              onClick={() => {
+                setActive("/hakkimizda");
+              }}
+            >
+              Hakkımızda
+            </a>
+          </Link>
+
           <Link href={"/iletisim"} passHref legacyBehavior>
             <a
               className={classes.link}

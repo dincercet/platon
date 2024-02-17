@@ -1,5 +1,6 @@
 "server only";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import React from "react";
 import type { Metadata } from "next";
 import { MantineProvider } from "@mantine/core";
@@ -18,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="shortcut icon" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
