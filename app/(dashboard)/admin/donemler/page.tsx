@@ -8,6 +8,7 @@ import { IconPlus, IconEdit } from "@tabler/icons-react";
 import AddPeriodModal from "./components/AddPeriodModal";
 import EditPeriodModal from "./components/EditPeriodModal";
 import dayjs from "dayjs";
+import ShowCurriculumModal from "./components/ShowCurriculumModal";
 
 const localizedFormat = require("dayjs/plugin/localizedFormat");
 dayjs.extend(localizedFormat);
@@ -16,6 +17,7 @@ export default function Page() {
   //handlers to open and close modals
   const [addPeriodOpened, addPeriodHandlers] = useDisclosure(false);
   const [editPeriodOpened, editPeriodHandlers] = useDisclosure(false);
+  const [showCurriculumOpened, showCurriculumHandlers] = useDisclosure(false);
 
   //array of periods after fetchPeriods
   const [periods, setPeriods] = useState<
@@ -150,6 +152,13 @@ export default function Page() {
           period={periods[selectedPeriod]}
         />
       )}
+      {showCurriculumOpened && (
+        <ShowCurriculumModal
+          opened={showCurriculumOpened}
+          close={showCurriculumHandlers.close}
+          curriculumId={periods[selectedPeriod].curriculumId}
+        />
+      )}
       <Flex direction="column" m={rem(8)}>
         <Button
           leftSection={<IconPlus size={16} />}
@@ -171,6 +180,7 @@ export default function Page() {
           <Button //show curriculum button
             variant="outline"
             disabled={!isPeriodSelected}
+            onClick={showCurriculumHandlers.open}
           >
             Müfredat
           </Button>
