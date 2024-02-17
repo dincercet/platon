@@ -72,27 +72,36 @@ export default function AddPeriodModal({
   }
 
   async function handleAddPeriod() {
+    //if date is valid
     if (
-      !dateSchema.safeParse({ beginsAt: dateValues[0], endsAt: dateValues[1] })
+      dateSchema.safeParse({ beginsAt: dateValues[0], endsAt: dateValues[1] })
         .success
-    )
-      //if date is not valid, return
-      return;
+    ) {
+      try {
+        //addPeriod action call (passing curriculumId and dates)
+        const res = await addPeriod(selectedCurriculumId, [
+          dateValues[0]!,
+          dateValues[1]!,
+        ]);
 
-    try {
-      //addPeriod action call (passing curriculumId and dates)
-      const res = await addPeriod(selectedCurriculumId, [
-        dateValues[0]!,
-        dateValues[1]!,
-      ]);
-      if (!res.success) {
-        //error returned from addCurriculum action
-        console.error(res.error);
-        return;
+        if (!res.success) {
+          //error returned from addCurriculum action
+          console.error(res.error);
+          return;
+        }
+
+        //close the modal
+        close();
+        //update the parent state Periods
+        await fetchPeriods();
+      } catch (e) {
+        console.error("unknown error addCurriculum", e);
+
+        //close the modal
+        close();
+        //update the parent state Periods
+        await fetchPeriods();
       }
-    } catch (e) {
-      console.error("unknown error addCurriculum", e);
-      close();
     }
   }
 
@@ -119,18 +128,11 @@ export default function AddPeriodModal({
   };
 
   return (
-    <Modal
-      opened={opened}
-      onClose={() => {
-        close();
-        fetchPeriods();
-      }}
-      title="Yeni Dönem"
-      centered
-    >
+    <Modal opened={opened} onClose={close} title="Yeni Dönem" centered>
       <form
         onSubmit={(e) => {
           e?.preventDefault();
+          handleAddPeriod();
         }}
       >
         <Stack>

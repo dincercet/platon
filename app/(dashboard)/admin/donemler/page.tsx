@@ -1,9 +1,9 @@
 "use client";
 import "dayjs/locale/tr";
 import { useState, useEffect } from "react";
-import { Button, Flex, Group, Radio, rem } from "@mantine/core";
+import { Button, Flex, Group, Radio, Stack, rem } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPlus } from "@tabler/icons-react";
+import { IconPlus, IconEdit } from "@tabler/icons-react";
 
 import AddPeriodModal from "./components/AddPeriodModal";
 import dayjs from "dayjs";
@@ -15,6 +15,7 @@ export default function Page() {
   //handlers to open and close modals
   const [addPeriodOpened, addPeriodHandlers] = useDisclosure(false);
 
+  //array of periods after fetchPeriods
   const [periods, setPeriods] = useState<
     {
       periodId: number;
@@ -25,18 +26,21 @@ export default function Page() {
     }[]
   >([]);
 
+  //to enable buttons when radio is selected
+  const [isPeriodSelected, setIsPeriodSelected] = useState(false);
+
   useEffect(() => {
     fetchPeriods();
-    console.log("useEffect fetchPeriods called");
   }, []);
 
   async function fetchPeriods() {
     try {
+      //call to getPeriods api
       const res = await fetch("donemler/api/getPeriods", {
         method: "GET",
       });
       const resParsed = await res.json();
-
+      console.log("inside fetchPeriods");
       if (!res.ok) {
         //error returned from api
         console.error(resParsed.error);
@@ -70,6 +74,7 @@ export default function Page() {
     }
   }
 
+  //to translate date to Turkish
   const getCurriculumDate = (createdAt: Date) => {
     const months = [
       "Ocak",
@@ -91,6 +96,7 @@ export default function Page() {
     return date.getDate() + " " + months[date.getMonth()];
   };
 
+  //list of Radio components showing period details
   const periodList = periods.map((period) => {
     const begins = dayjs(new Date(period.beginsAt)).locale("tr").format("LL");
     const ends = dayjs(new Date(period.endsAt)).locale("tr").format("LL");
@@ -102,9 +108,12 @@ export default function Page() {
         label={begins + " - " + ends}
         description={
           getCurriculumDate(period.curriculumCreatedAt) +
-          ": " +
+          " Müfredatı: " +
           period.courseName
         }
+        onClick={() => {
+          setIsPeriodSelected(true);
+        }}
       />
     );
   });
@@ -129,16 +138,19 @@ export default function Page() {
         >
           Yeni Dönem
         </Button>
-
-        <Radio.Group>{periodList}</Radio.Group>
-        <Group>
+        <Radio.Group>
+          <Stack>{periodList}</Stack>
+        </Radio.Group>
+        <Group grow mt={rem(8)}>
           <Button //show students button
-          //disabled={!isPeriodSelected}
+            variant="outline"
+            disabled={!isPeriodSelected}
           >
             Öğrenciler
           </Button>
           <Button //show curriculum button
-          //disabled={!isPeriodSelected}
+            variant="outline"
+            disabled={!isPeriodSelected}
           >
             Müfredat
           </Button>
@@ -146,7 +158,7 @@ export default function Page() {
 
         <Button //edit button
           variant="outline"
-          //disabled={!isPeriodSelected}
+          disabled={!isPeriodSelected}
           mt={rem(8)}
           onClick={() => {
             //editPeriodHandlers.open();
