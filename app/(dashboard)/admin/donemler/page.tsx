@@ -6,6 +6,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconEdit } from "@tabler/icons-react";
 
 import AddPeriodModal from "./components/AddPeriodModal";
+import EditPeriodModal from "./components/EditPeriodModal";
 import dayjs from "dayjs";
 
 const localizedFormat = require("dayjs/plugin/localizedFormat");
@@ -14,6 +15,7 @@ dayjs.extend(localizedFormat);
 export default function Page() {
   //handlers to open and close modals
   const [addPeriodOpened, addPeriodHandlers] = useDisclosure(false);
+  const [editPeriodOpened, editPeriodHandlers] = useDisclosure(false);
 
   //array of periods after fetchPeriods
   const [periods, setPeriods] = useState<
@@ -22,12 +24,16 @@ export default function Page() {
       beginsAt: Date;
       endsAt: Date;
       courseName: string;
+      curriculumId: number;
       curriculumCreatedAt: Date;
     }[]
   >([]);
 
   //to enable buttons when radio is selected
   const [isPeriodSelected, setIsPeriodSelected] = useState(false);
+
+  //holds the index of selected period
+  const [selectedPeriod, setSelectedPeriod] = useState(0);
 
   useEffect(() => {
     fetchPeriods();
@@ -56,13 +62,18 @@ export default function Page() {
               id: number;
               begins_at: Date;
               ends_at: Date;
-              curriculum: { created_at: Date; course: { name: string } };
+              curriculum: {
+                id: number;
+                created_at: Date;
+                course: { name: string };
+              };
             }) => {
               return {
                 periodId: period.id,
                 beginsAt: period.begins_at,
                 endsAt: period.ends_at,
                 courseName: period.curriculum.course.name,
+                curriculumId: period.curriculum.id,
                 curriculumCreatedAt: period.curriculum.created_at,
               };
             },
@@ -97,7 +108,7 @@ export default function Page() {
   };
 
   //list of Radio components showing period details
-  const periodList = periods.map((period) => {
+  const periodList = periods.map((period, index) => {
     const begins = dayjs(new Date(period.beginsAt)).locale("tr").format("LL");
     const ends = dayjs(new Date(period.endsAt)).locale("tr").format("LL");
 
@@ -112,6 +123,7 @@ export default function Page() {
           period.courseName
         }
         onClick={() => {
+          setSelectedPeriod(index);
           setIsPeriodSelected(true);
         }}
       />
@@ -130,6 +142,14 @@ export default function Page() {
           />
         )
       }
+      {editPeriodOpened && (
+        <EditPeriodModal
+          opened={editPeriodOpened}
+          close={editPeriodHandlers.close}
+          fetchPeriods={fetchPeriods}
+          period={periods[selectedPeriod]}
+        />
+      )}
       <Flex direction="column" m={rem(8)}>
         <Button
           leftSection={<IconPlus size={16} />}
@@ -160,9 +180,7 @@ export default function Page() {
           variant="outline"
           disabled={!isPeriodSelected}
           mt={rem(8)}
-          onClick={() => {
-            //editPeriodHandlers.open();
-          }}
+          onClick={editPeriodHandlers.open}
         >
           <IconEdit />
         </Button>

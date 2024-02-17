@@ -37,6 +37,7 @@ admin:
   curriculums:
   -add delete function if there is no students, make it legacy if there are students
   -sort by newest and display whether legacy
+  -add description to divide course name and curriculum date
 
 
 -incorporate useMemo, useCallback, React.memo, into existing code where needed.

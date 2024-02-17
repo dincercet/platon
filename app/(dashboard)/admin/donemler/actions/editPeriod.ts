@@ -5,7 +5,8 @@ import isAdminAuth from "../../actions/isAdminAuth";
 
 const prisma = new PrismaClient();
 
-export default async function addPeriod(
+export default async function editPeriod(
+  periodId: number,
   curriculumId: number,
   dates: [Date, Date],
 ): Promise<{ success: boolean; error?: string }> {
@@ -14,6 +15,7 @@ export default async function addPeriod(
 
   //create zod schema
   const schema = z.object({
+    periodId: z.number().min(0),
     curriculumId: z.number().min(0),
     beginsAt: z.date(),
     endsAt: z.date(),
@@ -21,6 +23,7 @@ export default async function addPeriod(
 
   //validation result
   const validation = schema.safeParse({
+    periodId: periodId,
     curriculumId: curriculumId,
     beginsAt: dates[0],
     endsAt: dates[1],
@@ -35,23 +38,23 @@ export default async function addPeriod(
     //validation successful
 
     try {
-      //create an entry in curriculum_periods table
-      await prisma.curriculum_periods.create({
+      //update an entry in curriculum_periods table
+      await prisma.curriculum_periods.update({
+        where: { id: periodId },
         data: {
-          curriculum_id: curriculumId,
           begins_at: dates[0],
           ends_at: dates[1],
+          curriculum_id: curriculumId,
         },
       });
 
-      //successful
-      return { success: true };
+      return { success: true }; //successful
     } catch (e) {
       //database error
-      console.error("prisma error: failed to add period", e);
+      console.error("prisma error: failed to edit period", e);
       return {
         success: false,
-        error: "Database error: Failed to add period.",
+        error: "Database error: Failed to edit period.",
       };
     }
   }

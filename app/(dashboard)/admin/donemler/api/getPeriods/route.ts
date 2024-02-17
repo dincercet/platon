@@ -24,6 +24,7 @@ export async function GET(): Promise<NextResponse> {
         ends_at: true,
         curriculum: {
           select: {
+            id: true,
             created_at: true,
             course: { select: { name: true } },
           },

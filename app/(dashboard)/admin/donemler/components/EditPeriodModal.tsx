@@ -3,7 +3,7 @@ import { Stack, Button, Modal, NativeSelect } from "@mantine/core";
 import { DatesProvider, DatePickerInput } from "@mantine/dates";
 import "dayjs/locale/tr";
 import { z } from "zod";
-import addPeriod from "../actions/addPeriod";
+import editPeriod from "../actions/editPeriod";
 
 //check if date is valid
 const dateSchema = z.object({
@@ -11,14 +11,23 @@ const dateSchema = z.object({
   endsAt: z.date(),
 });
 
-export default function AddPeriodModal({
+export default function EditPeriodModal({
   opened,
   close,
   fetchPeriods,
+  period,
 }: {
   opened: boolean;
   close: () => void;
   fetchPeriods: () => Promise<void>;
+  period: {
+    periodId: number;
+    beginsAt: Date;
+    endsAt: Date;
+    courseName: string;
+    curriculumId: number;
+    curriculumCreatedAt: Date;
+  };
 }) {
   const [curriculums, setCurriculums] = useState<
     {
@@ -29,11 +38,13 @@ export default function AddPeriodModal({
     }[]
   >([]);
 
-  const [selectedCurriculumId, setSelectedCurriculumId] = useState(0);
+  const [selectedCurriculumId, setSelectedCurriculumId] = useState(
+    period.curriculumId,
+  );
 
   const [dateValues, setDateValues] = useState<[Date | null, Date | null]>([
-    null,
-    null,
+    new Date(period.beginsAt),
+    new Date(period.endsAt),
   ]);
 
   useEffect(() => {
@@ -64,28 +75,27 @@ export default function AddPeriodModal({
             };
           }),
         );
-        setSelectedCurriculumId(resParsed.curriculums[0].id);
       }
     } catch (e) {
       console.error("error fetching curriculums", e);
     }
   }
 
-  async function handleAddPeriod() {
+  async function handleEditPeriod() {
     //if date is valid
     if (
       dateSchema.safeParse({ beginsAt: dateValues[0], endsAt: dateValues[1] })
         .success
     ) {
       try {
-        //addPeriod action call (passing curriculumId and dates)
-        const res = await addPeriod(selectedCurriculumId, [
+        //editPeriod action call (passing curriculumId and dates)
+        const res = await editPeriod(period.periodId, selectedCurriculumId, [
           dateValues[0]!,
           dateValues[1]!,
         ]);
 
         if (!res.success) {
-          //error returned from addPeriod action
+          //error returned from addCurriculum action
           console.error(res.error);
           return;
         }
@@ -95,7 +105,7 @@ export default function AddPeriodModal({
         //update the parent state Periods
         await fetchPeriods();
       } catch (e) {
-        console.error("unknown error addPeriod", e);
+        console.error("unknown error addCurriculum", e);
 
         //close the modal
         close();
@@ -132,7 +142,7 @@ export default function AddPeriodModal({
       <form
         onSubmit={(e) => {
           e?.preventDefault();
-          handleAddPeriod();
+          handleEditPeriod();
         }}
       >
         <Stack>
@@ -161,11 +171,10 @@ export default function AddPeriodModal({
               type="range"
               value={dateValues}
               onChange={setDateValues}
-              defaultValue={[new Date(), null]}
             />
           </DatesProvider>
 
-          <Button type="submit">Dönemi Ekle</Button>
+          <Button type="submit">Dönemi Düzenle</Button>
         </Stack>
       </form>
     </Modal>
