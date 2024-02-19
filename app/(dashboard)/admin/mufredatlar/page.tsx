@@ -1,15 +1,7 @@
 "use client";
 
 import { useDisclosure } from "@mantine/hooks";
-import {
-  Flex,
-  rem,
-  Button,
-  Accordion,
-  Radio,
-  Center,
-  Group,
-} from "@mantine/core";
+import { Flex, rem, Button, Accordion, Radio, Center } from "@mantine/core";
 import AddCurriculumModal from "./components/AddCurriculumModal";
 import EditCurriculumModal from "./components/EditCurriculumModal";
 import { IconPlus, IconEdit } from "@tabler/icons-react";

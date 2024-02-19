@@ -16,23 +16,23 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     console.error("isAdminAuth error", e);
   }
 
-  const param = request.nextUrl.searchParams.get("curriculumId");
+  const param = request.nextUrl.searchParams.get("periodId");
   if (!param)
     return NextResponse.json(
-      { error: "Curriculum parameter is missing." },
+      { error: "Period parameter is missing." },
       { status: 400 },
     );
 
-  const curriculumId = parseInt(param);
+  const periodId = parseInt(param);
 
   //create zod schema
   const schema = z.object({
-    curriculumId: z.number().min(0),
+    periodId: z.number().min(0),
   });
 
   //validation result
   const validation = schema.safeParse({
-    curriculumId: curriculumId,
+    periodId: periodId,
   });
 
   if (!validation.success) {
@@ -45,30 +45,34 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     );
   } else {
     try {
-      //retrieve curriculums with course name from db
-      const curriculum = await prisma.course_curriculums.findUnique({
-        where: { id: curriculumId },
+      //retrieve students of that period from db
+      const students = await prisma.users_periods.findMany({
+        where: { period_id: periodId },
         select: {
-          created_at: true,
-          course: { select: { name: true } },
-          weeks: { select: { week_no: true, description: true } },
+          user: {
+            select: {
+              id: true,
+              email: true,
+              first_name: true,
+              last_name: true,
+            },
+          },
         },
       });
 
-      //check if curriculum is null
-      if (!curriculum)
+      //check if students is null
+      if (!students.length)
         return NextResponse.json(
-          { error: "No curriculum found" },
+          { error: "No student found" },
           { status: 404 },
         );
       //success
-      else
-        return NextResponse.json({ curriculum: curriculum }, { status: 200 });
+      else return NextResponse.json({ students: students }, { status: 200 });
     } catch (e) {
       //db error
-      console.error("error fetching curriculums", e);
+      console.error("error fetching students", e);
       return NextResponse.json(
-        { error: "Database error: Couldn't fetch curriculums" },
+        { error: "Database error: Couldn't fetch students" },
         { status: 500 },
       );
     }

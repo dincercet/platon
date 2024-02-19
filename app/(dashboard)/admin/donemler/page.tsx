@@ -9,6 +9,7 @@ import AddPeriodModal from "./components/AddPeriodModal";
 import EditPeriodModal from "./components/EditPeriodModal";
 import dayjs from "dayjs";
 import ShowCurriculumModal from "./components/ShowCurriculumModal";
+import ShowStudentsModal from "./components/ShowStudentsModal";
 
 const localizedFormat = require("dayjs/plugin/localizedFormat");
 dayjs.extend(localizedFormat);
@@ -18,6 +19,7 @@ export default function Page() {
   const [addPeriodOpened, addPeriodHandlers] = useDisclosure(false);
   const [editPeriodOpened, editPeriodHandlers] = useDisclosure(false);
   const [showCurriculumOpened, showCurriculumHandlers] = useDisclosure(false);
+  const [showStudentsOpened, showStudentsHandlers] = useDisclosure(false);
 
   //array of periods after fetchPeriods
   const [periods, setPeriods] = useState<
@@ -135,6 +137,7 @@ export default function Page() {
   return (
     <>
       {
+        //Modal components
         //conditional to unmount modal when modal is closed
         addPeriodOpened && (
           <AddPeriodModal
@@ -159,6 +162,14 @@ export default function Page() {
           curriculumId={periods[selectedPeriod].curriculumId}
         />
       )}
+      {showStudentsOpened && (
+        <ShowStudentsModal
+          opened={showStudentsOpened}
+          close={showStudentsHandlers.close}
+          periodId={periods[selectedPeriod].periodId}
+        />
+      )}
+
       <Flex direction="column" m={rem(8)}>
         <Button
           leftSection={<IconPlus size={16} />}

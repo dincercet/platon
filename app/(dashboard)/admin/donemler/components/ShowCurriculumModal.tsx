@@ -52,7 +52,7 @@ export default function ShowCurriculumModal({
         ),
       });
     } catch (e) {
-      console.error("error fetching curriculums", e);
+      console.error("error fetching curriculum", e);
     }
   }
 

@@ -39,6 +39,13 @@ admin:
   -sort by newest and display whether legacy
   -add description to divide course name and curriculum date
 
+  students:
+  -Modal: handleAddStudent needs firebase call for sending invite link
+  -add 2 modals to edit student and edit periods per student
+  -send the email sign up link if did_register is false and email is edited (think more about it, what if student registers using the previous email link?)
+  -show did_register in the Paper of each student
+  -sort the students by newest
+  -implement button to resend email sign up link (later if needed)
 
 -incorporate useMemo, useCallback, React.memo, into existing code where needed.
 
