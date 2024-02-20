@@ -39,6 +39,21 @@ export default async function addStudent(
     //validation successful
 
     try {
+      // Check if a user with the same email already exists
+      const existingUser = await prisma.users.findUnique({
+        where: { email: email },
+      });
+
+      if (existingUser) {
+        // User already exists, return an error
+        return {
+          success: false,
+          error: "A student with this email already exists.",
+        };
+      }
+
+      // If user does not exist, create a new one
+
       //create an entry in users table,
       //if periodId is passed, create an entry in users_periods table
       await prisma.users.create({

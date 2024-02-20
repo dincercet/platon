@@ -11,7 +11,9 @@ import {
   Checkbox,
   Button,
 } from "@mantine/core";
+import auth from "firebase.init.js";
 import addStudent from "../actions/addStudent";
+import { sendSignInLinkToEmail } from "firebase/auth";
 
 type FormValues = { firstName: string; lastName: string; email: string };
 
@@ -113,17 +115,52 @@ export default function AddStudentModal({
       if (!res.success) {
         //error returned from addStudent action
         console.error(res.error);
+        //show error in form
+        form.setFieldError("email", res.error);
         return;
       }
-
-      //close the modal
-      close();
-      //re-fetch students
-      fetchStudents();
     } catch (e) {
       console.error("unknown error addStudent", e);
+
+      //show error in form
+      form.setFieldError(
+        "email",
+        "Sunucuyla iletişimde bir hata oluştu. Tekrar deneyin.",
+      );
       return;
     }
+
+    //firebase config object
+    const actionCodeSettings = {
+      // URL you want to redirect back to. The domain (www.example.com) for this
+      // URL must be in the authorized domains list in the Firebase Console.
+      url: "http://localhost:3000",
+      // This must be true.
+      handleCodeInApp: true,
+    };
+
+    try {
+      //send the email link for the student to sign up
+      await sendSignInLinkToEmail(auth, values.email, actionCodeSettings);
+    } catch (e: any) {
+      console.error(
+        "firebase error sendSignInLinkToEmail",
+        //error returned from firebase
+        e.message ? e.message : e,
+      );
+      //show error in form
+      form.setFieldError(
+        "email",
+        "Davet linki gönderilirken bir hata oluştu, fakat veritabanında kullanıcı oluşturuldu. Lütfen formu kapatın ve yeni kullanıcı oluşturmadan varolan kullanıcıya yeni link gönderin.",
+      );
+      return;
+    }
+    //successful
+
+    //close the modal
+    close();
+    //re-fetch students
+    fetchStudents();
   }
 
   //call this function to show the date in correct format

@@ -3,19 +3,21 @@ fr39 haftalik faaliyet, 5 gun 5 satir 14 hafta - fr42 isyeri degerlendirme 7. ve
 
 - add error.ts files for fallback because even the panel errors fallback to the default root error page.
 - add loading state for fetching data
-- create an error dump file for production, for now it is console.error only.
+- create an error dump file for production, for now it is console.error only. (implement winston, copilot helped)
+  don't create anymore console.error, create logger.error after winston is ready.
+
+-return error messages from server in Turkish, and display them in UI as a seperate text field.
+ get rid of throw new Error() and change them to return; from functions instead.
 
 header:
-- fix the responsiveness and make the burger button work. Will need a drawer on small screens. 
-- remove anasayfa and add Hakkimizda instead.
-- change the logo and make clickable for homepage
+- fix the responsiveness and make the burger button work. Will need a drawer on small screens.
 - why is onAuthStateChanged called 3 times on every useEffect execution?
 
 panel:
 - check if the container component causes the layout.tsx to be rendered on the client. (security risk)
 
 actions:
-- revise cookie (need restriction for binge requests, and accurate error return) 
+- revise cookies, implement Throttling or Debouncing for abuse risk
 - revise if any action should be called within a startTransition
 
 token expiration:
@@ -25,8 +27,6 @@ loginpage:
 - login page is reachable for logged in users, restrict it.
 
 admin:
-  navbar ui:
-  -hide the navbar for small devices? (low priority)
 
   courses:
   -add delete function but only allow it if it is not connected to a student schedule, consider making it 'legacy' if it is connected to a student schedule
@@ -40,7 +40,6 @@ admin:
   -add description to divide course name and curriculum date
 
   students:
-  -Modal: handleAddStudent needs firebase call for sending invite link
   -send the email sign up link if did_register is false and email is edited (think more about it, what if student registers using the previous email link?)
   -show did_register in the Paper of each student
   -sort the students by newest

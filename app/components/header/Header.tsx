@@ -65,7 +65,7 @@ export default function Header() {
             idToken = await currentUser.getIdToken(true);
           } catch (e) {
             console.error("error firebase getIdToken", e);
-            throw new Error("error firebase getIdToken");
+            return;
           }
 
           try {
@@ -74,7 +74,7 @@ export default function Header() {
             await setAuthCookies(idToken);
           } catch (e) {
             console.error("error setting auth cookies", e);
-            throw new Error("error setting auth cookies");
+            return;
           }
 
           //delete later(check useEffect call count)

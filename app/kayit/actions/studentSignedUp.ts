@@ -31,6 +31,18 @@ export default async function studentSignedUp(
     //validation successful
 
     try {
+      //check if user already registered
+      const user = await prisma.users.findUnique({
+        where: { email: email },
+        select: { did_register: true },
+      });
+
+      //if registered, return error
+      if (user?.did_register) {
+        console.error(email + " User already registered.");
+        return { success: false, error: "User already registered." };
+      }
+
       //update the course based on id
       await prisma.users.update({
         where: { email: email },
