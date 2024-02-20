@@ -1,0 +1,51 @@
+"use server";
+
+import { z } from "zod";
+import { PrismaClient } from "@prisma/client";
+import isUserAuth from "app/(dashboard)/panel/actions/isUserAuth";
+
+const prisma = new PrismaClient();
+
+export default async function studentSignedUp(
+  email: string,
+): Promise<{ success: boolean; error?: string }> {
+  //check authorization
+  if (!(await isUserAuth())) return { success: false, error: "Unauthorized." };
+
+  //create zod schema
+  const schema = z.object({
+    email: z.string().min(1).max(150),
+  });
+
+  //validation result
+  const validation = schema.safeParse({
+    email: email,
+  });
+
+  if (!validation.success) {
+    //validation failed
+
+    console.error("Form validation failed.");
+    return { success: false, error: "Form validation failed." };
+  } else {
+    //validation successful
+
+    try {
+      //update the course based on id
+      await prisma.users.update({
+        where: { email: email },
+        data: { did_register: true },
+      });
+
+      //successful
+      return { success: true };
+    } catch (e) {
+      //database error
+      console.error("prisma error: failed to edit course", e);
+      return {
+        success: false,
+        error: "Database error: Failed to edit course.",
+      };
+    }
+  }
+}
