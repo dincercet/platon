@@ -1,19 +1,35 @@
 "use client";
 import "dayjs/locale/tr";
 import dayjs from "dayjs";
-import { Flex, Button, rem, Divider, Paper, Stack, Text } from "@mantine/core";
-import { IconEdit, IconPlus } from "@tabler/icons-react";
+import {
+  Flex,
+  Button,
+  rem,
+  Divider,
+  Paper,
+  Stack,
+  Text,
+  Group,
+} from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classes from "./StudentCard.module.css";
 import AddStudentModal from "./components/AddStudentModal";
+import ShowPeriodsModal from "./components/ShowPeriodsModal";
+import EditStudentModal from "./components/EditStudentModal";
 
-const localizedFormat = require("dayjs/plugin/localizedFormat");
+//const localizedFormat = require("dayjs/plugin/localizedFormat");
+import localizedFormat from "dayjs";
 dayjs.extend(localizedFormat);
 
 export default function Page() {
+  //Modal handlers
   const [addStudentOpened, addStudentHandlers] = useDisclosure(false);
+  const [showPeriodsOpened, showPeriodsHandlers] = useDisclosure(false);
+  const [editStudentOpened, editStudentHandlers] = useDisclosure(false);
 
+  //keeps array of students fetched
   const [students, setStudents] = useState<
     {
       id: number;
@@ -30,12 +46,23 @@ export default function Page() {
     }[]
   >([]);
 
+  //selected student's id
   const [selectedStudentId, setSelectedStudentId] = useState<number | null>(
     null,
   );
 
+  const [selectedStudentIndex, setSelectedStudentIndex] = useState<
+    number | null
+  >(null);
+
+  useEffect(() => {
+    fetchStudents();
+    console.log("useEffect fetchStudents called");
+  }, []);
+
   async function fetchStudents() {
     try {
+      //api call to get all students
       const res = await fetch("ogrenciler/api/getStudents", {
         method: "GET",
       });
@@ -79,7 +106,7 @@ export default function Page() {
 
   //list of Paper components each with information about student
   //clickable for edit
-  const studentList = students.map((student) => (
+  const studentList = students.map((student, index) => (
     <Paper
       key={student.id}
       shadow="sm"
@@ -87,7 +114,10 @@ export default function Page() {
       withBorder
       className={classes.paper}
       data-active={selectedStudentId === student.id || undefined}
-      onClick={() => setSelectedStudentId(student.id)}
+      onClick={() => {
+        setSelectedStudentId(student.id);
+        setSelectedStudentIndex(index);
+      }}
     >
       <Stack>
         <Text size="md">
@@ -113,10 +143,10 @@ export default function Page() {
     </Paper>
   ));
 
-  //todo: add 2 modals for edit student and edit period
   return (
     <>
       {
+        //Modal components
         //conditional to unmount modal when modal is closed
         addStudentOpened && (
           <AddStudentModal
@@ -126,6 +156,31 @@ export default function Page() {
           />
         )
       }
+      {showPeriodsOpened && selectedStudentId && selectedStudentIndex && (
+        <ShowPeriodsModal
+          opened={showPeriodsOpened}
+          close={showPeriodsHandlers.close}
+          fetchStudents={fetchStudents}
+          studentId={selectedStudentId}
+          studentFullName={
+            students[selectedStudentIndex].firstName +
+            " " +
+            students[selectedStudentIndex].lastName
+          }
+          periodsProp={students[selectedStudentIndex].periods}
+        />
+      )}
+      {editStudentOpened && selectedStudentId && selectedStudentIndex && (
+        <EditStudentModal
+          opened={editStudentOpened}
+          close={editStudentHandlers.close}
+          fetchStudents={fetchStudents}
+          studentId={selectedStudentId}
+          email={students[selectedStudentIndex].email}
+          firstName={students[selectedStudentIndex].firstName}
+          lastName={students[selectedStudentIndex].lastName}
+        />
+      )}
 
       <Flex direction="column" m={rem(8)}>
         <Button
@@ -138,26 +193,28 @@ export default function Page() {
 
         {studentList.length > 0 && studentList}
 
-        <Button
-          variant="outline"
-          disabled={!selectedStudentId}
-          mt={rem(8)}
-          onClick={() => {
-            //.open(); //edit student
-          }}
-        >
-          <IconEdit />
-        </Button>
-        <Button
-          variant="outline"
-          disabled={!selectedStudentId}
-          mt={rem(8)}
-          onClick={() => {
-            //.open(); //show periods (show if there's period, and button to add new period, also button to remove from period)
-          }}
-        >
-          <IconEdit />
-        </Button>
+        <Group grow>
+          <Button
+            variant="outline"
+            disabled={!selectedStudentId}
+            mt={rem(8)}
+            onClick={() => {
+              editStudentHandlers.open();
+            }}
+          >
+            Düzenle
+          </Button>
+          <Button
+            variant="outline"
+            disabled={!selectedStudentId}
+            mt={rem(8)}
+            onClick={() => {
+              showPeriodsHandlers.open();
+            }}
+          >
+            Dönemler
+          </Button>
+        </Group>
       </Flex>
     </>
   );

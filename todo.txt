@@ -41,7 +41,6 @@ admin:
 
   students:
   -Modal: handleAddStudent needs firebase call for sending invite link
-  -add 2 modals to edit student and edit periods per student
   -send the email sign up link if did_register is false and email is edited (think more about it, what if student registers using the previous email link?)
   -show did_register in the Paper of each student
   -sort the students by newest
