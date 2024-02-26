@@ -20,7 +20,7 @@ import ShowPeriodsModal from "./components/ShowPeriodsModal";
 import EditStudentModal from "./components/EditStudentModal";
 
 //const localizedFormat = require("dayjs/plugin/localizedFormat");
-import localizedFormat from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 dayjs.extend(localizedFormat);
 
 export default function Page() {
@@ -51,6 +51,7 @@ export default function Page() {
     null,
   );
 
+  //selected student's index to find in students array
   const [selectedStudentIndex, setSelectedStudentIndex] = useState<
     number | null
   >(null);
@@ -102,8 +103,6 @@ export default function Page() {
     }
   }
 
-  //todo: show registered status in the Paper
-
   //list of Paper components each with information about student
   //clickable for edit
   const studentList = students.map((student, index) => (
@@ -139,6 +138,21 @@ export default function Page() {
             </Text>
           );
         })}
+
+        <Divider my="sm" />
+
+        {
+          //if registered to firebase
+          student.didRegister ? (
+            <Text size="sm" c="green">
+              Öğrenci kaydını tamamladı.
+            </Text>
+          ) : (
+            <Text size="sm" c="yellow">
+              Öğrenci kaydını tamamlamadı.
+            </Text>
+          )
+        }
       </Stack>
     </Paper>
   ));
@@ -176,7 +190,6 @@ export default function Page() {
           close={editStudentHandlers.close}
           fetchStudents={fetchStudents}
           studentId={selectedStudentId}
-          email={students[selectedStudentIndex].email}
           firstName={students[selectedStudentIndex].firstName}
           lastName={students[selectedStudentIndex].lastName}
         />

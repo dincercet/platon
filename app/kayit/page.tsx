@@ -7,6 +7,7 @@ import {
   signInWithEmailLink,
   linkWithCredential,
   EmailAuthProvider,
+  deleteUser,
 } from "firebase/auth";
 import auth from "firebase.init.js";
 import { setAuthCookies } from "app/actions/setAuthCookies";
@@ -16,6 +17,8 @@ import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
 import studentSignedUp from "./actions/studentSignedUp";
+import clientLogger from "app/actions/clientLogger";
+import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
 
 //form types
 type FormValues = {
@@ -73,70 +76,118 @@ export default function Page() {
       throw new Error("Error setting persistence");
     }
 
-    let user;
     //check if signing in through email link
     if (isSignInWithEmailLink(auth, window.location.href)) {
+      //there is a long list of calls with nested try/catch blocks in order to handle errors without losing sync between firebase db and server db
+      let signedInUser;
       try {
         //sign in with email link
-        const signedInUser = await signInWithEmailLink(
+        signedInUser = await signInWithEmailLink(
           auth,
           email,
           window.location.href,
         );
-
-        //associate the email with the password
-        user = await linkWithCredential(
-          signedInUser.user,
-          EmailAuthProvider.credential(email, password),
+      } catch (e) {
+        console.error("error firebase signInWithEmailLink", e);
+        throw new Error(
+          "Hesap yaratılırken bir hata oluştu. Lütfen yeniden link gönderilmesini talep ediniz.",
         );
+      }
+
+      let user;
+      try {
+        //associate the email with the password
+        if (signedInUser)
+          user = await linkWithCredential(
+            signedInUser.user,
+            EmailAuthProvider.credential(email, password),
+          );
+      } catch (e) {
+        console.error("error firebase linkWithCredential", e);
+        try {
+          //if couldn't link password, delete user from firebase
+          await deleteUser(signedInUser.user);
+        } catch {
+          //if couldn't delete user, log it
+          clientLogger(
+            `error linking user with email ${email}, couldn't delete user from firebase afterwards. Will need to delete user manually from firebase.`,
+          );
+        }
+        throw new Error(
+          "E-postayı şifre ile bağdaştırırken bir hata oluştu. Lütfen yeniden link gönderilmesini talep ediniz.",
+        );
+      }
+
+      if (user) {
+        //successfully signed in and linked with email
+        let currentUser = user.user;
 
         try {
+          //get idToken for further authentication (get a fresh token)
+          const idToken = await currentUser.getIdToken(true);
+
+          //action call to set cookies
+          await setAuthCookies(idToken);
+
           const res = await studentSignedUp(email);
           if (!res.success) {
             //error returned from action
             console.error(res.error);
+
+            try {
+              //if unsuccessful, delete user from firebase
+              await deleteUser(currentUser);
+            } catch {
+              //if couldn't delete user, log it
+              clientLogger(
+                `error deleting user from firebase with email ${email}, after unsuccessful studentSignedUp action call. Will need to delete user manually from firebase. Action error response: ${res.error}`,
+              );
+            }
+
+            try {
+              //action call to delete cookies
+              await deleteAuthCookies();
+            } catch (e) {
+              console.error("error deleting auth cookies", e);
+              throw new Error("Çerezler temizlenirken bir hata oluştu.");
+            }
+
             throw new Error(
               "Üyelik işlemi tamamlanamadı. Lütfen yeniden link gönderilmesini talep ediniz.",
             );
           }
         } catch (e) {
-          console.error("error studentSignedUp action", e);
+          console.error(
+            "error getIdToken, setAuthCookies or studentSignedUp",
+            e,
+          );
+
+          try {
+            //if couldn't update database, delete user from firebase
+            await deleteUser(currentUser);
+          } catch {
+            //if couldn't delete user, log it
+            clientLogger(
+              `error deleting user from firebase with email ${email}, after getIdToken, setAuthCookies or studentSignedUp action call error. Will need to delete user manually from firebase.`,
+            );
+          }
+
+          try {
+            //action call to delete cookies
+            await deleteAuthCookies();
+          } catch (e) {
+            console.error("error deleting auth cookies", e);
+            throw new Error("Çerezler temizlenirken bir hata oluştu.");
+          }
+
+          throw new Error(
+            "Üyelik işlemi tamamlanamadı. Lütfen yeniden link gönderilmesini talep ediniz.",
+          );
         }
-      } catch (e) {
-        console.error(
-          "error firebase isSignInWithEmailLink or signInWithEmailLink or linkWithCredential",
-          e,
-        );
-        throw new Error(
-          "E-postayı şifre ile bağdaştırırken bir hata oluştu. Lütfen yeniden link gönderilmesini talep ediniz.",
-        );
       }
-    }
-
-    if (user) {
-      //successfully signed in and linked with email
-      let currentUser = user.user;
-
-      let idToken;
-      try {
-        //get idToken for further authentication (get a fresh token)
-        idToken = await currentUser.getIdToken(true);
-      } catch (e) {
-        console.error("error firebase getIdToken", e);
-        throw new Error(
-          "Üye oldunuz fakat üyelik bilgileri alınırken bir hata oluştu. Yeniden giriş yapınız.",
-        );
-      }
-
-      try {
-        //action call to set cookies
-        await setAuthCookies(idToken);
-      } catch (e) {
-        console.error("error setting auth cookies", e);
-        throw new Error(
-          "Üye oldunuz fakat çerezler tanımlanırken bir hata oluştu. Yeniden giriş yapınız.",
-        );
-      }
+    } else {
+      console.error("firebase error isSignInWithEmailLink, link not valid");
+      throw new Error("Email link not valid.");
     }
 
     //redirect to home

@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
 import isUserAuth from "app/(dashboard)/panel/actions/isUserAuth";
+import logger from "winston-config";
 
 const prisma = new PrismaClient();
 
@@ -25,7 +26,7 @@ export default async function studentSignedUp(
   if (!validation.success) {
     //validation failed
 
-    console.error("Form validation failed.");
+    logger.error("Form validation failed.");
     return { success: false, error: "Form validation failed." };
   } else {
     //validation successful
@@ -39,7 +40,7 @@ export default async function studentSignedUp(
 
       //if registered, return error
       if (user?.did_register) {
-        console.error(email + " User already registered.");
+        logger.error(email + " User already registered.");
         return { success: false, error: "User already registered." };
       }
 
@@ -53,10 +54,13 @@ export default async function studentSignedUp(
       return { success: true };
     } catch (e) {
       //database error
-      console.error("prisma error: failed to edit course", e);
+      logger.error(
+        "prisma error: failed to update user's registered status",
+        e,
+      );
       return {
         success: false,
-        error: "Database error: Failed to edit course.",
+        error: "Database error: Failed to update user's registered status.",
       };
     }
   }

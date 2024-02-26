@@ -17,7 +17,8 @@ panel:
 - check if the container component causes the layout.tsx to be rendered on the client. (security risk)
 
 actions:
-- revise cookies, implement Throttling or Debouncing for abuse risk
+- throttling? debouncing?
+  incorporate rate limiting to setCookies, deleteCookies, auth checkers?, and loggers called from client (within middleware? using lru-cache? (for in-memory storage?))
 - revise if any action should be called within a startTransition
 
 token expiration:
@@ -40,11 +41,6 @@ admin:
   -add description to divide course name and curriculum date
 
   students:
-  -send the email sign up link if did_register is false and email is edited (think more about it, what if student registers using the previous email link?)
-  -show did_register in the Paper of each student
   -sort the students by newest
   -implement button to resend email sign up link (later if needed)
-
--incorporate useMemo, useCallback, React.memo, into existing code where needed.
-
 

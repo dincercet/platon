@@ -3,8 +3,9 @@ import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { Stack, Group, Modal, TextInput, Button } from "@mantine/core";
 import editStudent from "../actions/editStudent";
+import deleteStudent from "../actions/deleteStudent";
 
-type FormValues = { firstName: string; lastName: string; email: string };
+type FormValues = { firstName: string; lastName: string };
 
 //create zod schema
 const schema = z.object({
@@ -16,11 +17,6 @@ const schema = z.object({
     .string()
     .min(1, { message: "Soyisim zorunludur." })
     .max(100, { message: "Soyisim 100 karakterden uzun olamaz." }),
-  email: z
-    .string()
-    .min(1, { message: "Email zorunludur." })
-    .max(150, { message: "Email 150 karakterden uzun olamaz." })
-    .email(),
 });
 
 //modal component to edit a student
@@ -29,7 +25,6 @@ export default function EditStudentModal({
   close,
   fetchStudents,
   studentId,
-  email,
   firstName,
   lastName,
 }: {
@@ -37,13 +32,12 @@ export default function EditStudentModal({
   close: () => void;
   fetchStudents: () => Promise<void>;
   studentId: number;
-  email: string;
   firstName: string;
   lastName: string;
 }) {
   //mantine form initialization
   const form = useForm<FormValues>({
-    initialValues: { firstName: firstName, lastName: lastName, email: email },
+    initialValues: { firstName: firstName, lastName: lastName },
     validate: zodResolver(schema),
   });
 
@@ -53,7 +47,6 @@ export default function EditStudentModal({
       //editStudent action call
       const res = await editStudent(
         studentId,
-        values.email,
         values.firstName,
         values.lastName,
       );
@@ -70,6 +63,28 @@ export default function EditStudentModal({
       fetchStudents();
     } catch (e) {
       console.error("unknown error editStudent", e);
+      return;
+    }
+  }
+
+  //delete student form handler
+  async function handleDeleteStudent() {
+    try {
+      //deleteStudent action call
+      const res = await deleteStudent(studentId);
+
+      if (!res.success) {
+        //error returned from deleteStudent action
+        console.error(res.error);
+        return;
+      }
+
+      //close the modal
+      close();
+      //re-fetch students
+      fetchStudents();
+    } catch (e) {
+      console.error("unknown error deleteStudent", e);
       return;
     }
   }
@@ -91,9 +106,23 @@ export default function EditStudentModal({
             <TextInput label="Soyisim" {...form.getInputProps("lastName")} />
           </Group>
 
-          <TextInput label="Email" {...form.getInputProps("email")} />
-
-          <Button type="submit">Öğrenci Düzenle</Button>
+          <Group>
+            <Button type="submit">Düzenle</Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Öğrenciyi silmek istediğinizden emin misiniz?",
+                  )
+                ) {
+                  handleDeleteStudent();
+                }
+              }}
+            >
+              Öğrenciyi Sil
+            </Button>
+          </Group>
         </Stack>
       </form>
     </Modal>
