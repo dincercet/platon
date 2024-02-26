@@ -110,6 +110,7 @@ export default function Page() {
       key={student.id}
       shadow="sm"
       radius="md"
+      p="xs"
       withBorder
       className={classes.paper}
       data-active={selectedStudentId === student.id || undefined}
@@ -118,13 +119,13 @@ export default function Page() {
         setSelectedStudentIndex(index);
       }}
     >
-      <Stack>
+      <Stack gap={0}>
         <Text size="md">
           {student.firstName} {student.lastName}
         </Text>
         <Text size="sm">{student.email}</Text>
 
-        <Divider my="sm" />
+        {student.periods.length > 0 && <Divider my="xs" />}
 
         {student.periods.map((period) => {
           //show each period for student
@@ -139,7 +140,7 @@ export default function Page() {
           );
         })}
 
-        <Divider my="sm" />
+        <Divider my="xs" />
 
         {
           //if registered to firebase
@@ -170,32 +171,36 @@ export default function Page() {
           />
         )
       }
-      {showPeriodsOpened && selectedStudentId && selectedStudentIndex && (
-        <ShowPeriodsModal
-          opened={showPeriodsOpened}
-          close={showPeriodsHandlers.close}
-          fetchStudents={fetchStudents}
-          studentId={selectedStudentId}
-          studentFullName={
-            students[selectedStudentIndex].firstName +
-            " " +
-            students[selectedStudentIndex].lastName
-          }
-          periodsProp={students[selectedStudentIndex].periods}
-        />
-      )}
-      {editStudentOpened && selectedStudentId && selectedStudentIndex && (
-        <EditStudentModal
-          opened={editStudentOpened}
-          close={editStudentHandlers.close}
-          fetchStudents={fetchStudents}
-          studentId={selectedStudentId}
-          firstName={students[selectedStudentIndex].firstName}
-          lastName={students[selectedStudentIndex].lastName}
-        />
-      )}
+      {showPeriodsOpened &&
+        selectedStudentId !== null &&
+        selectedStudentIndex !== null && (
+          <ShowPeriodsModal
+            opened={showPeriodsOpened}
+            close={showPeriodsHandlers.close}
+            fetchStudents={fetchStudents}
+            studentId={selectedStudentId}
+            studentFullName={
+              students[selectedStudentIndex].firstName +
+              " " +
+              students[selectedStudentIndex].lastName
+            }
+            periodsProp={students[selectedStudentIndex].periods}
+          />
+        )}
+      {editStudentOpened &&
+        selectedStudentId !== null &&
+        selectedStudentIndex !== null && (
+          <EditStudentModal
+            opened={editStudentOpened}
+            close={editStudentHandlers.close}
+            fetchStudents={fetchStudents}
+            studentId={selectedStudentId}
+            firstName={students[selectedStudentIndex].firstName}
+            lastName={students[selectedStudentIndex].lastName}
+          />
+        )}
 
-      <Flex direction="column" m={rem(8)}>
+      <Flex direction="column" miw={rem(220)} m={rem(8)}>
         <Button
           leftSection={<IconPlus size={16} />}
           mb={rem(8)}

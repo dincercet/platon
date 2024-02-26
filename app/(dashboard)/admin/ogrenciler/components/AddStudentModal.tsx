@@ -31,7 +31,7 @@ const schema = z.object({
     .string()
     .min(1, { message: "Email zorunludur." })
     .max(150, { message: "Email 150 karakterden uzun olamaz." })
-    .email(),
+    .email("Email formatı hatalı."),
 });
 
 //modal component to add a student
@@ -197,7 +197,7 @@ export default function AddStudentModal({
         })}
       >
         <Stack>
-          <Group>
+          <Group wrap="nowrap">
             <TextInput label="İsim" {...form.getInputProps("firstName")} />
             <TextInput label="Soyisim" {...form.getInputProps("lastName")} />
           </Group>
@@ -230,7 +230,16 @@ export default function AddStudentModal({
             })}
           />
 
-          <Button type="submit">Öğrenci Ekle</Button>
+          <Button
+            type="submit"
+            disabled={
+              !form.values.firstName ||
+              !form.values.lastName ||
+              !form.values.email
+            }
+          >
+            Öğrenci Ekle
+          </Button>
         </Stack>
       </form>
     </Modal>

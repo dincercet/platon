@@ -3,8 +3,6 @@ fr39 haftalik faaliyet, 5 gun 5 satir 14 hafta - fr42 isyeri degerlendirme 7. ve
 
 - add error.ts files for fallback because even the panel errors fallback to the default root error page.
 - add loading state for fetching data
-- create an error dump file for production, for now it is console.error only. (implement winston, copilot helped)
-  don't create anymore console.error, create logger.error after winston is ready.
 
 -return error messages from server in Turkish, and display them in UI as a seperate text field.
  get rid of throw new Error() and change them to return; from functions instead.
@@ -19,6 +17,7 @@ panel:
 actions:
 - throttling? debouncing?
   incorporate rate limiting to setCookies, deleteCookies, auth checkers?, and loggers called from client (within middleware? using lru-cache? (for in-memory storage?))
+  maybe limit rate to all actions and api routes?
 - revise if any action should be called within a startTransition
 
 token expiration:
@@ -32,15 +31,29 @@ admin:
   courses:
   -add delete function but only allow it if it is not connected to a student schedule, consider making it 'legacy' if it is connected to a student schedule
   -consider adding server side props for initial courses state (route segment config on nextjs docs: getStaticProps equivalent of app router)
-  -try with empty courses list for errors
   -sort by newest
+  -test with empty list
+  -add course modal: disable add button if form variables empty
+  -edit course modal: disable edit button if form isTouched false
 
   curriculums:
   -add delete function if there is no students, make it legacy if there are students
   -sort by newest and display whether legacy
   -add description to divide course name and curriculum date
+  -add new curriculum modal: sort the courses by newest and exclude legacy
+
+  periods:
+  -disable edit button in modal when form isTouched false, and change the title of modal
+  -ogrenciler button doesn't trigger modal
+  -sort by beginning date (newest first)
+  -test with empty list
 
   students:
   -sort the students by newest
   -implement button to resend email sign up link (later if needed)
+  -add student modal: sort periods by beginning date (newest first)
+   doesn't add period when the first period on the list is selected, solve
+  -test edit periods modal
+
+Check good ui components compatible with tailwind (animation frameworks?)
 
