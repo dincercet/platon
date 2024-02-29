@@ -1,4 +1,9 @@
 "use server";
+
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
+import { MantineProvider } from "@mantine/core";
+import { theme } from "theme";
 import isAdminAuth from "./actions/isAdminAuth";
 import { redirect } from "next/navigation";
 import { Navbar } from "./components/Navbar";
@@ -28,11 +33,11 @@ export default async function AdminLayout({
 
   //else continue rendering
   return (
-    <>
+    <MantineProvider theme={theme}>
       <Container display="flex" pl={rem(3)}>
         <Navbar />
         {children}
       </Container>
-    </>
+    </MantineProvider>
   );
 }

@@ -1,12 +1,11 @@
 "use client";
 
+import "@mantine/core/styles.css";
 import {
   setPersistence,
   browserSessionPersistence,
   isSignInWithEmailLink,
   signInWithEmailLink,
-  linkWithCredential,
-  EmailAuthProvider,
   deleteUser,
   updatePassword,
 } from "firebase/auth";
@@ -19,7 +18,6 @@ import {
   PasswordInput,
   Paper,
   Button,
-  Flex,
   Center,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -29,6 +27,8 @@ import studentSignedUp from "./actions/studentSignedUp";
 import { setAuthCookies } from "app/actions/setAuthCookies";
 import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
 import clientLogger from "app/actions/clientLogger";
+import { MantineProvider } from "@mantine/core";
+import { theme } from "theme";
 
 //form types
 type FormValues = {
@@ -222,45 +222,54 @@ export default function Page() {
   }
 
   return (
-    <Container>
-      <Center>
-        <Paper withBorder shadow="md" miw={rem(280)} p={20} mt={30} radius="md">
-          <form
-            onSubmit={form.onSubmit((values, e) => {
-              e?.preventDefault();
-              form.validate();
-              if (form.isValid()) handleSignup(values);
-            })}
+    <MantineProvider theme={theme}>
+      <Container>
+        <Center>
+          <Paper
+            withBorder
+            shadow="md"
+            miw={rem(280)}
+            p={20}
+            mt={30}
+            radius="md"
           >
-            <TextInput
-              label="E-posta"
-              placeholder="E-postanızı doğrulamak için giriniz"
-              required
-              {...form.getInputProps("email")}
-            />
+            <form
+              onSubmit={form.onSubmit((values, e) => {
+                e?.preventDefault();
+                form.validate();
+                if (form.isValid()) handleSignup(values);
+              })}
+            >
+              <TextInput
+                label="E-posta"
+                placeholder="E-postanızı doğrulamak için giriniz"
+                required
+                {...form.getInputProps("email")}
+              />
 
-            <PasswordInput
-              label="Şifre"
-              placeholder="Şifreniz"
-              required
-              mt="md"
-              {...form.getInputProps("password")}
-            />
+              <PasswordInput
+                label="Şifre"
+                placeholder="Şifreniz"
+                required
+                mt="md"
+                {...form.getInputProps("password")}
+              />
 
-            <PasswordInput
-              label="Şifre Tekrarı"
-              placeholder="Şifrenizi tekrar giriniz"
-              required
-              mt="md"
-              {...form.getInputProps("confirmPassword")}
-            />
+              <PasswordInput
+                label="Şifre Tekrarı"
+                placeholder="Şifrenizi tekrar giriniz"
+                required
+                mt="md"
+                {...form.getInputProps("confirmPassword")}
+              />
 
-            <Button type="submit" fullWidth mt="xl">
-              Kaydımı Tamamla
-            </Button>
-          </form>
-        </Paper>
-      </Center>
-    </Container>
+              <Button type="submit" fullWidth mt="xl">
+                Kaydımı Tamamla
+              </Button>
+            </form>
+          </Paper>
+        </Center>
+      </Container>
+    </MantineProvider>
   );
 }

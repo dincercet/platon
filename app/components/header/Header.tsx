@@ -20,6 +20,18 @@ import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
 import { setAuthCookies } from "app/actions/setAuthCookies";
 import cx from "clsx";
 
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+
 //decide which storage is used for auth info
 function getStorage() {
   let storage;
@@ -126,150 +138,182 @@ export default function Header() {
   //todo: restrict login page to logged in users
 
   //if logged in, return a ProfileButton based on role, otherwise return Login Button
-  function ProfileButton() {
-    if (!isLoggedIn) {
-      return (
-        <Link href={"/giris"} passHref legacyBehavior>
-          <a
-            className={cx(classes.link, classes.login_link)}
-            data-active={active === "/giris" || undefined}
-            onClick={() => {
-              setActive("/giris");
-            }}
-          >
-            Öğrenci Girişi
-          </a>
-        </Link>
-      );
-    } else {
-      if (role === "user") {
-        return (
-          <Menu shadow="md" width={200}>
-            <Menu.Target>
-              <UnstyledButton
-                className={cx(classes.link, classes.login_link)}
-                data-active={active === "/panel" || undefined}
-              >
-                Öğrenci Paneli
-              </UnstyledButton>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item
-                component={Link}
-                href="/panel"
-                leftSection={
-                  <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
-                }
-                onClick={() => {
-                  setActive("/panel");
-                }}
-              >
-                Panelim
-              </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconLogout style={{ width: rem(14), height: rem(14) }} />
-                }
-                onClick={async () => await handleLogout()}
-              >
-                Çıkış Yap
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        );
-      } else if (role === "admin") {
-        return (
-          <Menu shadow="md" width={200}>
-            <Menu.Target>
-              <UnstyledButton
-                className={cx(classes.link, classes.login_link)}
-                data-active={active === "/admin" || undefined}
-              >
-                Admin Paneli
-              </UnstyledButton>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item
-                component={Link}
-                href="/admin"
-                leftSection={
-                  <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
-                }
-                onClick={() => {
-                  setActive("/admin");
-                }}
-              >
-                Panelim
-              </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconLogout style={{ width: rem(14), height: rem(14) }} />
-                }
-                onClick={async () => await handleLogout()}
-              >
-                Çıkış Yap
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        );
-      }
-    }
-  }
+  // function ProfileButton() {
+  //   if (!isLoggedIn) {
+  //     return (
+  //       <Link href={"/giris"} passHref legacyBehavior>
+  //         <a
+  //           className={cx(classes.link, classes.login_link)}
+  //           data-active={active === "/giris" || undefined}
+  //           onClick={() => {
+  //             setActive("/giris");
+  //           }}
+  //         >
+  //           Öğrenci Girişi
+  //         </a>
+  //       </Link>
+  //     );
+  //   } else {
+  //     if (role === "user") {
+  //       return (
+  //         <Menu shadow="md" width={200}>
+  //           <Menu.Target>
+  //             <UnstyledButton
+  //               className={cx(classes.link, classes.login_link)}
+  //               data-active={active === "/panel" || undefined}
+  //             >
+  //               Öğrenci Paneli
+  //             </UnstyledButton>
+  //           </Menu.Target>
+  //           <Menu.Dropdown>
+  //             <Menu.Item
+  //               component={Link}
+  //               href="/panel"
+  //               leftSection={
+  //                 <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
+  //               }
+  //               onClick={() => {
+  //                 setActive("/panel");
+  //               }}
+  //             >
+  //               Panelim
+  //             </Menu.Item>
+  //             <Menu.Item
+  //               leftSection={
+  //                 <IconLogout style={{ width: rem(14), height: rem(14) }} />
+  //               }
+  //               onClick={async () => await handleLogout()}
+  //             >
+  //               Çıkış Yap
+  //             </Menu.Item>
+  //           </Menu.Dropdown>
+  //         </Menu>
+  //       );
+  //     } else if (role === "admin") {
+  //       return (
+  //         <Menu shadow="md" width={200}>
+  //           <Menu.Target>
+  //             <UnstyledButton
+  //               className={cx(classes.link, classes.login_link)}
+  //               data-active={active === "/admin" || undefined}
+  //             >
+  //               Admin Paneli
+  //             </UnstyledButton>
+  //           </Menu.Target>
+  //           <Menu.Dropdown>
+  //             <Menu.Item
+  //               component={Link}
+  //               href="/admin"
+  //               leftSection={
+  //                 <IconUserCircle style={{ width: rem(14), height: rem(14) }} />
+  //               }
+  //               onClick={() => {
+  //                 setActive("/admin");
+  //               }}
+  //             >
+  //               Panelim
+  //             </Menu.Item>
+  //             <Menu.Item
+  //               leftSection={
+  //                 <IconLogout style={{ width: rem(14), height: rem(14) }} />
+  //               }
+  //               onClick={async () => await handleLogout()}
+  //             >
+  //               Çıkış Yap
+  //             </Menu.Item>
+  //           </Menu.Dropdown>
+  //         </Menu>
+  //       );
+  //     }
+  //   }
+  // }
 
   return (
-    <header className={classes.header}>
-      <Container size="md" className={classes.inner}>
-        <Link href={"/"}>
-          <Image
-            src="/platon-logo.png"
-            height={32}
-            width={99}
-            alt="Platon Logo"
-            className={classes.logo}
-          />
-        </Link>
-
-        <Group gap={5} visibleFrom="xs">
-          <Link href={"/egitimler"} passHref legacyBehavior>
-            <a
-              className={classes.link}
-              data-active={active === "/egitimler" || undefined}
-              onClick={() => {
-                setActive("/egitimler");
-              }}
-            >
-              Eğitimler
-            </a>
-          </Link>
-
-          <Link href={"/hakkimizda"} passHref legacyBehavior>
-            <a
-              className={classes.link}
-              data-active={active === "/hakkimizda" || undefined}
-              onClick={() => {
-                setActive("/hakkimizda");
-              }}
-            >
-              Hakkımızda
-            </a>
-          </Link>
-
-          <Link href={"/iletisim"} passHref legacyBehavior>
-            <a
-              className={classes.link}
-              data-active={active === "/iletisim" || undefined}
-              onClick={() => {
-                setActive("/iletisim");
-              }}
-            >
-              İletişim
-            </a>
-          </Link>
-        </Group>
-
-        <ProfileButton />
-        <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-      </Container>
+    <header>
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link href="/egitimler" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Eğitimler
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/hakkimizda" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Hakkımızda
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/iletisim" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                İletişim
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
     </header>
+
+    // <header className={classes.header}>
+    //
+    //
+    //
+    //
+    //   <Container size="md" className={classes.inner}>
+    //     <Link href={"/"}>
+    //       <Image
+    //         src="/platon-logo.png"
+    //         height={32}
+    //         width={99}
+    //         alt="Platon Logo"
+    //         className={classes.logo}
+    //       />
+    //     </Link>
+    //
+    //     <Group gap={5} visibleFrom="xs">
+    //       <Link href={"/egitimler"} passHref legacyBehavior>
+    //         <a
+    //           className={classes.link}
+    //           data-active={active === "/egitimler" || undefined}
+    //           onClick={() => {
+    //             setActive("/egitimler");
+    //           }}
+    //         >
+    //           Eğitimler
+    //         </a>
+    //       </Link>
+    //
+    //       <Link href={"/hakkimizda"} passHref legacyBehavior>
+    //         <a
+    //           className={classes.link}
+    //           data-active={active === "/hakkimizda" || undefined}
+    //           onClick={() => {
+    //             setActive("/hakkimizda");
+    //           }}
+    //         >
+    //           Hakkımızda
+    //         </a>
+    //       </Link>
+    //
+    //       <Link href={"/iletisim"} passHref legacyBehavior>
+    //         <a
+    //           className={classes.link}
+    //           data-active={active === "/iletisim" || undefined}
+    //           onClick={() => {
+    //             setActive("/iletisim");
+    //           }}
+    //         >
+    //           İletişim
+    //         </a>
+    //       </Link>
+    //     </Group>
+    //
+    //     <ProfileButton />
+    //     <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+    //   </Container>
+    // </header>
   );
 }

@@ -55,5 +55,9 @@ admin:
    doesn't add period when the first period on the list is selected, solve
   -test edit periods modal
 
-Check good ui components compatible with tailwind (animation frameworks?)
+-winston logger might not be functional because level: 'info' is set and I use logger.error(), see if it works
+
+-Check good ui components compatible with tailwind (animation frameworks?)
+
+-complete the main pages then move on to 'admin period file upload' and student panel. 
 
