@@ -19,7 +19,7 @@ export default function Page() {
       )}
     >
       <Header />
-      <div className="container">
+      <div className="container px-2 sm:px-4">
         <div className="block justify-center my-16">
           <p className="text-center md:text-lg mb-2">Deneyimimize güvenin.</p>
           <TypewriterEffect

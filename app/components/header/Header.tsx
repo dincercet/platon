@@ -184,7 +184,7 @@ export default function Header() {
   }
 
   return (
-    <header>
+    <header className="container px-2 sm:px-4">
       <NavigationMenu>
         <Link href={"/"} passHref>
           <Image
