@@ -1,9 +1,25 @@
+//for shadcn
 const { fontFamily } = require("tailwindcss/defaultTheme");
+
+//for aceternity
+const {
+  default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  //load preflight manually (button reset conflicts with mantine)
+  corePlugins: { preflight: false },
   darkMode: ["class"],
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  options: {
+    ignore: [
+      "./app/giris/**/*.{ts,tsx}",
+      "./app/kayit/**/*.{ts,tsx}",
+      "./app/admin/**/*.{ts,tsx}",
+      "./app/panel/**/*.{ts,tsx}",
+    ],
+  },
   theme: {
     container: {
       center: true,
@@ -72,5 +88,18 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), addVariablesForColors],
 };
+
+//for aceternity
+// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
+function addVariablesForColors({ addBase, theme }: any) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}

@@ -8,6 +8,7 @@ import isAdminAuth from "./actions/isAdminAuth";
 import { redirect } from "next/navigation";
 import { Navbar } from "./components/Navbar";
 import { Container, rem } from "@mantine/core";
+import MantineHeader from "../../components/header/MantineHeader";
 
 //todo: convert into async?
 export default async function AdminLayout({
@@ -33,7 +34,8 @@ export default async function AdminLayout({
 
   //else continue rendering
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} forceColorScheme="light">
+      <MantineHeader />
       <Container display="flex" pl={rem(3)}>
         <Navbar />
         {children}

@@ -38,6 +38,7 @@ admin:
 
   curriculums:
   -add delete function if there is no students, make it legacy if there are students
+  -every curriculum can only have one course. When adding a new curriculum, check if the chosen course has a non-legacy curriculum, if there is, require to make the existing curriculum legacy
   -sort by newest and display whether legacy
   -add description to divide course name and curriculum date
   -add new curriculum modal: sort the courses by newest and exclude legacy
