@@ -22,7 +22,8 @@ import {
 } from "@/components/ui/dialog";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 
-const localizedFormat = require("dayjs/plugin/localizedFormat");
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 dayjs.extend(localizedFormat);
 
 const fontSans = FontSans({
@@ -249,6 +250,7 @@ export default function Page() {
           </div>
         </Dialog>
       ) : null}
+      <BackgroundBeams />
     </div>
   );
 }
