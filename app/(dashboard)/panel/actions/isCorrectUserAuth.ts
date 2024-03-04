@@ -1,9 +1,10 @@
+
 "use server";
 var admin = require("firebase-admin.init");
 import { cookies } from "next/headers";
 import logger from "@/winston-config";
 
-export default async function isUserAuth(): Promise<boolean> {
+export default async function isCorrectUserAuth(email: string): Promise<boolean> {
   const cookieStore = cookies();
 
   //retrieve idToken cookie
@@ -11,11 +12,16 @@ export default async function isUserAuth(): Promise<boolean> {
 
   if (idToken) {
     //verify token via firebase
+    let decodedUser;
     try {
-      await admin.auth().verifyIdToken(idToken);
+      decodedUser = await admin.auth().verifyIdToken(idToken);
     } catch (e) {
       logger.error("firebase: token verification failed", e);
       return false;
+    }
+
+    try{
+      
     }
 
     //success

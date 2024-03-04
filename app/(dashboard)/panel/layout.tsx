@@ -1,12 +1,10 @@
 "use server";
 
 import "@mantine/core/styles.css";
-import "@mantine/dates/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { theme } from "theme";
-import isAdminAuth from "./actions/isAdminAuth";
+import isUserAuth from "./actions/isUserAuth";
 import { redirect } from "next/navigation";
-import { Navbar } from "./components/Navbar";
 import { Container, rem } from "@mantine/core";
 import MantineHeader from "../../components/header/MantineHeader";
 
@@ -16,15 +14,13 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  //todo: test with a user account
-
   try {
     //if auth fails redirect
-    if (!(await isAdminAuth())) {
+    if (!(await isUserAuth())) {
       redirect("/");
     }
   } catch (e) {
-    console.error("isAdminAuth error", e);
+    console.error("isUserAuth error", e);
     redirect("/");
   }
 
@@ -32,8 +28,7 @@ export default async function AdminLayout({
   return (
     <MantineProvider theme={theme} forceColorScheme="light">
       <MantineHeader />
-      <Container display="flex" pl={rem(3)}>
-        <Navbar />
+      <Container display="flex" px={rem(3)}>
         {children}
       </Container>
     </MantineProvider>
