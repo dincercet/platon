@@ -7,6 +7,7 @@ import isUserAuth from "./actions/isUserAuth";
 import { redirect } from "next/navigation";
 import { Container, rem } from "@mantine/core";
 import MantineHeader from "../../components/header/MantineHeader";
+import logger from "@/winston-config";
 
 //todo: convert into async?
 export default async function AdminLayout({
@@ -20,7 +21,7 @@ export default async function AdminLayout({
       redirect("/");
     }
   } catch (e) {
-    console.error("isUserAuth error", e);
+    logger.error("isUserAuth error", e);
     redirect("/");
   }
 

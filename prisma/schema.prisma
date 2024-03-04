@@ -7,9 +7,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
-//note that this schema is defined in snake_case instead of the prisma default PascalCase
+// !!!
+// Note that this schema is defined in snake_case instead of the prisma default PascalCase
+// !!!
 
-//after user signs up via firebase link sent to their email, did_register is set to true
+//after student signs up via firebase link sent to their email, did_register is set to true
 model users {
   id            Int             @id @default(autoincrement())
   email         String          @unique @db.VarChar(150)
@@ -34,6 +36,7 @@ model courses {
   curriculums course_curriculums[]
 }
 
+//each course can have many curriculums (but each course can have only one curriculum that's not legacy)
 model course_curriculums {
   id         Int                  @id @default(autoincrement())
   created_at DateTime             @default(now())
@@ -44,6 +47,9 @@ model course_curriculums {
   periods    curriculum_periods[]
 }
 
+//description of weeks for each curriculum
+//
+//each curriculum can have many weeks
 model curriculum_weeks {
   id            Int                @id @default(autoincrement())
   week_no       Int
@@ -54,6 +60,8 @@ model curriculum_weeks {
 
 //periods are linked to curriculums instead of courses,
 //because courses stay the same, but different periods may have a new curriculum
+//
+//each curriculum can have many periods
 model curriculum_periods {
   id            Int                @id @default(autoincrement())
   begins_at     DateTime
@@ -61,6 +69,29 @@ model curriculum_periods {
   curriculum    course_curriculums @relation(fields: [curriculum_id], references: [id])
   curriculum_id Int
   users_periods users_periods[]
+  period_weeks  period_weeks[]
+}
+
+//this is seperate from 'curriculum_weeks' because:
+//curriculum weeks are created for each week's curriculum description, they are explanatory
+//period weeks are created for uploading documents, they are functional
+//both of them don't have to be in sync with each other.
+//
+//each period can have many weeks
+model period_weeks {
+  id        Int                @id @default(autoincrement())
+  week_no   Int
+  period    curriculum_periods @relation(fields: [period_id], references: [id])
+  period_id Int
+  documents week_documents[]
+}
+
+//each week can have many documents
+model week_documents {
+  id        Int          @id @default(autoincrement())
+  file_name String       @db.VarChar(300)
+  week      period_weeks @relation(fields: [week_id], references: [id])
+  week_id   Int
 }
 
 //many to many table between users and periods
@@ -73,11 +104,3 @@ model users_periods {
 
   @@id([user_id, period_id])
 }
-
-//period_files (todo)
-//id
-//week_no
-//file_url
-//period_id (foreign key)
-
-//period_announcements? 

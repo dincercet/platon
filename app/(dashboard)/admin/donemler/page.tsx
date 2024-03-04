@@ -3,7 +3,7 @@ import "dayjs/locale/tr";
 import { useState, useEffect } from "react";
 import { Button, Flex, Group, Radio, Stack, rem } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPlus, IconEdit } from "@tabler/icons-react";
+import { IconPlus, IconEdit, IconFiles } from "@tabler/icons-react";
 
 import AddPeriodModal from "./components/AddPeriodModal";
 import EditPeriodModal from "./components/EditPeriodModal";
@@ -197,6 +197,15 @@ export default function Page() {
           </Button>
         </Group>
 
+        <Button //show documents button
+          leftSection={<IconFiles size={16} />}
+          variant="outline"
+          disabled={!isPeriodSelected}
+          mt={rem(8)}
+          // onClick={editPeriodHandlers.open}
+        >
+          Dökümanlar
+        </Button>
         <Button //edit button
           variant="outline"
           disabled={!isPeriodSelected}

@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { Navbar } from "./components/Navbar";
 import { Container, rem } from "@mantine/core";
 import MantineHeader from "../../components/header/MantineHeader";
+import logger from "@/winston-config";
 
 //todo: convert into async?
 export default async function AdminLayout({
@@ -24,7 +25,7 @@ export default async function AdminLayout({
       redirect("/");
     }
   } catch (e) {
-    console.error("isAdminAuth error", e);
+    logger.error("isAdminAuth error", e);
     redirect("/");
   }
 
