@@ -2,6 +2,7 @@
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
 import isAdminAuth from "../../actions/isAdminAuth";
+import logger from "@/winston-config";
 
 const prisma = new PrismaClient();
 
@@ -30,7 +31,7 @@ export default async function addCurriculumWeek(
   if (!validation.success) {
     //validation failed
 
-    console.error("Form validation failed.");
+    logger.error("Form validation failed.");
     return { success: false, error: "Form validation failed." };
   } else {
     //validation successful
@@ -51,7 +52,7 @@ export default async function addCurriculumWeek(
         : { success: false, error: "Failed to add curriculum week." }; //no week id returned
     } catch (e) {
       //database error
-      console.error("prisma error: failed to add curriculum week", e);
+      logger.error("prisma error: failed to add curriculum week", e);
       return {
         success: false,
         error: "Database error: Failed to add curriculum week.",

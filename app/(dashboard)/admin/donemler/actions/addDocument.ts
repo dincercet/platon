@@ -10,8 +10,7 @@ const prisma = new PrismaClient();
 
 //Add a document to an existing week in that period
 export default async function addDocument(
-  periodId: number,
-  weekNo: number,
+  weekId: number,
   data: FormData,
 ): Promise<{ success: boolean; error?: string }> {
   //check authorization
@@ -20,35 +19,50 @@ export default async function addDocument(
   const file: File | null = data.get("file") as unknown as File;
 
   //check parameters
-  if (!file || !periodId || !weekNo) {
+  if (!file || !weekId) {
     return { success: false, error: "Parameter missing." };
   }
 
   //create zod schema
   const schema = z.object({
-    periodId: z.number().min(0),
-    weekNo: z.number().min(0),
+    weekId: z.number().min(0),
   });
 
   //validate parameters
-  const validation = schema.safeParse({ periodId: periodId, weekNo: weekNo });
+  const validation = schema.safeParse({ weekId: weekId });
   if (!validation.success)
     return { success: false, error: "Parameter validation failed." };
 
   //normalize the filename
   const filename = file.name.replaceAll(" ", "_");
 
+  let pathParams;
+  try {
+    //get the period id and week no to create a path for file
+    pathParams = await prisma.period_weeks.findFirst({
+      where: { id: weekId },
+      select: { period_id: true, week_no: true },
+    });
+  } catch (e) {
+    logger.error("Prisma error: couldn't get path params", e);
+    return { success: false, error: "Couldn't get path parameters." };
+  }
+
   //concatenate the path
   const path = join(
     process.cwd(),
-    `/app/documents/${periodId}/${weekNo}/`,
+    `/app/documents/${pathParams?.period_id}/${pathParams?.week_no}/`,
     filename,
   );
 
   try {
     //check if file with same name already exists
-    const fileFound = await prisma.period_files.findFirst({
-      where: { week_no: weekNo, period_id: periodId, file_name: filename },
+    const fileFound = await prisma.period_weeks.findFirst({
+      where: {
+        week_no: pathParams?.week_no,
+        period_id: pathParams?.period_id,
+        documents: { some: { file_name: filename } },
+      },
     });
 
     if (fileFound)
@@ -78,9 +92,8 @@ export default async function addDocument(
 
   try {
     //create the database entry for finding file location
-    await prisma.period_files.update({
-      where: { period_id: periodId, week_no: weekNo },
-      data: { file_name: filename },
+    await prisma.week_documents.create({
+      data: { week_id: weekId, file_name: filename },
     });
     return { success: true }; //successful
   } catch (e) {
