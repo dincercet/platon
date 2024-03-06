@@ -41,7 +41,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    const documents = prisma.period_weeks.findMany({
+    const documents = await prisma.period_weeks.findMany({
       where: { period_id: periodId },
       select: {
         id: true,
@@ -49,6 +49,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         documents: { select: { id: true, file_name: true } },
       },
     });
+    console.log(documents);
 
     //check if documents is null
     if (!documents)

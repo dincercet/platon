@@ -7,10 +7,12 @@ import {
   Paper,
   Stack,
   Text,
+  rem,
 } from "@mantine/core";
 import { IconPlus, IconTrashX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import addDocumentWeek from "../actions/addDocumentWeek";
+import addDocument from "../actions/addDocument";
 
 export default function ShowDocumentsModal({
   opened,
@@ -29,14 +31,14 @@ export default function ShowDocumentsModal({
     }[]
   >([]);
 
-  const [files, setFiles] = useState<File[]>([]);
+  const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
 
   useEffect(() => {
     fetchDocuments();
     console.log("useEffect fetchDocuments called");
   }, []);
 
-  //call to getCourses api, then set courses state
+  //call to getDocuments api, then set weeks state
   async function fetchDocuments() {
     try {
       const res = await fetch(
@@ -52,12 +54,12 @@ export default function ShowDocumentsModal({
       }
 
       //set weeks array state
-      if (resParsed.courses.length > 0) {
+      if (resParsed.documents.length > 0) {
         setWeeks(
           resParsed.documents.map((week: any) => {
             return {
               weekId: week.id,
-              weekNo: week.weekNo,
+              weekNo: week.week_no,
               documents: week.documents.map((document: any) => {
                 return {
                   documentId: document.id,
@@ -74,23 +76,50 @@ export default function ShowDocumentsModal({
   }
 
   async function handleAddWeek() {
+    const weekNo = weeks.length > 0 ? weeks.at(-1)?.weekNo! + 1 : 1;
+
     try {
       //addDocumentWeek action call
-      //
-      //find out the week no for param
-      const res = await addDocumentWeek();
-      if (!res.success || !res.curriculumId) {
-        //error returned from addCurriculum action
+      const res = await addDocumentWeek(periodId, weekNo);
+      if (!res.success || !res.weekId) {
+        //error returned from addDocumentWeek action
         console.error(res.error);
         return;
       }
+
+      setWeeks([
+        ...weeks,
+        { weekId: res.weekId, weekNo: weekNo, documents: [] },
+      ]);
     } catch (e) {
-      console.error("unknown error addCurriculum", e);
+      console.error("unknown error addDocumentWeek", e);
       close();
     }
   }
 
-  async function handleAddDocuments(weekId: number) {}
+  async function handleAddDocuments(weekId: number) {
+    if (!selectedDocuments) return;
+
+    const formData = new FormData();
+
+    selectedDocuments.map((document) => formData.append("documents", document));
+
+    try {
+      //addDocument action call
+      const res = await addDocument(weekId, formData);
+      if (!res.success) {
+        //error returned from addDocument action
+        console.error(res.error);
+        return;
+      }
+
+      setSelectedDocuments([]);
+      fetchDocuments();
+    } catch (e) {
+      console.error("unknown error addDocument", e);
+      close();
+    }
+  }
 
   const weekList = weeks.map((week) => {
     return (
@@ -98,10 +127,11 @@ export default function ShowDocumentsModal({
         <Stack gap={0}>
           <Text size="md">{week.weekNo}. Hafta</Text>
           {week.documents.map((document) => (
-            <Group key={document.documentId}>
+            <Group gap={rem(4)} key={document.documentId}>
               <Text size="sm">{document.fileName}</Text>
               <ActionIcon
-                variant="danger"
+                size="xs"
+                color="red"
                 onClick={() => {
                   //remove document
                   //pass document.documentId
@@ -115,21 +145,27 @@ export default function ShowDocumentsModal({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              console.log(e.target);
-              //handleAddDocuments(week.weekId);
             }}
           >
-            <Group>
+            <Group gap={rem(4)}>
               <FileInput
                 leftSection={<IconPlus size={14} />}
                 placeholder="Döküman Ekle"
                 size="sm"
                 clearable
                 multiple
-                // value={files}
-                // onChange={setFiles}
+                value={selectedDocuments}
+                onChange={(e) => {
+                  setSelectedDocuments(e);
+                }}
               />
-              <ActionIcon type="submit" size="sm">
+              <ActionIcon
+                type="submit"
+                onClick={() => {
+                  handleAddDocuments(week.weekId);
+                }}
+                size="md"
+              >
                 <IconPlus size={14} />
               </ActionIcon>
             </Group>
@@ -140,18 +176,13 @@ export default function ShowDocumentsModal({
   });
 
   return (
-    <Modal
-      opened={opened}
-      onClose={() => {
-        close();
-      }}
-      title="Documents"
-      centered
-    >
+    <Modal opened={opened} onClose={close} title="Dökümanlar" centered>
       <Stack>
         <Button onClick={handleAddWeek}>Hafta Ekle</Button>
         {weekList.length > 0 && weekList}
-        <Button variant="danger">Son Haftayı Sil</Button>
+        <Button color="red" disabled={!weeks.length}>
+          Son Haftayı Sil
+        </Button>
       </Stack>
     </Modal>
   );

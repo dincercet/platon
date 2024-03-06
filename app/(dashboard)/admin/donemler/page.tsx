@@ -11,7 +11,8 @@ import dayjs from "dayjs";
 import ShowCurriculumModal from "./components/ShowCurriculumModal";
 import ShowStudentsModal from "./components/ShowStudentsModal";
 
-const localizedFormat = require("dayjs/plugin/localizedFormat");
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import ShowDocumentsModal from "./components/ShowDocumentsModal";
 dayjs.extend(localizedFormat);
 
 export default function Page() {
@@ -20,6 +21,7 @@ export default function Page() {
   const [editPeriodOpened, editPeriodHandlers] = useDisclosure(false);
   const [showCurriculumOpened, showCurriculumHandlers] = useDisclosure(false);
   const [showStudentsOpened, showStudentsHandlers] = useDisclosure(false);
+  const [showDocumentsOpened, showDocumentsHandlers] = useDisclosure(false);
 
   //array of periods after fetchPeriods
   const [periods, setPeriods] = useState<
@@ -169,6 +171,13 @@ export default function Page() {
           periodId={periods[selectedPeriod].periodId}
         />
       )}
+      {showDocumentsOpened && (
+        <ShowDocumentsModal
+          opened={showDocumentsOpened}
+          close={showDocumentsHandlers.close}
+          periodId={periods[selectedPeriod].periodId}
+        />
+      )}
 
       <Flex direction="column" m={rem(8)}>
         <Button
@@ -202,7 +211,7 @@ export default function Page() {
           variant="outline"
           disabled={!isPeriodSelected}
           mt={rem(8)}
-          // onClick={editPeriodHandlers.open}
+          onClick={showDocumentsHandlers.open}
         >
           Dökümanlar
         </Button>
