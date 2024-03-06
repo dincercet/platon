@@ -1,6 +1,6 @@
 "use server";
 import { join } from "path";
-import { writeFile, unlink } from "fs/promises";
+import { unlink } from "fs/promises";
 import { outputFile } from "fs-extra";
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
@@ -26,15 +26,25 @@ export default async function addDocument(
     return { success: false, error: "Parameter missing." };
   }
 
-  //create zod schema
+  //create zod schemas
   const schema = z.object({
     weekId: z.number().min(0),
+  });
+
+  const filenameSchema = z.object({
+    filename: z.string().min(1).max(300),
   });
 
   //validate parameters
   const validation = schema.safeParse({ weekId: weekId });
   if (!validation.success)
     return { success: false, error: "Parameter validation failed." };
+
+  //validate all file names
+  for (let i = 0; i < files.length; i++) {
+    if (!filenameSchema.safeParse({ filename: files[i].name }).success)
+      return { success: false, error: "File name validation failed." };
+  }
 
   let pathParams;
   try {

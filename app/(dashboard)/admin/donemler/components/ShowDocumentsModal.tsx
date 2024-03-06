@@ -13,6 +13,8 @@ import { IconPlus, IconTrashX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import addDocumentWeek from "../actions/addDocumentWeek";
 import addDocument from "../actions/addDocument";
+import deleteLastWeek from "../actions/deleteLastWeek";
+import deleteDocument from "../actions/deleteDocument";
 
 export default function ShowDocumentsModal({
   opened,
@@ -87,13 +89,13 @@ export default function ShowDocumentsModal({
         return;
       }
 
+      //add the new week to the array
       setWeeks([
         ...weeks,
         { weekId: res.weekId, weekNo: weekNo, documents: [] },
       ]);
     } catch (e) {
       console.error("unknown error addDocumentWeek", e);
-      close();
     }
   }
 
@@ -113,11 +115,70 @@ export default function ShowDocumentsModal({
         return;
       }
 
+      //flush the selected documents
       setSelectedDocuments([]);
+      //re-fetch
       fetchDocuments();
     } catch (e) {
       console.error("unknown error addDocument", e);
-      close();
+    }
+  }
+
+  async function handleDeleteDocument(
+    weekNo: number,
+    documentId: number,
+    fileName: string,
+  ) {
+    try {
+      //deleteDocument action call
+      const res = await deleteDocument(periodId, weekNo, documentId, fileName);
+      if (!res.success) {
+        //error returned from deleteDocument action
+        console.error(res.error);
+        return;
+      }
+
+      //delete the document from the array
+      setWeeks(
+        weeks.map((week: any) => {
+          //find the correct week
+          if (week.weekNo === weekNo) {
+            //delete the document from week
+            const updatedDocuments = week.documents.filter(
+              (document: any) => document.documentId !== documentId,
+            );
+            //return new object with updated documents
+            return { ...week, documents: updatedDocuments };
+          }
+          //return rest of the weeks unchanged
+          return week;
+        }),
+      );
+    } catch (e) {
+      console.error("unknown error deleteDocument", e);
+    }
+  }
+
+  async function handleDeleteLastWeek() {
+    if (!weeks.length) return;
+
+    const weekId = weeks.at(-1)!.weekId;
+    const weekNo = weeks.at(-1)!.weekNo;
+    const documents = weeks.at(-1)!.documents;
+
+    try {
+      //deleteLastWeek action call
+      const res = await deleteLastWeek(periodId, weekId, weekNo, documents);
+      if (!res.success) {
+        //error returned from deleteLastWeek action
+        console.error(res.error);
+        return;
+      }
+
+      //delete the last week
+      setWeeks(weeks.filter((week) => week.weekId !== weekId));
+    } catch (e) {
+      console.error("unknown error deleteLastWeek", e);
     }
   }
 
@@ -132,9 +193,13 @@ export default function ShowDocumentsModal({
               <ActionIcon
                 size="xs"
                 color="red"
+                variant="outline"
                 onClick={() => {
-                  //remove document
-                  //pass document.documentId
+                  handleDeleteDocument(
+                    week.weekNo,
+                    document.documentId,
+                    document.fileName,
+                  );
                 }}
               >
                 <IconTrashX size={14} />
@@ -161,6 +226,7 @@ export default function ShowDocumentsModal({
               />
               <ActionIcon
                 type="submit"
+                disabled={!selectedDocuments.length}
                 onClick={() => {
                   handleAddDocuments(week.weekId);
                 }}
@@ -180,7 +246,11 @@ export default function ShowDocumentsModal({
       <Stack>
         <Button onClick={handleAddWeek}>Hafta Ekle</Button>
         {weekList.length > 0 && weekList}
-        <Button color="red" disabled={!weeks.length}>
+        <Button
+          color="red"
+          disabled={!weeks.length}
+          onClick={handleDeleteLastWeek}
+        >
           Son Haftayı Sil
         </Button>
       </Stack>
