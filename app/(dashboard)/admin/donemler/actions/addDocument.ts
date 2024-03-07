@@ -104,7 +104,6 @@ export default async function addDocument(
     try {
       //create the file (through fs-extra lib)
       await outputFile(path, buffer);
-      // logger.info(`open ${path} to see the uploaded file`);
     } catch (e) {
       logger.error("Error writing file", e);
       return { success: false, error: "Couldn't write file." };

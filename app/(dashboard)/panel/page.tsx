@@ -35,6 +35,8 @@ export default function StudentPage() {
     }[]
   >([]);
 
+  const [selectedPeriodId, setSelectedPeriodId] = useState<number | null>(null);
+
   useEffect(() => {
     fetchUserPeriods();
   }, []);
@@ -115,6 +117,33 @@ export default function StudentPage() {
     }
   }
 
+  async function handleDownloadDocument(weekNo: number, fileName: string) {
+    try {
+      const res = await fetch(
+        `/panel/api/downloadDocument?email=${localStorage.getItem("email")}&periodId=${selectedPeriodId}&weekNo=${weekNo}&filename=${fileName}`,
+        { method: "GET" },
+      );
+
+      if (!res.ok) {
+        const resParsed = await res.json();
+        //error returned from api
+        console.error(resParsed.error);
+        return;
+      }
+
+      const fileBlob = await res.blob();
+
+      //create a temporary link, download the file and remove the link
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(fileBlob);
+      link.download = fileName;
+      link.click();
+      link.remove();
+    } catch (e) {
+      console.error("error fetching documents", e);
+    }
+  }
+
   //array of Paper components that display info for each period that the student is in
   const periodList = userPeriods.map((period) => {
     const begins = dayjs(new Date(period.begins)).locale("tr").format("LL");
@@ -154,6 +183,7 @@ export default function StudentPage() {
             leftSection={<IconFiles size={16} />}
             onClick={() => {
               fetchDocuments(period.id);
+              setSelectedPeriodId(period.id);
               showDocumentsHandlers.open();
             }}
           >
@@ -176,7 +206,7 @@ export default function StudentPage() {
                 size="xs"
                 variant="outline"
                 onClick={() => {
-                  //handleDownloadDocument()
+                  handleDownloadDocument(week.weekNo, document.fileName);
                 }}
               >
                 <IconFileDownload size={14} />
@@ -194,6 +224,7 @@ export default function StudentPage() {
         opened={showDocumentsOpened}
         onClose={() => {
           setWeeks([]);
+          setSelectedPeriodId(null);
           showDocumentsHandlers.close();
         }}
         title="Dökümanlar"
