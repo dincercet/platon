@@ -194,6 +194,7 @@ export default function Page() {
           <Button //show students button
             variant="outline"
             disabled={!isPeriodSelected}
+            onClick={showStudentsHandlers.open}
           >
             Öğrenciler
           </Button>

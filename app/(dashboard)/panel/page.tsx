@@ -28,7 +28,7 @@ export default function StudentPage() {
     try {
       //api call to get user's periods
       const res = await fetch(
-        `api/getUserPeriods?email=${window.localStorage.getItem("email")}`,
+        `/panel/api/getUserPeriods?email=${window.localStorage.getItem("email")}`,
         {
           method: "GET",
         },

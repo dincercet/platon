@@ -10,6 +10,7 @@ fr39 haftalik faaliyet, 5 gun 5 satir 14 hafta - fr42 isyeri degerlendirme 7. ve
 header:
 - fix the responsiveness and make the burger button work. Will need a drawer on small screens.
 - why is onAuthStateChanged called 3 times on every useEffect execution?
+- logout button doesn't clear local storage but clears cookies.
 
 panel:
 - check if the container component causes the layout.tsx to be rendered on the client. (security risk)
@@ -27,38 +28,45 @@ loginpage:
 - login page is reachable for logged in users, restrict it.
 
 admin:
-
   courses:
-  -add delete function but only allow it if it is not connected to a student schedule, consider making it 'legacy' if it is connected to a student schedule
+  -add delete function but only allow it if it is not connected to a student schedule, make it 'legacy' if it is connected to a student schedule
   -consider adding server side props for initial courses state (route segment config on nextjs docs: getStaticProps equivalent of app router)
-  -sort by newest
+
+  -sort by id descending
+  -group by legacy
+  -change color if legacy
+
   -test with empty list
   -add course modal: disable add button if form variables empty
   -edit course modal: disable edit button if form isTouched false
 
   curriculums:
+  -change color if legacy
   -add delete function if there is no students, make it legacy if there are students
   -every curriculum can only have one course. When adding a new curriculum, check if the chosen course has a non-legacy curriculum, if there is, require to make the existing curriculum legacy
+   maybe just exclude courses that have a non-legacy curriculum when adding new curriculum
+
+  -add delete last week function
+
   -sort by newest and display whether legacy
-  -add description to divide course name and curriculum date
   -add new curriculum modal: sort the courses by newest and exclude legacy
 
   periods:
-  -disable edit button in modal when form isTouched false, and change the title of modal
-  -ogrenciler button doesn't trigger modal
+  -add period modal: disable add button in modal when form isTouched false
+   exclude legacy curriculums
+   sort fetched curriculums by id descending
+
+  -edit period modal: disable edit button in modal when form isTouched false, and change the title of modal
   -sort by beginning date (newest first)
   -test with empty list
 
   students:
   -sort the students by newest
-  -implement button to resend email sign up link (later if needed)
+  -sort periods by beginning date (newest first)
+
   -add student modal: sort periods by beginning date (newest first)
-   doesn't add period when the first period on the list is selected, solve
-  -test edit periods modal
+  -edit periods modal: sort fetchedPeriods by beginning date (newest first)
 
--winston logger might not be functional because level: 'info' is set and I use logger.error(), see if it works
-
--Check good ui components compatible with tailwind (animation frameworks?)
-
--complete the main pages then move on to 'admin period file upload' and student panel. 
+  -test remove student
+  -implement button to resend email sign up link (later if needed)
 

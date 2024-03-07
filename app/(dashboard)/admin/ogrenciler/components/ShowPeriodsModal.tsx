@@ -1,7 +1,15 @@
 import { useState } from "react";
 import "dayjs/locale/tr";
 import dayjs from "dayjs";
-import { NativeSelect, Button, Stack, Modal, Radio } from "@mantine/core";
+import {
+  NativeSelect,
+  Button,
+  Stack,
+  Modal,
+  Radio,
+  Center,
+  rem,
+} from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import deleteFromPeriod from "../actions/deleteFromPeriod";
 import addToPeriod from "../actions/addToPeriod";
@@ -40,7 +48,7 @@ export default function ShowPeriodsModal({
   //when adding new period, fetch and keep periods array for use in NativeSelect
   const [fetchedPeriods, setFetchedPeriods] = useState<typeof periodsProp>([]);
 
-  //when adding new period, keep selected period index from NativeSelect
+  //when adding new period, keep selected period id from NativeSelect
   const [selectedPeriodId, setSelectedPeriodId] = useState<number | null>(null);
 
   //fetch if add new period button is clicked
@@ -55,25 +63,51 @@ export default function ShowPeriodsModal({
         return;
       }
 
-      //set periods array state based on retrieved periods
       if (resParsed.periods.length > 0) {
-        setFetchedPeriods(
-          resParsed.periods.map(
-            (period: {
-              id: number;
-              begins_at: Date;
-              ends_at: Date;
-              curriculum: { course: { name: string } };
-            }) => {
-              return {
-                id: period.id,
-                beginsAt: period.begins_at,
-                endsAt: period.ends_at,
-                courseName: period.curriculum.course.name,
-              };
-            },
-          ),
+        // setFetchedPeriods(
+        //   resParsed.periods.map(
+        //     (period: {
+        //       id: number;
+        //       begins_at: Date;
+        //       ends_at: Date;
+        //       curriculum: { course: { name: string } };
+        //     }) => {
+        //       return {
+        //         id: period.id,
+        //         beginsAt: new Date(period.begins_at),
+        //         endsAt: new Date(period.ends_at),
+        //         courseName: period.curriculum.course.name,
+        //       };
+        //     },
+        //   ),
+        // );
+        const newFetchedPeriods = resParsed.periods.map(
+          (period: {
+            id: number;
+            begins_at: Date;
+            ends_at: Date;
+            curriculum: { course: { name: string } };
+          }) => {
+            return {
+              id: period.id,
+              beginsAt: new Date(period.begins_at),
+              endsAt: new Date(period.ends_at),
+              courseName: period.curriculum.course.name,
+            };
+          },
         );
+
+        // Exclude the periods that are already in the periods array
+        const filteredFetchedPeriods = newFetchedPeriods.filter(
+          (newPeriod: any) =>
+            !periods.some((period) => period.id === newPeriod.id),
+        );
+
+        //set the selected period to the first period
+        setSelectedPeriodId(filteredFetchedPeriods[0].id);
+
+        //set periods array state based on retrieved periods
+        setFetchedPeriods(filteredFetchedPeriods);
       }
     } catch (e) {
       console.error("error fetching periods", e);
@@ -81,7 +115,8 @@ export default function ShowPeriodsModal({
   }
 
   async function handleDeleteFromPeriod() {
-    if (!selectedPeriodIndex) return;
+    if (selectedPeriodIndex === null) return;
+
     try {
       //deleteFromPeriod action call
       const res = await deleteFromPeriod(
@@ -107,7 +142,7 @@ export default function ShowPeriodsModal({
   }
 
   async function handleAddToPeriod() {
-    if (!selectedPeriodId) return;
+    if (selectedPeriodId === null) return;
     try {
       //addToPeriod action call
       const res = await addToPeriod(studentId, selectedPeriodId);
@@ -117,8 +152,20 @@ export default function ShowPeriodsModal({
         return;
       }
 
-      //update periods array to add the new period
-      setPeriods([...periods, fetchedPeriods[selectedPeriodId]]);
+      //add the new period to the periods array state
+      setPeriods((prev) => {
+        const newPeriod = fetchedPeriods.find(
+          (period) => period.id === selectedPeriodId,
+        );
+        if (newPeriod) {
+          return [...prev, newPeriod];
+        } else {
+          return prev;
+        }
+      });
+
+      //flush selectedPeriodId
+      setSelectedPeriodId(null);
 
       //unmount NativeSelect
       setIsAddToPeriodActive(false);
@@ -154,7 +201,7 @@ export default function ShowPeriodsModal({
     return (
       <Radio
         key={period.id}
-        value={period.id.toString()}
+        value={index.toString()}
         onClick={() => setSelectedPeriodIndex(index)}
         label={period.courseName}
         description={
@@ -198,8 +245,15 @@ export default function ShowPeriodsModal({
                 }}
               >
                 <Stack>
-                  {periodList}
-                  <Button type="submit" disabled={!selectedPeriodIndex}>
+                  <Radio.Group>
+                    <Stack gap={rem(6)}>{periodList} </Stack>
+                  </Radio.Group>
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    color="red"
+                    disabled={selectedPeriodIndex === null}
+                  >
                     Dönemden Çıkar
                   </Button>
                 </Stack>
@@ -217,7 +271,9 @@ export default function ShowPeriodsModal({
               <NativeSelect
                 label="Dönemi Seçiniz"
                 value={
-                  selectedPeriodId ? selectedPeriodId.toString() : undefined
+                  selectedPeriodId !== null
+                    ? selectedPeriodId.toString()
+                    : undefined
                 }
                 onChange={(event) =>
                   setSelectedPeriodId(parseInt(event.currentTarget.value))

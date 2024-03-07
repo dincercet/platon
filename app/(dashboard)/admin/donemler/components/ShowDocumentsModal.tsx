@@ -30,10 +30,11 @@ export default function ShowDocumentsModal({
       weekId: number;
       weekNo: number;
       documents: { documentId: number; fileName: string }[];
+      selectedDocuments: File[];
     }[]
   >([]);
 
-  const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
+  // const [selectedDocuments, setSelectedDocuments] = useState<File[]>([]);
 
   useEffect(() => {
     fetchDocuments();
@@ -68,6 +69,7 @@ export default function ShowDocumentsModal({
                   fileName: document.file_name,
                 };
               }),
+              selectedDocuments: [],
             };
           }),
         );
@@ -92,14 +94,19 @@ export default function ShowDocumentsModal({
       //add the new week to the array
       setWeeks([
         ...weeks,
-        { weekId: res.weekId, weekNo: weekNo, documents: [] },
+        {
+          weekId: res.weekId,
+          weekNo: weekNo,
+          documents: [],
+          selectedDocuments: [],
+        },
       ]);
     } catch (e) {
       console.error("unknown error addDocumentWeek", e);
     }
   }
 
-  async function handleAddDocuments(weekId: number) {
+  async function handleAddDocuments(weekId: number, selectedDocuments: File[]) {
     if (!selectedDocuments) return;
 
     const formData = new FormData();
@@ -116,7 +123,7 @@ export default function ShowDocumentsModal({
       }
 
       //flush the selected documents
-      setSelectedDocuments([]);
+      // setSelectedDocuments([]);
       //re-fetch
       fetchDocuments();
     } catch (e) {
@@ -219,16 +226,22 @@ export default function ShowDocumentsModal({
                 size="sm"
                 clearable
                 multiple
-                value={selectedDocuments}
+                value={week.selectedDocuments}
                 onChange={(e) => {
-                  setSelectedDocuments(e);
+                  setWeeks(
+                    weeks.map((w) =>
+                      w.weekNo === week.weekNo
+                        ? { ...w, selectedDocuments: e }
+                        : w,
+                    ),
+                  );
                 }}
               />
               <ActionIcon
                 type="submit"
-                disabled={!selectedDocuments.length}
+                disabled={!week.selectedDocuments.length}
                 onClick={() => {
-                  handleAddDocuments(week.weekId);
+                  handleAddDocuments(week.weekId, week.selectedDocuments);
                 }}
                 size="md"
               >

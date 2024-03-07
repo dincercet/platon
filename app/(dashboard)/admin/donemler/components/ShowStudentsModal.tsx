@@ -1,4 +1,4 @@
-import { Modal, Stack, Card, Text } from "@mantine/core";
+import { Modal, Stack, Card, Text, Paper } from "@mantine/core";
 import { useEffect, useState } from "react";
 
 export default function ShowStudentsModal({
@@ -17,7 +17,7 @@ export default function ShowStudentsModal({
       firstName: string;
       lastName: string;
     }[]
-  >();
+  >([]);
 
   useEffect(() => {
     fetchStudents();
@@ -40,9 +40,9 @@ export default function ShowStudentsModal({
       setStudents(
         resParsed.students.map((student: any) => {
           return {
-            email: student.email,
-            firstName: student.firstName,
-            lastName: student.lastName,
+            email: student.user.email,
+            firstName: student.user.first_name,
+            lastName: student.user.last_name,
           };
         }),
       );
@@ -51,27 +51,24 @@ export default function ShowStudentsModal({
     }
   }
 
-  const studentList = !students
-    ? []
-    : students.map((student) => {
-        return (
-          <Card key={student.email}>
-            <Text size="md">{student.firstName + " " + student.lastName}</Text>
-            <Text size="sm">{student.email}</Text>
-          </Card>
-        );
-      });
+  const studentList = students?.map((student) => {
+    return (
+      <Paper radius="md" p="xs" withBorder key={student.email}>
+        <Text size="md">{student.firstName + " " + student.lastName}</Text>
+        <Text size="sm">{student.email}</Text>
+      </Paper>
+    );
+  });
 
   return (
-    students && (
-      <Modal
-        opened={opened}
-        onClose={close}
-        title="Dönemin Öğrencileri"
-        centered
-      >
-        <Stack>{studentList}</Stack>
-      </Modal>
-    )
+    <Modal opened={opened} onClose={close} title="Dönemin Öğrencileri" centered>
+      <Stack>
+        {students.length > 0 ? (
+          studentList
+        ) : (
+          <Text>Eklenen öğrenci bulunamadı.</Text>
+        )}
+      </Stack>
+    </Modal>
   );
 }

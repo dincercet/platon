@@ -106,10 +106,11 @@ export default function EditStudentModal({
             <TextInput label="Soyisim" {...form.getInputProps("lastName")} />
           </Group>
 
-          <Group>
+          <Group grow>
             <Button type="submit">Düzenle</Button>
             <Button
-              variant="danger"
+              color="red"
+              variant="outline"
               onClick={() => {
                 if (
                   window.confirm(

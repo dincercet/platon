@@ -2,7 +2,7 @@
 
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
-import { MantineProvider } from "@mantine/core";
+import { Flex, MantineProvider } from "@mantine/core";
 import { theme } from "theme";
 import isAdminAuth from "./actions/isAdminAuth";
 import { redirect } from "next/navigation";
@@ -33,9 +33,11 @@ export default async function AdminLayout({
   return (
     <MantineProvider theme={theme} forceColorScheme="light">
       <MantineHeader />
-      <Container display="flex" pl={rem(3)}>
+      <Container display="flex" px={rem(3)}>
         <Navbar />
-        {children}
+        <Flex justify="center" w="100%">
+          {children}
+        </Flex>
       </Container>
     </MantineProvider>
   );

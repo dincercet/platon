@@ -108,7 +108,7 @@ export default function LoginForm() {
     let roleResData;
     try {
       //fetch role from /giris/api
-      const roleRes = await fetch(`api/getUserRole?email=${email}`, {
+      const roleRes = await fetch(`/giris/api/getUserRole?email=${email}`, {
         method: "GET",
       });
 
@@ -132,13 +132,13 @@ export default function LoginForm() {
     if (remember) {
       window.localStorage.setItem("loggedIn", "true");
       window.localStorage.setItem("email", email);
-      role === "USER"
+      role === "STUDENT"
         ? window.localStorage.setItem("role", "user")
         : window.localStorage.setItem("role", "admin");
     } else {
       window.sessionStorage.setItem("loggedIn", "true");
       window.sessionStorage.setItem("email", email);
-      role === "USER"
+      role === "STUDENT"
         ? window.sessionStorage.setItem("role", "user")
         : window.sessionStorage.setItem("role", "admin");
     }
