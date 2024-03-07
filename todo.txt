@@ -70,3 +70,4 @@ admin:
   -test remove student
   -implement button to resend email sign up link (later if needed)
 
+you used localstorage for passing email in getDocuments (admin and student panel), adjust it to whichever storage is used
