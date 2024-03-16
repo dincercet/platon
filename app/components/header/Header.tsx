@@ -28,8 +28,14 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
+import {
+  MoonIcon,
+  SunIcon,
+  HamburgerMenuIcon,
+  Cross1Icon,
+} from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes";
 
 //decide which storage is used for auth info
 function getStorage() {
@@ -48,6 +54,8 @@ export default function Header() {
   //Auth states
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState("");
+
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     //window object available only after mount
@@ -279,6 +287,14 @@ export default function Header() {
               İletişim
             </Button>
           </Link>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          </Button>
         </div>
       </DrawerContent>
     </Drawer>
