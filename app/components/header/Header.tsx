@@ -7,20 +7,29 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import auth from "firebase.init";
 import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
 import { setAuthCookies } from "app/actions/setAuthCookies";
-import cx from "clsx";
-import { cn } from "@/lib/utils";
+
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
 
 //decide which storage is used for auth info
 function getStorage() {
@@ -129,7 +138,7 @@ export default function Header() {
   function ProfileButton() {
     if (!isLoggedIn) {
       return (
-        <NavigationMenuItem className="list-none">
+        <NavigationMenuItem className="list-none justify-self-end">
           <Link href="/giris" legacyBehavior passHref>
             <NavigationMenuLink
               active={active === "/giris"}
@@ -145,7 +154,7 @@ export default function Header() {
       );
     } else {
       return (
-        <NavigationMenuItem className="list-none">
+        <NavigationMenuItem className="list-none justify-self-end">
           <NavigationMenuTrigger>
             {role === "user" ? "Öğrenci Paneli" : "Admin Paneli"}
           </NavigationMenuTrigger>
@@ -184,60 +193,94 @@ export default function Header() {
   }
 
   return (
-    <header className="container px-2 sm:px-4">
-      <NavigationMenu>
-        <Link href={"/"} passHref>
-          <Image
-            src="/platon-logo.png"
-            height={32}
-            width={99}
-            alt="Platon Logo"
-          />
-        </Link>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <Link href="/egitimler" legacyBehavior passHref>
-              <NavigationMenuLink
-                active={active === "/egitimler"}
-                onSelect={() => {
-                  setActive("/egitimler");
-                }}
-                className={navigationMenuTriggerStyle()}
-              >
-                Eğitimler
-              </NavigationMenuLink>
+    <Drawer>
+      <header className="container px-2 sm:px-4">
+        <NavigationMenu>
+          <DrawerTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="sm:hidden justify-self-start"
+            >
+              <HamburgerMenuIcon />
+            </Button>
+          </DrawerTrigger>
+          <div className="justify-self-center sm:justify-self-start">
+            <Link href={"/"} passHref>
+              <Image
+                src="/platon-logo.png"
+                height={32}
+                width={99}
+                alt="Platon Logo"
+              />
             </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/hakkimizda" legacyBehavior passHref>
-              <NavigationMenuLink
-                active={active === "/hakkimizda"}
-                onSelect={() => {
-                  setActive("/hakkimizda");
-                }}
-                className={navigationMenuTriggerStyle()}
-              >
-                Hakkımızda
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/iletisim" legacyBehavior passHref>
-              <NavigationMenuLink
-                active={active === "/iletisim"}
-                onSelect={() => {
-                  setActive("/iletisim");
-                }}
-                className={navigationMenuTriggerStyle()}
-              >
-                İletişim
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-        </NavigationMenuList>
+          </div>
+          <div className="hidden sm:block justify-self-center">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link href="/egitimler" legacyBehavior passHref>
+                  <NavigationMenuLink
+                    active={active === "/egitimler"}
+                    onSelect={() => {
+                      setActive("/egitimler");
+                    }}
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    Eğitimler
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/hakkimizda" legacyBehavior passHref>
+                  <NavigationMenuLink
+                    active={active === "/hakkimizda"}
+                    onSelect={() => {
+                      setActive("/hakkimizda");
+                    }}
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    Hakkımızda
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/iletisim" legacyBehavior passHref>
+                  <NavigationMenuLink
+                    active={active === "/iletisim"}
+                    onSelect={() => {
+                      setActive("/iletisim");
+                    }}
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    İletişim
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </div>
 
-        <ProfileButton />
-      </NavigationMenu>
-    </header>
+          <ProfileButton />
+        </NavigationMenu>
+      </header>
+      <DrawerContent>
+        <div className="flex flex-col gap-2 items-center my-4">
+          <Link href="/egitimler" legacyBehavior passHref>
+            <Button variant="ghost" className="w-36">
+              Eğitimler
+            </Button>
+          </Link>
+          <Link href="/hakkimizda" legacyBehavior passHref>
+            <Button variant="ghost" className="w-36">
+              Hakkımızda
+            </Button>
+          </Link>
+          <Link href="/iletisim" legacyBehavior passHref>
+            <Button variant="ghost" className="w-36">
+              İletişim
+            </Button>
+          </Link>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 }

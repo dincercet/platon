@@ -4,7 +4,6 @@ import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import { cn } from "@/lib/utils";
 import Header from "./components/header/Header";
 import CourseCards from "./components/CourseCards";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -58,7 +57,6 @@ export default function Page() {
           <CourseCards />
         </div>
       </div>
-      <BackgroundBeams />
     </div>
   );
 }

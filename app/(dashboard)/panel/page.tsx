@@ -198,7 +198,9 @@ export default function StudentPage() {
     return (
       <Paper radius="md" p="xs" withBorder key={week.weekId}>
         <Stack gap={0}>
-          <Text size="md">{week.weekNo}. Hafta</Text>
+          <Text size="md" c="blue">
+            {week.weekNo}. Hafta
+          </Text>
           {week.documents.map((document) => (
             <Group gap={rem(4)} key={document.documentId}>
               <Text size="sm">{document.fileName}</Text>
@@ -230,7 +232,13 @@ export default function StudentPage() {
         title="Dökümanlar"
         centered
       >
-        <Stack>{weekList.length > 0 && weekList}</Stack>
+        <Stack>
+          {weekList.length > 0 ? (
+            weekList
+          ) : (
+            <Text>Henüz döküman yüklenmedi.</Text>
+          )}
+        </Stack>
       </Modal>
       <Flex wrap="wrap" gap="md" mt="md" justify="center">
         {periodList.length > 0 ? (
