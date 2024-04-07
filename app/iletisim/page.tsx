@@ -2,7 +2,6 @@ import "../globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import Header from "../components/header/Header";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 import { IconMail, IconMapPin, IconPhone, IconUser } from "@tabler/icons-react";
 
 const fontSans = FontSans({
@@ -52,7 +51,7 @@ export default function Page() {
             </div>
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3184.221218811765!2d35.29595527699728!3d37.05221115345126!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x152885e430861eed%3A0x56346e2254a1a301!2sPlaton%20Bili%C5%9Fim%20Akademi!5e0!3m2!1sen!2str!4v1709496531169!5m2!1sen!2str"
-              className="border-0 justify-self-center w-[300px] h-[225px] sm:justify-self-start sm:w-[600px] sm:h-[450px]"
+              className="border-0 w-[300px] h-[225px] sm:w-[600px] sm:h-[450px]"
               allowFullScreen={false}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -60,8 +59,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-
-      <BackgroundBeams />
     </div>
   );
 }
