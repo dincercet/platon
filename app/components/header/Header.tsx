@@ -140,13 +140,28 @@ export default function Header() {
     console.log("logged out");
   }
 
+  function DarkModeButton({ className }: { className?: string }) {
+    return (
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        className={className}
+      >
+        <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:rotate-90 dark:scale-0" />
+        <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      </Button>
+    );
+  }
+
   //todo: restrict login page to logged in users
 
   //if logged in, return a ProfileButton based on role, otherwise return Login Button
   function ProfileButton() {
     if (!isLoggedIn) {
       return (
-        <NavigationMenuItem className="list-none justify-self-end">
+        <NavigationMenuItem className="flex list-none justify-self-end">
+          <DarkModeButton className="hidden sm:flex mr-1" />
           <Link href="/giris" legacyBehavior passHref>
             <NavigationMenuLink
               active={active === "/giris"}
@@ -162,7 +177,8 @@ export default function Header() {
       );
     } else {
       return (
-        <NavigationMenuItem className="list-none justify-self-end">
+        <NavigationMenuItem className="flex list-none justify-self-end">
+          <DarkModeButton className="hidden sm:flex mr-1" />
           <NavigationMenuTrigger>
             {role === "user" ? "Öğrenci Paneli" : "Admin Paneli"}
           </NavigationMenuTrigger>
@@ -202,18 +218,18 @@ export default function Header() {
 
   return (
     <Drawer>
-      <header className="container px-2 sm:px-4">
+      <header className="container px-2">
         <NavigationMenu>
-          <DrawerTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="sm:hidden justify-self-start"
-            >
-              <HamburgerMenuIcon />
-            </Button>
-          </DrawerTrigger>
-          <div className="justify-self-center sm:justify-self-start">
+          <div className="flex gap-1 sm:hidden justify-self-start">
+            <DrawerTrigger asChild>
+              <Button variant="outline" size="icon">
+                <HamburgerMenuIcon />
+              </Button>
+            </DrawerTrigger>
+            <DarkModeButton className="flex" />
+          </div>
+
+          <div className="flex gap-1 justify-self-center sm:justify-self-start">
             <Link href={"/"} passHref>
               <Image
                 src="/platon-logo.png"
@@ -223,6 +239,7 @@ export default function Header() {
               />
             </Link>
           </div>
+
           <div className="hidden sm:block justify-self-center">
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -272,9 +289,17 @@ export default function Header() {
       </header>
       <DrawerContent>
         <div className="grid grid-cols-2">
-          <div className=""></div>
+          <div className="my-4 ml-4">
+            <Image
+              src="/platonheykel.jpg"
+              width="500"
+              height="500"
+              alt="heykel"
+              className="w-full h-full object-cover rounded-t-xl"
+            ></Image>
+          </div>
 
-          <div className="flex flex-col gap-2 items-center my-4">
+          <div className="flex flex-col gap-4 items-center justify-center my-4">
             <Link href="/egitimler" legacyBehavior passHref>
               <Button variant="ghost" className="w-36">
                 Eğitimler
@@ -292,15 +317,6 @@ export default function Header() {
                 İletişim
               </Button>
             </Link>
-
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:rotate-90 dark:scale-0" />
-              <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            </Button>
           </div>
         </div>
       </DrawerContent>

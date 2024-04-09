@@ -9,7 +9,7 @@ const {
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   //load preflight manually (button reset conflicts with mantine)
-  corePlugins: { preflight: false },
+  // corePlugins: { preflight: false },
   darkMode: ["class"],
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   options: {
