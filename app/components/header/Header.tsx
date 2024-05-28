@@ -8,16 +8,7 @@ import auth from "firebase.init";
 import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
 import { setAuthCookies } from "app/actions/setAuthCookies";
 
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 
 import {
   NavigationMenu,
@@ -28,12 +19,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import {
-  MoonIcon,
-  SunIcon,
-  HamburgerMenuIcon,
-  Cross1Icon,
-} from "@radix-ui/react-icons";
+import { MoonIcon, SunIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 

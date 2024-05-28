@@ -1,22 +1,10 @@
 import "../globals.css";
-import { Inter as FontSans } from "next/font/google";
-import { cn } from "@/lib/utils";
 import Header from "../components/header/Header";
 import { IconMail, IconMapPin, IconPhone, IconUser } from "@tabler/icons-react";
 
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
 export default function Page() {
   return (
-    <div
-      className={cn(
-        "min-h-screen bg-background font-sans antialiased",
-        fontSans.variable,
-      )}
-    >
+    <div>
       <Header />
       <div className="container flex flex-col justify-center px-2 sm:px-4 pt-6 sm:pt-10">
         <p className="text-4xl font-bold text-center mb-6 z-10">Bize ulaşın</p>

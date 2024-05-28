@@ -29,7 +29,7 @@ loginpage:
 
 admin:
   courses:
-  -add delete function but only allow it if it is not connected to a student schedule, make it 'legacy' if it is connected to a student schedule
+  -add delete function but only allow it if it is not connected to a student period, make it 'legacy' if it is connected to a student period
   -consider adding server side props for initial courses state (route segment config on nextjs docs: getStaticProps equivalent of app router)
 
   -sort by id descending

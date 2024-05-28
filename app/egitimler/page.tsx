@@ -1,6 +1,5 @@
 "use client";
 import "../globals.css";
-import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "dayjs/locale/tr";
 import dayjs from "dayjs";
@@ -24,11 +23,6 @@ import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 import localizedFormat from "dayjs/plugin/localizedFormat";
 dayjs.extend(localizedFormat);
-
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
 export default function Page() {
   //array of curriculums, and array of weeks within each curriculum
@@ -188,12 +182,7 @@ export default function Page() {
   });
 
   return (
-    <div
-      className={cn(
-        "min-h-screen bg-background font-sans antialiased",
-        fontSans.variable,
-      )}
-    >
+    <div>
       <Header />
       {curriculums.length > 0 ? (
         <Dialog>

@@ -11,7 +11,11 @@ module.exports = {
   //load preflight manually (button reset conflicts with mantine)
   // corePlugins: { preflight: false },
   darkMode: ["class"],
-  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  content: [
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    // "./@/**/*.{ts,tsx}",
+  ],
   options: {
     ignore: [
       "./app/giris/**/*.{ts,tsx}",

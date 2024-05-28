@@ -1,23 +1,11 @@
 import "./globals.css";
-import { Inter as FontSans } from "next/font/google";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
-import { cn } from "@/lib/utils";
 import Header from "./components/header/Header";
 import CourseCards from "./components/CourseCards";
 
-const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
 export default function Page() {
   return (
-    <div
-      className={cn(
-        "min-h-screen bg-background font-sans antialiased",
-        fontSans.variable,
-      )}
-    >
+    <div>
       <Header />
       <div className="container px-2 sm:px-4">
         <div className="block justify-center my-16">
