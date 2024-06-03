@@ -2,6 +2,7 @@
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
 import isAdminAuth from "../../actions/isAdminAuth";
+import logger from "@/winston-config";
 
 const prisma = new PrismaClient();
 
@@ -30,7 +31,7 @@ export default async function editCourse(
   if (!validation.success) {
     //validation failed
 
-    console.error("Form validation failed.");
+    logger.error("Form validation failed.");
     return { success: false, error: "Form validation failed." };
   } else {
     //validation successful
@@ -46,7 +47,7 @@ export default async function editCourse(
       return { success: true };
     } catch (e) {
       //database error
-      console.error("prisma error: failed to edit course", e);
+      logger.error("prisma error: failed to edit course", e);
       return {
         success: false,
         error: "Database error: Failed to edit course.",

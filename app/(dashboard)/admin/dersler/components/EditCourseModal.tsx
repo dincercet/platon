@@ -1,8 +1,16 @@
-import { Stack, Button, Modal, TextInput, Textarea } from "@mantine/core";
+import {
+  Stack,
+  Button,
+  Modal,
+  TextInput,
+  Textarea,
+  Group,
+} from "@mantine/core";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import editCourse from "../actions/editCourse";
+import deleteCourse from "../actions/deleteCourse";
 
 type FormValues = {
   name: string;
@@ -27,6 +35,7 @@ export default function EditCourseModal({
   courseId,
   courseName,
   courseDescription,
+  relatedCurriculum,
   fetchCourses,
 }: {
   opened: boolean;
@@ -34,6 +43,7 @@ export default function EditCourseModal({
   courseId: number;
   courseName: string;
   courseDescription: string;
+  relatedCurriculum: number | undefined;
   fetchCourses: () => Promise<void>;
 }) {
   //mantine form hook
@@ -53,6 +63,25 @@ export default function EditCourseModal({
       res = await editCourse(courseId, values.name, values.description);
       if (!res.success) {
         //error returned from editCourse action
+        console.error(res.error);
+      }
+      //close the modal
+      close();
+
+      //update the parent state 'courses'
+      await fetchCourses();
+    } catch (e) {
+      console.error("unknown error editCourse", e);
+      close();
+    }
+  }
+
+  async function handleDeleteCourse() {
+    try {
+      //deleteCourse action call
+      const res = await deleteCourse(courseId);
+      if (!res.success) {
+        //error returned from deleteCourse action
         console.error(res.error);
       }
       //close the modal
@@ -87,7 +116,16 @@ export default function EditCourseModal({
             {...form.getInputProps("description")}
           />
 
-          <Button type="submit">Güncelle</Button>
+          <Group>
+            <Button type="submit">Güncelle</Button>
+            {relatedCurriculum === undefined ? (
+              <Button color="red" onClick={handleDeleteCourse}>
+                Sil
+              </Button>
+            ) : (
+              <Button color="yellow">Eskit</Button>
+            )}
+          </Group>
         </Stack>
       </form>
     </Modal>

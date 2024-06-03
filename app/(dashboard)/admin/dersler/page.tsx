@@ -20,7 +20,13 @@ export default function CoursesPage() {
 
   //array of courses fetched
   const [courses, setCourses] = useState<
-    { id: number; name: string; description: string; legacy: boolean }[]
+    {
+      id: number;
+      name: string;
+      description: string;
+      legacy: boolean;
+      curriculums: { course_id: number | undefined }[];
+    }[]
   >([]);
 
   //the values to be passed to EditCourseModal
@@ -46,7 +52,7 @@ export default function CoursesPage() {
         console.error(resParsed.error);
         return;
       }
-
+      console.log(resParsed.courses);
       //set courses state based on retrieved courses
       if (resParsed.courses.length > 0) setCourses(resParsed.courses);
     } catch (e) {
@@ -98,6 +104,7 @@ export default function CoursesPage() {
           courseId={courses[selectedCourse].id}
           courseName={courses[selectedCourse].name}
           courseDescription={courses[selectedCourse].description}
+          relatedCurriculum={courses[selectedCourse].curriculums[0].course_id}
           fetchCourses={fetchCourses}
         />
       )}
