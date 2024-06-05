@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import isAdminAuth from "app/(dashboard)/admin/actions/isAdminAuth";
+import logger from "@/winston-config";
 
 const prisma = new PrismaClient();
 
@@ -12,7 +13,24 @@ export async function GET(): Promise<NextResponse> {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   } catch (e) {
-    console.error("isAdminAuth error", e);
+    logger.error("isAdminAuth error", e);
+  }
+
+  //we will have to check if there are related periods
+  //if there are any, we need to know on the client side, to show the appropriate button (make legacy or delete)
+  let relatedPeriods;
+  try {
+    //find if there are related periods, if so get the curriculum ids
+    relatedPeriods = await prisma.curriculum_periods.findMany({
+      select: { curriculum_id: true },
+      distinct: ["curriculum_id"],
+    });
+  } catch (e) {
+    logger.error("prisma error fetching related periods", e);
+    return NextResponse.json(
+      { error: "Database error: Couldn't fetch related periods" },
+      { status: 500 },
+    );
   }
 
   try {
@@ -21,6 +39,7 @@ export async function GET(): Promise<NextResponse> {
       select: {
         id: true,
         created_at: true,
+        legacy: true,
         course: { select: { name: true } },
         weeks: { select: { id: true, week_no: true, description: true } },
       },
@@ -37,7 +56,7 @@ export async function GET(): Promise<NextResponse> {
       return NextResponse.json({ curriculums: curriculums }, { status: 200 });
   } catch (e) {
     //db error
-    console.error("error fetching curriculums", e);
+    logger.error("prisma error fetching curriculums", e);
     return NextResponse.json(
       { error: "Database error: Couldn't fetch curriculums" },
       { status: 500 },

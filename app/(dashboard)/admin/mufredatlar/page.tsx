@@ -17,6 +17,7 @@ export default function Page() {
     {
       curriculumId: number;
       createdAt: Date;
+      legacy: boolean;
       courseName: string;
       weeks: { weekId: number; weekNo: number; weekDescription: string }[];
     }[]
@@ -51,6 +52,7 @@ export default function Page() {
             (curriculum: {
               id: number;
               created_at: Date;
+              legacy: boolean;
               course: { name: string };
               weeks: { id: number; week_no: number; description: string }[];
             }) => {
@@ -58,6 +60,7 @@ export default function Page() {
               return {
                 curriculumId: curriculum.id,
                 createdAt: curriculum.created_at,
+                legacy: curriculum.legacy,
                 courseName: curriculum.course.name,
                 //create a new array of weeks related to the curriculum
                 weeks: curriculum.weeks.map((week) => {
