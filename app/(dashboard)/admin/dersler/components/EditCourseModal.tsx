@@ -11,6 +11,7 @@ import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import editCourse from "../actions/editCourse";
 import deleteCourse from "../actions/deleteCourse";
+import makeCourseLegacy from "../actions/makeCourseLegacy";
 
 type FormValues = {
   name: string;
@@ -35,6 +36,7 @@ export default function EditCourseModal({
   courseId,
   courseName,
   courseDescription,
+  legacy,
   relatedCurriculum,
   fetchCourses,
 }: {
@@ -43,6 +45,7 @@ export default function EditCourseModal({
   courseId: number;
   courseName: string;
   courseDescription: string;
+  legacy: boolean;
   relatedCurriculum: number | undefined;
   fetchCourses: () => Promise<void>;
 }) {
@@ -90,7 +93,26 @@ export default function EditCourseModal({
       //update the parent state 'courses'
       await fetchCourses();
     } catch (e) {
-      console.error("unknown error editCourse", e);
+      console.error("unknown error deleteCourse", e);
+      close();
+    }
+  }
+
+  async function handleMakeCourseLegacy() {
+    try {
+      //makeCourseLegacy action call
+      const res = await makeCourseLegacy(courseId);
+      if (!res.success) {
+        //error returned from makeCourseLegacy action
+        console.error(res.error);
+      }
+      //close the modal
+      close();
+
+      //update the parent state 'courses'
+      await fetchCourses();
+    } catch (e) {
+      console.error("unknown error makeCourseLegacy", e);
       close();
     }
   }
@@ -123,7 +145,13 @@ export default function EditCourseModal({
                 Sil
               </Button>
             ) : (
-              <Button color="yellow">Eskit</Button>
+              <Button
+                color="yellow"
+                disabled={legacy}
+                onClick={handleMakeCourseLegacy}
+              >
+                Eskit
+              </Button>
             )}
           </Group>
         </Stack>

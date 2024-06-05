@@ -104,6 +104,7 @@ export default function CoursesPage() {
           courseId={courses[selectedCourse].id}
           courseName={courses[selectedCourse].name}
           courseDescription={courses[selectedCourse].description}
+          legacy={courses[selectedCourse].legacy}
           relatedCurriculum={courses[selectedCourse].curriculums[0].course_id}
           fetchCourses={fetchCourses}
         />
