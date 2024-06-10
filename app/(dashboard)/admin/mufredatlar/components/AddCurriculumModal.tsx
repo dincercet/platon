@@ -40,7 +40,12 @@ export default function AddCurriculumModal({
 }) {
   //array of courses fetched
   const [courses, setCourses] = useState<
-    { id: number; name: string; legacy: boolean }[]
+    {
+      id: number;
+      name: string;
+      legacy: boolean;
+      curriculums: { legacy: boolean }[];
+    }[]
   >([]);
 
   //selected course id to pass into addCurriculum to create empty curriculum (keeps it as string to set the 'NativeSelect' component value)
@@ -178,7 +183,9 @@ export default function AddCurriculumModal({
                 return {
                   label: course.name,
                   value: course.id.toString(),
-                  disabled: course.legacy,
+                  //set it to disabled if course is legacy,
+                  //or if the course has another curriculum that is not legacy.
+                  disabled: course.legacy || !course.curriculums[0].legacy,
                 };
               })}
             />

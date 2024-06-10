@@ -2,6 +2,7 @@
 import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
 import isAdminAuth from "../../actions/isAdminAuth";
+import logger from "@/winston-config";
 
 const prisma = new PrismaClient();
 
@@ -22,10 +23,33 @@ export default async function addCurriculum(
   if (!validation.success) {
     //validation failed
 
-    console.error("Form validation failed.");
+    logger.error("Form validation failed.");
     return { success: false, error: "Form validation failed." };
   } else {
     //validation successful
+
+    try {
+      //check if there is an existing curriculum that is not legacy on the same course
+      const existingCurriculum = await prisma.course_curriculums.findFirst({
+        select: { id: true },
+        where: { course_id: courseId, legacy: false },
+      });
+
+      //if exists, return error
+      if (existingCurriculum) {
+        return {
+          success: false,
+          error: "A non-legacy curriculum already exists for this course.",
+        };
+      }
+    } catch (e) {
+      //database error
+      logger.error("prisma error: failed when checking existing curriculum", e);
+      return {
+        success: false,
+        error: "Database error: Failed when checking existing curriculum.",
+      };
+    }
 
     try {
       //create an entry in course_curriculums table
@@ -39,7 +63,7 @@ export default async function addCurriculum(
         : { success: false, error: "Failed to add curriculum." }; //no added curriculum returned
     } catch (e) {
       //database error
-      console.error("prisma error: failed to add curriculum", e);
+      logger.error("prisma error: failed to add curriculum", e);
       return {
         success: false,
         error: "Database error: Failed to add curriculum.",

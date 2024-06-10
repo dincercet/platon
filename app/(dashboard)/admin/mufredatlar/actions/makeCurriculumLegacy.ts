@@ -6,7 +6,7 @@ import logger from "@/winston-config";
 
 const prisma = new PrismaClient();
 
-export default async function makeCourseLegacy(
+export default async function makeCurriculumLegacy(
   id: number,
 ): Promise<{ success: boolean; error?: string }> {
   //check authorization
@@ -31,27 +31,8 @@ export default async function makeCourseLegacy(
     //validation successful
 
     try {
-      //make related curriculums legacy
-      await prisma.course_curriculums.updateMany({
-        where: { course_id: id },
-        data: { legacy: true },
-      });
-    } catch (e) {
-      //database error
-      logger.error(
-        "prisma error: failed to update course related curriculum to legacy.",
-        e,
-      );
-      return {
-        success: false,
-        error:
-          "Database error: failed to update course related curriculum to legacy.",
-      };
-    }
-
-    try {
-      //make the course legacy
-      await prisma.courses.update({
+      //make the curriculum legacy
+      await prisma.course_curriculums.update({
         where: { id: id },
         data: { legacy: true },
       });
@@ -60,10 +41,10 @@ export default async function makeCourseLegacy(
       return { success: true };
     } catch (e) {
       //database error
-      logger.error("prisma error: failed to make course legacy.", e);
+      logger.error("prisma error: failed to make curriculum legacy.", e);
       return {
         success: false,
-        error: "Database error: failed to make course legacy.",
+        error: "Database error: failed to make curriculum legacy.",
       };
     }
   }

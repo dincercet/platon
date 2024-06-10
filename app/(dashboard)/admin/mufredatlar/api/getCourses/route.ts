@@ -18,7 +18,14 @@ export async function GET(): Promise<NextResponse> {
   try {
     //retrieve courses from db
     const courses = await prisma.courses.findMany({
-      select: { id: true, name: true, legacy: true },
+      select: {
+        id: true,
+        name: true,
+        legacy: true,
+        curriculums: {
+          select: { legacy: true },
+        },
+      },
     });
 
     //if courses not null, return courses

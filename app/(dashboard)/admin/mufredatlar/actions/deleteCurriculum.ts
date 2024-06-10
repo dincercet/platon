@@ -6,7 +6,7 @@ import logger from "@/winston-config";
 
 const prisma = new PrismaClient();
 
-export default async function makeCourseLegacy(
+export default async function deleteCurriculum(
   id: number,
 ): Promise<{ success: boolean; error?: string }> {
   //check authorization
@@ -31,39 +31,39 @@ export default async function makeCourseLegacy(
     //validation successful
 
     try {
-      //make related curriculums legacy
-      await prisma.course_curriculums.updateMany({
-        where: { course_id: id },
-        data: { legacy: true },
+      //check if there is a related period
+      const found = await prisma.curriculum_periods.findFirst({
+        where: { curriculum_id: id },
       });
+
+      if (found)
+        return {
+          success: false,
+          error: "Curriculum has related period. Delete the period first.",
+        };
     } catch (e) {
       //database error
-      logger.error(
-        "prisma error: failed to update course related curriculum to legacy.",
-        e,
-      );
+      logger.error("prisma error: failed to check curriculum period.", e);
       return {
         success: false,
-        error:
-          "Database error: failed to update course related curriculum to legacy.",
+        error: "Database error: Failed to check curriculum period.",
       };
     }
 
     try {
-      //make the course legacy
-      await prisma.courses.update({
+      //delete curriculum based on id
+      await prisma.course_curriculums.delete({
         where: { id: id },
-        data: { legacy: true },
       });
 
       //successful
       return { success: true };
     } catch (e) {
       //database error
-      logger.error("prisma error: failed to make course legacy.", e);
+      logger.error("prisma error: failed to delete curriculum", e);
       return {
         success: false,
-        error: "Database error: failed to make course legacy.",
+        error: "Database error: Failed to delete curriculum.",
       };
     }
   }

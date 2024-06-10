@@ -1,11 +1,21 @@
 "use client";
 
 import { useDisclosure } from "@mantine/hooks";
-import { Flex, rem, Button, Accordion, Radio, Center } from "@mantine/core";
+import {
+  Flex,
+  rem,
+  Button,
+  Accordion,
+  Radio,
+  Center,
+  Group,
+} from "@mantine/core";
 import AddCurriculumModal from "./components/AddCurriculumModal";
 import EditCurriculumModal from "./components/EditCurriculumModal";
 import { IconPlus, IconEdit } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import deleteCurriculum from "./actions/deleteCurriculum";
+import makeCurriculumLegacy from "./actions/makeCurriculumLegacy";
 
 export default function Page() {
   //handlers to open and close modals
@@ -20,6 +30,7 @@ export default function Page() {
       legacy: boolean;
       courseName: string;
       weeks: { weekId: number; weekNo: number; weekDescription: string }[];
+      isRelated: boolean;
     }[]
   >([]);
 
@@ -55,6 +66,7 @@ export default function Page() {
               legacy: boolean;
               course: { name: string };
               weeks: { id: number; week_no: number; description: string }[];
+              isRelated: boolean;
             }) => {
               //array created is a little complicated because of nested query from database.
               return {
@@ -70,6 +82,7 @@ export default function Page() {
                     weekDescription: week.description,
                   };
                 }),
+                isRelated: curriculum.isRelated,
               };
             },
           ),
@@ -77,6 +90,42 @@ export default function Page() {
       }
     } catch (e) {
       console.error("error fetching curriculums", e);
+    }
+  }
+
+  async function handleDeleteCurriculum() {
+    try {
+      //deleteCurriculum action call
+      const res = await deleteCurriculum(
+        curriculums[selectedCurriculum].curriculumId,
+      );
+      if (!res.success) {
+        //error returned from deleteCurriculum action
+        console.error(res.error);
+      }
+
+      //update the curriculums array
+      await fetchCurriculums();
+    } catch (e) {
+      console.error("unknown error deleteCurriculum", e);
+    }
+  }
+
+  async function handleMakeCurriculumLegacy() {
+    try {
+      //makeCurriculumLegacy action call
+      const res = await makeCurriculumLegacy(
+        curriculums[selectedCurriculum].curriculumId,
+      );
+      if (!res.success) {
+        //error returned from makeCurriculumLegacy action
+        console.error(res.error);
+      }
+
+      //update the curriculums array
+      await fetchCurriculums();
+    } catch (e) {
+      console.error("unknown error makeCurriculumLegacy", e);
     }
   }
 
@@ -112,7 +161,7 @@ export default function Page() {
               setIsCurriculumSelected(true);
             }}
           />
-          <Accordion.Control>
+          <Accordion.Control color={curriculum.legacy ? "red" : undefined}>
             {date.getDate() +
               " " +
               months[date.getMonth()] +
@@ -177,16 +226,32 @@ export default function Page() {
           </Accordion>
         )}
 
-        <Button
-          variant="outline"
-          disabled={!isCurriculumSelected}
-          mt={rem(8)}
-          onClick={() => {
-            editCurriculumHandlers.open();
-          }}
-        >
-          <IconEdit />
-        </Button>
+        <Group>
+          <Button
+            variant="outline"
+            disabled={!isCurriculumSelected}
+            mt={rem(8)}
+            onClick={() => {
+              editCurriculumHandlers.open();
+            }}
+          >
+            <IconEdit />
+          </Button>
+
+          {curriculums[selectedCurriculum].isRelated === false ? (
+            <Button color="red" onClick={handleDeleteCurriculum}>
+              Sil
+            </Button>
+          ) : (
+            <Button
+              color="yellow"
+              disabled={curriculums[selectedCurriculum].legacy}
+              onClick={handleMakeCurriculumLegacy}
+            >
+              Eskit
+            </Button>
+          )}
+        </Group>
       </Flex>
     </>
   );
