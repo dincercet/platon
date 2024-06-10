@@ -33,9 +33,10 @@ export async function GET(): Promise<NextResponse> {
     );
   }
 
+  let curriculums: any[] | null;
   try {
     //retrieve curriculums with course name from db
-    const curriculums = await prisma.course_curriculums.findMany({
+    curriculums = await prisma.course_curriculums.findMany({
       select: {
         id: true,
         created_at: true,
@@ -43,7 +44,7 @@ export async function GET(): Promise<NextResponse> {
         course: { select: { name: true } },
         weeks: { select: { id: true, week_no: true, description: true } },
       },
-      orderBy: { legacy: "desc" },
+      orderBy: [{ legacy: "asc" }, { id: "desc" }],
     });
 
     //check if curriculums is null
@@ -56,16 +57,18 @@ export async function GET(): Promise<NextResponse> {
       //here we check each related period's curriculum_id and add a flag to each curriculum to show if it's related to a period
 
       //add a flag to each curriculum
-      let bindedCurriculums = curriculums.map((curriculum) => {
-        return { ...curriculum, isRelated: false };
+      curriculums = curriculums.map((curriculum) => {
+        curriculum.isRelated = false;
+        return curriculum;
       });
+
       //within nested for loops
-      for (let i = 0; i < bindedCurriculums.length; i++) {
+      for (let i = 0; i < curriculums.length; i++) {
         for (let j = 0; j < relatedPeriods.length; j++) {
           //compare the ids
-          if (bindedCurriculums[i].id === relatedPeriods[j].curriculum_id) {
+          if (curriculums[i].id === relatedPeriods[j].curriculum_id) {
             //if same, add flag and put it in the new array
-            bindedCurriculums[i].isRelated = true;
+            curriculums[i]["isRelated"] = true;
 
             //remove the related id so we don't check the same id again
             relatedPeriods.splice(j, 1);
@@ -75,10 +78,7 @@ export async function GET(): Promise<NextResponse> {
       }
 
       //success
-      return NextResponse.json(
-        { curriculums: bindedCurriculums },
-        { status: 200 },
-      );
+      return NextResponse.json({ curriculums: curriculums }, { status: 200 });
     }
   } catch (e) {
     //db error

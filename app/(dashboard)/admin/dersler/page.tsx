@@ -1,6 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Accordion, Button, Flex, rem, Center, Radio } from "@mantine/core";
+import {
+  Accordion,
+  Button,
+  Flex,
+  rem,
+  Center,
+  Radio,
+  Text,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconEdit } from "@tabler/icons-react";
 import AddCourseModal from "./components/AddCourseModal";
@@ -62,7 +70,15 @@ export default function CoursesPage() {
 
   //an accordion array to list courses
   const courseList = courses.map(
-    (course: { id: number; name: string; description: string }, index) => {
+    (
+      course: {
+        id: number;
+        name: string;
+        description: string;
+        legacy: boolean;
+      },
+      index,
+    ) => {
       return (
         <Accordion.Item key={course.id} value={course.name}>
           <Center>
@@ -74,7 +90,11 @@ export default function CoursesPage() {
                 setIsCourseSelected(true);
               }}
             />
-            <Accordion.Control>{course.name}</Accordion.Control>
+            <Accordion.Control>
+              <Text c={course.legacy ? "orange" : undefined}>
+                {course.name}
+              </Text>
+            </Accordion.Control>
           </Center>
           <Accordion.Panel>{course.description}</Accordion.Panel>
         </Accordion.Item>

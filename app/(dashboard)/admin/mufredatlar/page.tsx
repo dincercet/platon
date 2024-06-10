@@ -9,6 +9,7 @@ import {
   Radio,
   Center,
   Group,
+  Text,
 } from "@mantine/core";
 import AddCurriculumModal from "./components/AddCurriculumModal";
 import EditCurriculumModal from "./components/EditCurriculumModal";
@@ -54,7 +55,6 @@ export default function Page() {
         console.error(resParsed.error);
         return;
       }
-
       if (resParsed.curriculums.length > 0) {
         //set curriculums state array
         setCurriculums(
@@ -104,6 +104,7 @@ export default function Page() {
         console.error(res.error);
       }
 
+      setIsCurriculumSelected(false);
       //update the curriculums array
       await fetchCurriculums();
     } catch (e) {
@@ -122,6 +123,7 @@ export default function Page() {
         console.error(res.error);
       }
 
+      setIsCurriculumSelected(false);
       //update the curriculums array
       await fetchCurriculums();
     } catch (e) {
@@ -161,12 +163,14 @@ export default function Page() {
               setIsCurriculumSelected(true);
             }}
           />
-          <Accordion.Control color={curriculum.legacy ? "red" : undefined}>
-            {date.getDate() +
-              " " +
-              months[date.getMonth()] +
-              ": " +
-              curriculum.courseName}
+          <Accordion.Control>
+            <Text c={curriculum.legacy ? "orange" : undefined}>
+              {date.getDate() +
+                " " +
+                months[date.getMonth()] +
+                ": " +
+                curriculum.courseName}
+            </Text>
           </Accordion.Control>
         </Center>
         <Accordion.Panel>
@@ -226,11 +230,10 @@ export default function Page() {
           </Accordion>
         )}
 
-        <Group>
+        <Group grow mt={rem(8)}>
           <Button
             variant="outline"
             disabled={!isCurriculumSelected}
-            mt={rem(8)}
             onClick={() => {
               editCurriculumHandlers.open();
             }}
@@ -238,19 +241,20 @@ export default function Page() {
             <IconEdit />
           </Button>
 
-          {curriculums[selectedCurriculum].isRelated === false ? (
-            <Button color="red" onClick={handleDeleteCurriculum}>
-              Sil
-            </Button>
-          ) : (
-            <Button
-              color="yellow"
-              disabled={curriculums[selectedCurriculum].legacy}
-              onClick={handleMakeCurriculumLegacy}
-            >
-              Eskit
-            </Button>
-          )}
+          {isCurriculumSelected &&
+            (curriculums[selectedCurriculum].isRelated === false ? (
+              <Button color="red" onClick={handleDeleteCurriculum}>
+                Sil
+              </Button>
+            ) : (
+              <Button
+                color="yellow"
+                disabled={curriculums[selectedCurriculum].legacy}
+                onClick={handleMakeCurriculumLegacy}
+              >
+                Eskit
+              </Button>
+            ))}
         </Group>
       </Flex>
     </>
