@@ -44,12 +44,15 @@ export default function AddCurriculumModal({
       id: number;
       name: string;
       legacy: boolean;
-      curriculums: { legacy: boolean }[];
+      curriculums: { legacy: boolean | undefined }[];
     }[]
   >([]);
 
   //selected course id to pass into addCurriculum to create empty curriculum (keeps it as string to set the 'NativeSelect' component value)
   const [selectedCourseId, setSelectedCourseId] = useState(0);
+
+  //set to true after course is selected
+  const [isCourseSelected, setIsCourseSelected] = useState(false);
 
   //set to true after empty curriculum is created
   const [isCurriculumInitiated, setIsCurriculumInitiated] = useState(false);
@@ -87,9 +90,33 @@ export default function AddCurriculumModal({
 
       //set courses state based on retrieved courses
       if (resParsed.courses.length > 0) {
-        setCourses(resParsed.courses);
+        //exclude legacy courses
+        const freshCourses = resParsed.courses.filter(
+          (course: any) => !course.legacy,
+        );
+        setCourses(freshCourses);
 
-        setSelectedCourseId(resParsed.courses[0].id);
+        //find a course to select in NativeSelect
+        //(this step is to ensure none of the disabled choices are selected)
+        const courseToSelect = freshCourses.find(
+          (course: any) =>
+            course.curriculums[course.curriculums.length - 1] === undefined || //find one that's not related to any curriculum OR
+            course.curriculums[course.curriculums.length - 1].legacy, //find one that's related to a legacy curriculum
+        );
+
+        //if nothing to select found, it will remain to be 0
+        let selectedId = 0;
+
+        //if selectable course is found
+        if (courseToSelect) {
+          //assign its id
+          selectedId = courseToSelect.id;
+          //and claim that it's selected
+          setIsCourseSelected(true);
+        }
+
+        //finally update the selected course state
+        setSelectedCourseId(selectedId);
       }
     } catch (e) {
       console.error("error fetching courses", e);
@@ -99,7 +126,7 @@ export default function AddCurriculumModal({
   async function handleInitiateCurriculum() {
     try {
       //addCurriculum action call
-      const res = await addCurriculum(selectedCourseId);
+      const res = await addCurriculum(selectedCourseId!);
       if (!res.success || !res.curriculumId) {
         //error returned from addCurriculum action
         console.error(res.error);
@@ -175,23 +202,28 @@ export default function AddCurriculumModal({
             <NativeSelect
               label="Dersi Seçiniz"
               value={selectedCourseId.toString()}
-              onChange={(event) =>
-                setSelectedCourseId(parseInt(event.currentTarget.value))
-              }
+              onChange={(event) => {
+                setSelectedCourseId(parseInt(event.currentTarget.value));
+                setIsCourseSelected(true);
+              }}
               disabled={!courses.length || isCurriculumInitiated}
               data={courses.map((course) => {
                 return {
                   label: course.name,
                   value: course.id.toString(),
-                  //set it to disabled if course is legacy,
-                  //or if the course has another curriculum that is not legacy.
-                  disabled: course.legacy || !course.curriculums[0].legacy,
+                  //set it to disabled if the course has another curriculum that is not legacy.
+                  disabled:
+                    course.curriculums[course.curriculums.length - 1] !==
+                      undefined &&
+                    !course.curriculums[course.curriculums.length - 1].legacy,
                 };
               })}
             />
             <Button
               type="submit"
-              disabled={!courses.length || isCurriculumInitiated}
+              disabled={
+                !courses.length || !isCourseSelected || isCurriculumInitiated
+              }
             >
               Dersi Seç
             </Button>

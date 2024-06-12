@@ -29,23 +29,13 @@ loginpage:
 
 admin:
   courses:
-  -add delete function but only allow it if it is not connected to a student period, make it 'legacy' if it is connected to a student period
   -consider adding server side props for initial courses state (route segment config on nextjs docs: getStaticProps equivalent of app router)
 
-  -sort by id descending
-  -group by legacy
-  -change color if legacy
-
   -test with empty list
-  -add course modal: disable add button if form variables empty
-  -edit course modal: disable edit button if form isTouched false
 
   curriculums:
-  -change color if legacy
-  -add delete function if there is no students, make it legacy if there are students
-  -every curriculum can only have one course. When adding a new curriculum, check if the chosen course has a non-legacy curriculum, if there is, require to make the existing curriculum legacy
-   maybe just exclude courses that have a non-legacy curriculum when adding new curriculum
 
+  -curriculums[selectedCurriculum] is undefined when the last item of curriculums is deleted (none of the items becomes selected so 'remove' button throws error (after isCurriculumSelected &&))
   -add delete last week function
 
   -sort by newest and display whether legacy

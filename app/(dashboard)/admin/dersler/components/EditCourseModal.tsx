@@ -139,7 +139,9 @@ export default function EditCourseModal({
           />
 
           <Group>
-            <Button type="submit">Güncelle</Button>
+            <Button type="submit" disabled={!form.isDirty()}>
+              Güncelle
+            </Button>
             {relatedCurriculum === undefined ? (
               <Button color="red" onClick={handleDeleteCourse}>
                 Sil

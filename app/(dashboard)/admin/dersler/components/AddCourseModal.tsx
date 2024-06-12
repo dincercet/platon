@@ -80,7 +80,12 @@ export default function AddCourseModal({
             {...form.getInputProps("description")}
           />
 
-          <Button type="submit">Ekle</Button>
+          <Button
+            type="submit"
+            disabled={!form.isDirty("name") || !form.isDirty("description")}
+          >
+            Ekle
+          </Button>
         </Stack>
       </form>
     </Modal>

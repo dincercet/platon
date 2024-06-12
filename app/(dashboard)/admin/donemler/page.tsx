@@ -13,6 +13,7 @@ import ShowStudentsModal from "./components/ShowStudentsModal";
 
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import ShowDocumentsModal from "./components/ShowDocumentsModal";
+import deletePeriod from "./actions/deletePeriod";
 dayjs.extend(localizedFormat);
 
 export default function Page() {
@@ -88,6 +89,24 @@ export default function Page() {
       }
     } catch (e) {
       console.error("error fetching periods", e);
+    }
+  }
+
+  async function handleDeletePeriod() {
+    try {
+      //deletePeriod action call
+      const res = await deletePeriod(periods[selectedPeriod].periodId);
+      if (!res.success) {
+        //error returned from deletePeriod action
+        console.error(res.error);
+      }
+
+      setIsPeriodSelected(false);
+
+      //update the periods array
+      await fetchPeriods();
+    } catch (e) {
+      console.error("unknown error handleDeletePeriod", e);
     }
   }
 
@@ -216,14 +235,22 @@ export default function Page() {
         >
           Dökümanlar
         </Button>
-        <Button //edit button
-          variant="outline"
-          disabled={!isPeriodSelected}
-          mt={rem(8)}
-          onClick={editPeriodHandlers.open}
-        >
-          <IconEdit />
-        </Button>
+        <Group grow mt={rem(8)}>
+          <Button //edit button
+            variant="outline"
+            disabled={!isPeriodSelected}
+            onClick={editPeriodHandlers.open}
+          >
+            <IconEdit />
+          </Button>
+          <Button //delete button
+            color="red"
+            disabled={!isPeriodSelected}
+            onClick={handleDeletePeriod}
+          >
+            Sil
+          </Button>
+        </Group>
       </Flex>
     </>
   );

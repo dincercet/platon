@@ -50,11 +50,19 @@ export default async function deleteCurriculum(
       };
     }
 
+    //delete weeks of the curriculum first
+    const deleteWeeks = prisma.curriculum_weeks.deleteMany({
+      where: { curriculum_id: id },
+    });
+
+    //delete curriculum based on id
+    const deleteCurriculum = prisma.course_curriculums.delete({
+      where: { id: id },
+    });
+
     try {
-      //delete curriculum based on id
-      await prisma.course_curriculums.delete({
-        where: { id: id },
-      });
+      //if any of the query failed, rollback
+      await prisma.$transaction([deleteWeeks, deleteCurriculum]);
 
       //successful
       return { success: true };

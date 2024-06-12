@@ -104,7 +104,8 @@ export default function Page() {
         console.error(res.error);
       }
 
-      setIsCurriculumSelected(false);
+      // setSelectedCurriculum(0);
+      // setIsCurriculumSelected(false);
       //update the curriculums array
       await fetchCurriculums();
     } catch (e) {
@@ -123,7 +124,8 @@ export default function Page() {
         console.error(res.error);
       }
 
-      setIsCurriculumSelected(false);
+      // setSelectedCurriculum(0);
+      // setIsCurriculumSelected(false);
       //update the curriculums array
       await fetchCurriculums();
     } catch (e) {
