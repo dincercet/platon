@@ -6,7 +6,7 @@ import logger from "@/winston-config";
 
 const prisma = new PrismaClient();
 
-export default async function deleteCurriculum(
+export default async function deleteLastCurriculumWeek(
   id: number,
 ): Promise<{ success: boolean; error?: string }> {
   //check authorization
