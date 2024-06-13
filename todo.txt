@@ -36,15 +36,16 @@ admin:
   curriculums:
 
   -curriculums[selectedCurriculum] is undefined when the last item of curriculums is deleted (none of the items becomes selected so 'remove' button throws error (after isCurriculumSelected &&))
-  -add delete last week function
 
-  -sort by newest and display whether legacy
   -add new curriculum modal: sort the courses by newest and exclude legacy
+  -test with empty list
 
   periods:
   -add period modal: disable add button in modal when form isTouched false
    exclude legacy curriculums
    sort fetched curriculums by id descending
+
+  -update periods list after removing (the single last one i removed was still there)
 
   -edit period modal: disable edit button in modal when form isTouched false, and change the title of modal
   -sort by beginning date (newest first)

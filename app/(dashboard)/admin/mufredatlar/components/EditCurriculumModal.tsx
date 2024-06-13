@@ -9,6 +9,7 @@ import {
   Textarea,
   Accordion,
   ActionIcon,
+  Group,
 } from "@mantine/core";
 import { IconPlus, IconEdit } from "@tabler/icons-react";
 import { z } from "zod";
@@ -16,6 +17,7 @@ import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import addCurriculumWeek from "../actions/addCurriculumWeek";
 import editCurriculumWeek from "../actions/editCurriculumWeek";
+import deleteLastCurriculumWeek from "../actions/deleteLastCurriculumWeek";
 
 type WeekFormValues = {
   weekNo: number;
@@ -181,6 +183,34 @@ export default function EditCurriculumModal({
     }
   }
 
+  async function handleDeleteLastWeek() {
+    try {
+      //deleteLastCurriculumWeek action call
+      const res = await deleteLastCurriculumWeek(
+        //pass the last week's id
+        curriculumWeeks[curriculumWeeks.length - 1].weekId,
+      );
+
+      if (!res.success) {
+        //error returned from deleteLastCurriculumWeek action
+        console.error(res.error);
+        return;
+      }
+    } catch (e) {
+      console.error("unknown error deleteLastCurriculumWeek", e);
+      return;
+    }
+
+    setCurriculumWeeks(
+      curriculumWeeks.filter(
+        (week, index) => index !== curriculumWeeks.length - 1,
+      ),
+    );
+
+    //reset the radio group
+    setSelectedWeekValue("");
+  }
+
   const weekList = curriculumWeeks.map((week, index) => {
     return (
       <Accordion.Item key={week.weekId} value={week.weekNo.toString()}>
@@ -262,18 +292,26 @@ export default function EditCurriculumModal({
           //if there are any weeks and form is not rendered, show button
           //otherwise there is no need for this button.
           weekList.length > 0 && !isWeekFormActive && (
-            <Button
-              variant="outline"
-              //if no week is selected, disable the button
-              disabled={selectedWeekValue === ""}
-              mt={rem(8)}
-              onClick={() => {
-                //render the form
-                setIsWeekFormActive(true);
-              }}
-            >
-              <IconEdit />
-            </Button>
+            <Group grow mt={rem(8)}>
+              <Button
+                variant="outline"
+                //if no week is selected, disable the button
+                disabled={selectedWeekValue === ""}
+                onClick={() => {
+                  //render the form
+                  setIsWeekFormActive(true);
+                }}
+              >
+                <IconEdit />
+              </Button>
+              <Button
+                variant="outline"
+                color="red"
+                onClick={handleDeleteLastWeek}
+              >
+                Son Haftayı Sil
+              </Button>
+            </Group>
           )
         }
 
