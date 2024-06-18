@@ -1,19 +1,15 @@
-08.12 bsslangic - 18.03 bitis - 8 mart sunum, 15 mart dosya teslim
-fr39 haftalik faaliyet, 5 gun 5 satir 14 hafta - fr42 isyeri degerlendirme 7. ve 14. hafta - fr122 70 sayfa rapor.
-
 - add error.ts files for fallback because even the panel errors fallback to the default root error page.
 - add loading state for fetching data
 
--return error messages from server in Turkish, and display them in UI as a seperate text field.
- get rid of throw new Error() and change them to return; from functions instead.
+- get rid of throw new Error() and change them to return; from functions instead.
 
 header:
-- fix the responsiveness and make the burger button work. Will need a drawer on small screens.
 - why is onAuthStateChanged called 3 times on every useEffect execution?
 - logout button doesn't clear local storage but clears cookies.
 
 panel:
 - check if the container component causes the layout.tsx to be rendered on the client. (security risk)
+  will need to try GET request for unauthorized access to admin panel, to see whether the first render is allowed within admin/layout.tsx
 
 actions:
 - throttling? debouncing?
@@ -28,8 +24,9 @@ loginpage:
 - login page is reachable for logged in users, restrict it.
 
 admin:
+ - will need pagination for every admin page, to prevent overloading.
+
   courses:
-  -consider adding server side props for initial courses state (route segment config on nextjs docs: getStaticProps equivalent of app router)
   -test with empty list
 
   curriculums:
@@ -45,4 +42,4 @@ admin:
   -test remove student
   -test with empty list
 
-you used localstorage for passing email in download/getDocuments (admin and student panel), adjust it to whichever storage is used
+- you used localstorage for passing email in download/getDocuments (admin and student panel), adjust it to whichever storage is used
