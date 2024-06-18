@@ -39,6 +39,7 @@ export async function GET(): Promise<NextResponse> {
           },
         },
       },
+      orderBy: { id: "desc" },
     });
 
     //check if students is null

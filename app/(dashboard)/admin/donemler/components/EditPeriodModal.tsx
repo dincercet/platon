@@ -49,7 +49,6 @@ export default function EditPeriodModal({
 
   useEffect(() => {
     fetchCurriculums();
-    console.log("useEffect fetchCurriculums called");
   }, []);
 
   async function fetchCurriculums() {
@@ -138,7 +137,7 @@ export default function EditPeriodModal({
   };
 
   return (
-    <Modal opened={opened} onClose={close} title="Yeni Dönem" centered>
+    <Modal opened={opened} onClose={close} title="Dönemi Düzenle" centered>
       <form
         onSubmit={(e) => {
           e?.preventDefault();

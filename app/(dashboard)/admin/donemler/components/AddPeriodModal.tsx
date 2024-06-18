@@ -165,7 +165,12 @@ export default function AddPeriodModal({
             />
           </DatesProvider>
 
-          <Button type="submit">Dönemi Ekle</Button>
+          <Button
+            type="submit"
+            disabled={dateValues[0] === null || dateValues[1] === null}
+          >
+            Dönemi Ekle
+          </Button>
         </Stack>
       </form>
     </Modal>

@@ -64,23 +64,6 @@ export default function ShowPeriodsModal({
       }
 
       if (resParsed.periods.length > 0) {
-        // setFetchedPeriods(
-        //   resParsed.periods.map(
-        //     (period: {
-        //       id: number;
-        //       begins_at: Date;
-        //       ends_at: Date;
-        //       curriculum: { course: { name: string } };
-        //     }) => {
-        //       return {
-        //         id: period.id,
-        //         beginsAt: new Date(period.begins_at),
-        //         endsAt: new Date(period.ends_at),
-        //         courseName: period.curriculum.course.name,
-        //       };
-        //     },
-        //   ),
-        // );
         const newFetchedPeriods = resParsed.periods.map(
           (period: {
             id: number;

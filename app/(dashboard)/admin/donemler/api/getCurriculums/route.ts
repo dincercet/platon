@@ -24,6 +24,7 @@ export async function GET(): Promise<NextResponse> {
         legacy: true,
         course: { select: { name: true } },
       },
+      orderBy: [{ legacy: "asc" }, { id: "desc" }],
     });
 
     //check if curriculums is null

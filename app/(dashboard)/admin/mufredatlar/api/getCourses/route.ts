@@ -26,6 +26,7 @@ export async function GET(): Promise<NextResponse> {
           select: { legacy: true },
         },
       },
+      orderBy: { id: "desc" },
     });
 
     //if courses not null, return courses

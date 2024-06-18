@@ -30,35 +30,19 @@ loginpage:
 admin:
   courses:
   -consider adding server side props for initial courses state (route segment config on nextjs docs: getStaticProps equivalent of app router)
-
   -test with empty list
 
   curriculums:
-
   -curriculums[selectedCurriculum] is undefined when the last item of curriculums is deleted (none of the items becomes selected so 'remove' button throws error (after isCurriculumSelected &&))
-
-  -add new curriculum modal: sort the courses by newest and exclude legacy
   -test with empty list
 
   periods:
-  -add period modal: disable add button in modal when form isTouched false
-   exclude legacy curriculums
-   sort fetched curriculums by id descending
-
   -update periods list after removing (the single last one i removed was still there)
-
-  -edit period modal: disable edit button in modal when form isTouched false, and change the title of modal
-  -sort by beginning date (newest first)
+  -change outdated periods' color to orange
   -test with empty list
 
   students:
-  -sort the students by newest
-  -sort periods by beginning date (newest first)
-
-  -add student modal: sort periods by beginning date (newest first)
-  -edit periods modal: sort fetchedPeriods by beginning date (newest first)
-
   -test remove student
-  -implement button to resend email sign up link (later if needed)
+  -test with empty list
 
 you used localstorage for passing email in download/getDocuments (admin and student panel), adjust it to whichever storage is used
