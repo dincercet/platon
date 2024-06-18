@@ -27,14 +27,17 @@ admin:
  - will need pagination for every admin page, to prevent overloading.
 
   courses:
+  -warn when making legacy
   -test with empty list
 
   curriculums:
   -curriculums[selectedCurriculum] is undefined when the last item of curriculums is deleted (none of the items becomes selected so 'remove' button throws error (after isCurriculumSelected &&))
+  -warn when making legacy
   -test with empty list
 
   periods:
   -update periods list after removing (the single last one i removed was still there)
+  -warn when deleting
   -change outdated periods' color to orange
   -test with empty list
 
