@@ -18,7 +18,7 @@ export default function Page() {
                 { text: "dünyasını" },
                 {
                   text: "Platon'da",
-                  className: "text-blue-500 dark:text-blue-500",
+                  className: "text-blue-700 dark:text-blue-400",
                 },
                 { text: "keşfedin." },
               ]}
@@ -30,7 +30,7 @@ export default function Page() {
               <p className="md:text-2xl">
                 {"Adana'da"}
                 <br />
-                <span className="text-blue-500 dark:text-blue-500">
+                <span className="text-blue-700 dark:text-blue-400">
                   20 yıldır
                 </span>
                 <br />
@@ -41,7 +41,7 @@ export default function Page() {
               <p className="md:text-2xl">
                 ve alanımızda
                 <br />
-                <span className="text-blue-500 dark:text-blue-500">
+                <span className="text-blue-700 dark:text-blue-400">
                   iddaalıyız.
                 </span>
               </p>
