@@ -11,7 +11,9 @@ export default function Page() {
         <Header />
         <div className="flex-grow flex flex-col px-2 sm:px-4">
           <div className="flex-grow flex flex-col items-center justify-center my-16">
-            <p className="text-center md:text-lg mb-2">Deneyimimize güvenin.</p>
+            <p className="text-center pb-6 sm:pb-4 md:pb-0 text-lg mb-2 text-indigo-950 dark:text-indigo-200">
+              Adana&apos;ya kök salmış eğitim merkezi
+            </p>
             <TypewriterEffect
               words={[
                 { text: "Bilişim" },
@@ -22,6 +24,7 @@ export default function Page() {
                 },
                 { text: "keşfedin." },
               ]}
+              className="text-wrap text-4xl md:text-5xl"
             />
           </div>
 
