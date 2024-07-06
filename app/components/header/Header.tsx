@@ -209,24 +209,26 @@ export default function Header() {
     <Drawer>
       <header className="container px-2">
         <NavigationMenu>
-          <div className="flex gap-1 sm:hidden justify-self-start">
-            <DrawerTrigger asChild>
+          <div className="col-span-2 sm:col-span-1 flex gap-1 justify-self-start">
+            <DrawerTrigger asChild className="sm:hidden">
               <Button variant="outline" size="icon">
                 <HamburgerMenuIcon />
               </Button>
             </DrawerTrigger>
-            <DarkModeButton className="flex" />
-          </div>
 
-          <div className="flex gap-1 justify-self-center sm:justify-self-start">
-            <Link href={"/"} passHref>
-              <Image
-                src="/platon-logo.png"
-                height={32}
-                width={99}
-                alt="Platon Logo"
-              />
-            </Link>
+            <DarkModeButton className="flex sm:hidden" />
+
+            <div className="sm:justify-self-start content-center">
+              <Link href={"/"} passHref>
+                <Image
+                  src="/platon-logo.png"
+                  height="36"
+                  width="110"
+                  alt="Platon Logo"
+                  className="object-contain"
+                />
+              </Link>
+            </div>
           </div>
 
           <div className="hidden sm:block justify-self-center">
