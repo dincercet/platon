@@ -7,6 +7,36 @@ header:
 - why is onAuthStateChanged called 3 times on every useEffect execution?
 - logout button doesn't clear local storage but clears cookies.
 
+ui:
+ header:
+- adjust the color of the logo
+- fix popover overlap
+- fix popover transparent background
+- fix popover link width
+- fix popover 'logout' link effect
+- sticky navbar
+- add 'nav' for header if not exists and 'main' for pages
+ drawer:
+- change dark mode slider indicator color
+ homepage:
+- check stats initial high-gap issue on small device when in production
+- mention certification?
+ egitimler:
+- remove card effect component
+- make 'mufredati gor' inline with text
+- fix 'onumuzdeki donemler' date wrap on small device and make visually appealing
+- move the course name above the date interval
+ hakkimizda:
+- plan layout
+- teacher photo and bio
+- class photo? (preferably with students)
+- company history/description?
+  iletisim:
+- decide whether to keep the same email
+  footer:
+- add copyright
+
+
 panel:
 - check if the container component causes the layout.tsx to be rendered on the client. (security risk)
   will need to try GET request for unauthorized access to admin panel, to see whether the first render is allowed within admin/layout.tsx
