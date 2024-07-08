@@ -26,6 +26,7 @@ ui:
 - make 'mufredati gor' inline with text
 - fix 'onumuzdeki donemler' date wrap on small device and make visually appealing
 - move the course name above the date interval
+- half dersler half donemler takes full page, enable scrolling on overflow
  hakkimizda:
 - plan layout
 - teacher photo and bio
@@ -33,6 +34,7 @@ ui:
 - company history/description?
   iletisim:
 - decide whether to keep the same email
+- flex-col title and main, vertically center for visual improvement
   footer:
 - add copyright
 
