@@ -25,6 +25,7 @@ import { MoonIcon, SunIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 
 import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
 
 //decide which storage is used for auth info
 function getStorage() {
@@ -172,33 +173,43 @@ export default function Header() {
             {role === "user" ? "Öğrenci Paneli" : "Admin Paneli"}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="flex flex-col p-2">
-              <li>
-                <Link
-                  href={role === "user" ? "/panel" : "/admin"}
-                  legacyBehavior
-                  passHref
-                >
-                  <NavigationMenuLink
-                    active={active === "/panel"}
-                    onSelect={() => {
-                      setActive("/panel");
-                    }}
-                    className={navigationMenuTriggerStyle()}
+            <nav>
+              <ul className="flex flex-col p-2">
+                <li>
+                  <Link
+                    href={role === "user" ? "/panel" : "/admin"}
+                    legacyBehavior
+                    passHref
                   >
-                    Panelim
-                  </NavigationMenuLink>
-                </Link>
-              </li>
-              <li>
-                <NavigationMenuLink
-                  className={navigationMenuTriggerStyle()}
-                  onSelect={async () => await handleLogout()}
-                >
-                  Çıkış Yap
-                </NavigationMenuLink>
-              </li>
-            </ul>
+                    <NavigationMenuLink
+                      active={active === "/panel"}
+                      onSelect={() => {
+                        setActive("/panel");
+                      }}
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "w-full justify-start",
+                      )}
+                    >
+                      Panelim
+                    </NavigationMenuLink>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" passHref legacyBehavior>
+                    <NavigationMenuLink
+                      onSelect={async () => await handleLogout()}
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "w-full justify-start",
+                      )}
+                    >
+                      Çıkış Yap
+                    </NavigationMenuLink>
+                  </Link>
+                </li>
+              </ul>
+            </nav>
           </NavigationMenuContent>
         </NavigationMenuItem>
       );
@@ -231,7 +242,7 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="hidden sm:block justify-self-center">
+          <nav className="hidden sm:block justify-self-center">
             <NavigationMenuList>
               <NavigationMenuItem>
                 <Link href="/egitimler" legacyBehavior passHref>
@@ -273,7 +284,7 @@ export default function Header() {
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
-          </div>
+          </nav>
 
           <ProfileButton />
         </NavigationMenu>
@@ -285,12 +296,12 @@ export default function Header() {
               src="/platonheykel.jpg"
               width="500"
               height="500"
-              alt="heykel"
+              alt="platon-heykel"
               className="w-full h-full object-cover rounded-t-xl"
             ></Image>
           </div>
 
-          <div className="flex flex-col gap-4 items-center justify-center my-4">
+          <nav className="flex flex-col gap-4 items-center justify-center my-4">
             <Link href="/egitimler" legacyBehavior passHref>
               <Button variant="ghost" className="w-36">
                 Eğitimler
@@ -308,7 +319,7 @@ export default function Header() {
                 İletişim
               </Button>
             </Link>
-          </div>
+          </nav>
         </div>
       </DrawerContent>
     </Drawer>

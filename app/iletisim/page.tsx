@@ -1,13 +1,14 @@
 import "../globals.css";
 import Header from "../components/header/Header";
 import { IconMail, IconMapPin, IconPhone, IconUser } from "@tabler/icons-react";
+import { Separator } from "@/components/ui/separator";
 
 export default function Page() {
   return (
-    <div>
+    <>
       <Header />
-      <div className="container flex flex-col justify-center px-2 sm:px-4 pt-6 sm:pt-10">
-        <p className="text-4xl font-bold text-center mb-6 z-10">Bize ulaşın</p>
+      <main className="container flex flex-col justify-center">
+        <p className="text-4xl font-bold text-center my-16">Bize ulaşın</p>
         <div className="flex flex-wrap sm:flex-nowrap">
           <div className="sm:w-1/2 z-10 flex justify-center">
             <div className="flex flex-col gap-2 sm:place-content-center">
@@ -31,8 +32,10 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="flex flex-col flex-wrap w-full sm:flex-row sm:w-1/2 z-10">
-            <div className="flex sm:w-full py-2 sm:pt-0 items-center">
+          <Separator className="sm:hidden my-5" />
+
+          <div className="flex flex-col flex-wrap w-full gap-2 sm:flex-row sm:w-1/2">
+            <div className="flex sm:w-full items-center">
               <IconMapPin size={28} />
               &nbsp;
               <p className="text-xl">Uğur Mumcu Bulvarı, Adana</p>
@@ -46,7 +49,7 @@ export default function Page() {
             ></iframe>
           </div>
         </div>
-      </div>
-    </div>
+      </main>
+    </>
   );
 }

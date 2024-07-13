@@ -13,7 +13,7 @@ export default function Page() {
     <>
       <div className="min-h-screen flex flex-col dark:bg-indigo-950">
         <Header />
-        <div className="flex-grow flex flex-col px-2 sm:px-4">
+        <main className="flex-grow flex flex-col px-2 sm:px-4">
           <div className="flex-grow flex flex-col items-center justify-center py-16">
             <p className="text-center pb-6 sm:pb-4 md:pb-0 text-lg text-foreground mb-2">
               Adana&apos;nın köklü eğitim merkezi
@@ -78,7 +78,7 @@ export default function Page() {
               <CaretDownIcon className="self-center w-16 h-16 animate-bounce" />
             </div>
           </div>
-        </div>
+        </main>
       </div>
 
       <div className="min-h-screen block justify-center">

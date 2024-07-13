@@ -182,62 +182,64 @@ export default function Page() {
   });
 
   return (
-    <div>
+    <>
       <Header />
-      {curriculums.length > 0 ? (
-        <Dialog>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {curriculums[selectedCurriculumIndex!]?.courseName}
-              </DialogTitle>
-              <Accordion type="single" collapsible>
-                {curriculums[selectedCurriculumIndex!]?.weeks.map((week) => {
-                  return (
-                    <AccordionItem
-                      key={week.weekNo}
-                      value={week.weekNo.toString()}
-                    >
-                      <AccordionTrigger>
-                        {week.weekNo.toString() + ". Hafta"}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        {week.weekDescription}
-                      </AccordionContent>
-                    </AccordionItem>
-                  );
-                })}
-              </Accordion>
-            </DialogHeader>
-          </DialogContent>
+      <main>
+        {curriculums.length > 0 ? (
+          <Dialog>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  {curriculums[selectedCurriculumIndex!]?.courseName}
+                </DialogTitle>
+                <Accordion type="single" collapsible>
+                  {curriculums[selectedCurriculumIndex!]?.weeks.map((week) => {
+                    return (
+                      <AccordionItem
+                        key={week.weekNo}
+                        value={week.weekNo.toString()}
+                      >
+                        <AccordionTrigger>
+                          {week.weekNo.toString() + ". Hafta"}
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          {week.weekDescription}
+                        </AccordionContent>
+                      </AccordionItem>
+                    );
+                  })}
+                </Accordion>
+              </DialogHeader>
+            </DialogContent>
 
-          <div className="container max-w-[750px] flex flex-col gap-6 pt-6 sm:pt-10">
-            <BackgroundGradient className="bg-background rounded-[20px] p-2 sm:p-4">
-              <p className="text-lg text-center font-semibold mb-6">
-                Dersler ve Müfredatları
-              </p>
-              <Accordion
-                type="single"
-                collapsible
-                onValueChange={(value) => {
-                  setSelectedCurriculumIndex(Number(value));
-                  console.log(value);
-                }}
-              >
-                {courseList}
-              </Accordion>
-            </BackgroundGradient>
-            {nextPeriodList.length > 0 ? (
-              <BackgroundGradient className="bg-background rounded-[20px] p-2 sm:p-4 divide-x-1">
-                <p className="text-center text-lg font-semibold mb-6">
-                  Önümüzdeki dönemler
+            <div className="container max-w-[750px] flex flex-col gap-6 pt-6 sm:pt-10">
+              <BackgroundGradient className="bg-background rounded-[20px] p-2 sm:p-4">
+                <p className="text-lg text-center font-semibold mb-6">
+                  Dersler ve Müfredatları
                 </p>
-                {nextPeriodList}
+                <Accordion
+                  type="single"
+                  collapsible
+                  onValueChange={(value) => {
+                    setSelectedCurriculumIndex(Number(value));
+                    console.log(value);
+                  }}
+                >
+                  {courseList}
+                </Accordion>
               </BackgroundGradient>
-            ) : null}
-          </div>
-        </Dialog>
-      ) : null}
-    </div>
+              {nextPeriodList.length > 0 ? (
+                <BackgroundGradient className="bg-background rounded-[20px] p-2 sm:p-4 divide-x-1">
+                  <p className="text-center text-lg font-semibold mb-6">
+                    Önümüzdeki dönemler
+                  </p>
+                  {nextPeriodList}
+                </BackgroundGradient>
+              ) : null}
+            </div>
+          </Dialog>
+        ) : null}
+      </main>
+    </>
   );
 }

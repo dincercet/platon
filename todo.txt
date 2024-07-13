@@ -10,12 +10,7 @@ header:
 ui:
  header:
 - adjust the color of the logo
-- fix popover overlap
-- fix popover transparent background
-- fix popover link width
-- fix popover 'logout' link effect
 - sticky navbar
-- add 'nav' for header if not exists and 'main' for pages
  drawer:
 - change dark mode slider indicator color
  homepage:
