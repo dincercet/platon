@@ -22,6 +22,8 @@ import {
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 import localizedFormat from "dayjs/plugin/localizedFormat";
+import { CaretDownIcon } from "@radix-ui/react-icons";
+import { IconClock, IconSchool } from "@tabler/icons-react";
 dayjs.extend(localizedFormat);
 
 export default function Page() {
@@ -150,14 +152,17 @@ export default function Page() {
   const courseList = curriculums.map((curriculum, index) => {
     return (
       <AccordionItem key={curriculum.curriculumId} value={index.toString()}>
-        <AccordionTrigger>{curriculum.courseName}</AccordionTrigger>
+        <AccordionTrigger className="sm:text-lg">
+          {curriculum.courseName}
+        </AccordionTrigger>
         <AccordionContent>
-          <p className="grow self-center">{curriculum.courseDescription}</p>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="self-end">
-              Müfredatı Gör
-            </Button>
-          </DialogTrigger>
+          <p>{curriculum.courseDescription}</p>
+
+          <div className="text-center mt-2">
+            <DialogTrigger asChild>
+              <Button variant="outline">Müfredatı Gör</Button>
+            </DialogTrigger>
+          </div>
         </AccordionContent>
       </AccordionItem>
     );
@@ -170,76 +175,96 @@ export default function Page() {
 
     return (
       <>
-        <div key={period.periodId} className="flex">
-          <p className="text-foreground">{begins}</p>
-          <div className="h-1 border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:opacity-100 grow self-center mx-2"></div>
-          <p className="text-foreground">{ends}</p>
+        <p className="text-center text-blue-700 dark:text-blue-400 pb-4">
+          {period.courseName}
+        </p>
+        <div key={period.periodId} className="flex pb-8">
+          <p className="text-foreground text-sm">{begins}</p>
+          <div className="h-[2px] border-t-0 bg-transparent bg-gradient-to-r from-transparent via-indigo-950 dark:via-indigo-200  to-transparent opacity-25 dark:opacity-100 grow self-center mx-2"></div>
+          <p className="text-foreground text-sm">{ends}</p>
         </div>
-
-        <p className="text-center text-foreground">{period.courseName}</p>
       </>
     );
   });
 
   return (
     <>
-      <Header />
-      <main>
-        {curriculums.length > 0 ? (
-          <Dialog>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  {curriculums[selectedCurriculumIndex!]?.courseName}
-                </DialogTitle>
-                <Accordion type="single" collapsible>
-                  {curriculums[selectedCurriculumIndex!]?.weeks.map((week) => {
-                    return (
-                      <AccordionItem
-                        key={week.weekNo}
-                        value={week.weekNo.toString()}
-                      >
-                        <AccordionTrigger>
-                          {week.weekNo.toString() + ". Hafta"}
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          {week.weekDescription}
-                        </AccordionContent>
-                      </AccordionItem>
-                    );
-                  })}
-                </Accordion>
-              </DialogHeader>
-            </DialogContent>
+      <div className="h-dvh flex flex-col">
+        <Header />
+        <main className="grow flex flex-col">
+          {curriculums.length > 0 ? (
+            <Dialog>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    {curriculums[selectedCurriculumIndex!]?.courseName}
+                  </DialogTitle>
+                  <Accordion type="single" collapsible className="pt-4">
+                    {curriculums[selectedCurriculumIndex!]?.weeks.map(
+                      (week) => {
+                        return (
+                          <AccordionItem
+                            key={week.weekNo}
+                            value={week.weekNo.toString()}
+                          >
+                            <AccordionTrigger>
+                              {week.weekNo.toString() + ". Hafta"}
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              {week.weekDescription}
+                            </AccordionContent>
+                          </AccordionItem>
+                        );
+                      },
+                    )}
+                  </Accordion>
+                </DialogHeader>
+              </DialogContent>
 
-            <div className="container max-w-[750px] flex flex-col gap-6 pt-6 sm:pt-10">
-              <BackgroundGradient className="bg-background rounded-[20px] p-2 sm:p-4">
-                <p className="text-lg text-center font-semibold mb-6">
-                  Dersler ve Müfredatları
-                </p>
-                <Accordion
-                  type="single"
-                  collapsible
-                  onValueChange={(value) => {
-                    setSelectedCurriculumIndex(Number(value));
-                    console.log(value);
-                  }}
-                >
-                  {courseList}
-                </Accordion>
-              </BackgroundGradient>
-              {nextPeriodList.length > 0 ? (
-                <BackgroundGradient className="bg-background rounded-[20px] p-2 sm:p-4 divide-x-1">
-                  <p className="text-center text-lg font-semibold mb-6">
-                    Önümüzdeki dönemler
+              <div className="container grow h-full max-w-[750px] flex flex-col">
+                <div className="flex-1 flex flex-col gap-4 sm:gap-8 justify-center">
+                  <div className="flex flex-col gap-1 sm:gap-2 items-center">
+                    <IconSchool size={36} />
+                    <p className="text-2xl sm:text-4xl text-center font-semibold mb-4">
+                      Dersler ve Müfredatları
+                    </p>
+                  </div>
+                  <Accordion
+                    type="single"
+                    collapsible
+                    onValueChange={(value) => {
+                      setSelectedCurriculumIndex(Number(value));
+                    }}
+                  >
+                    {courseList}
+                  </Accordion>
+                </div>
+
+                <div className="flex flex-col text-blue-700 dark:text-blue-400">
+                  <p className="text-lg text-center italic">
+                    dönemlere göz atın
                   </p>
-                  {nextPeriodList}
-                </BackgroundGradient>
-              ) : null}
+                  <CaretDownIcon className="self-center w-16 h-16 animate-bounce" />
+                </div>
+              </div>
+            </Dialog>
+          ) : null}
+        </main>
+      </div>
+
+      {nextPeriodList.length > 0 ? (
+        <div className="min-h-dvh dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
+          <div className="container py-16 sm:py-24 flex flex-col gap-2 sm:gap-8 ">
+            <div className="flex flex-col gap-1 sm:gap-2 items-center">
+              <IconClock size={36} />
+              <p className="text-center text-2xl sm:text-4xl font-semibold pb-10">
+                Önümüzdeki Dönemler
+              </p>
             </div>
-          </Dialog>
-        ) : null}
-      </main>
+            <div>{nextPeriodList}</div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }

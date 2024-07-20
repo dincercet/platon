@@ -72,16 +72,14 @@ export default function Page() {
               </p>
             </div>
             <div className="flex flex-col pb-9 md:pb-0 text-blue-700 dark:text-blue-400">
-              <p className="text-lg text-center italic">
-                derslerimize göz atın
-              </p>
+              <p className="text-lg text-center italic">derslere göz atın</p>
               <CaretDownIcon className="self-center w-16 h-16 animate-bounce" />
             </div>
           </div>
         </main>
       </div>
 
-      <div className="min-h-screen block justify-center">
+      <div className="min-h-screen block justify-center pt-1 dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
         <CourseCards />
       </div>
     </>

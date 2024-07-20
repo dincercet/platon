@@ -8,25 +8,21 @@ header:
 - logout button doesn't clear local storage but clears cookies.
 
 ui:
- header:
-- adjust the color of the logo
-- sticky navbar
  drawer:
 - change dark mode slider indicator color
+
  homepage:
 - check stats initial high-gap issue on small device when in production
+- change min-h-screen to min-h-dvh
 - mention certification?
- egitimler:
-- remove card effect component
-- make 'mufredati gor' inline with text
-- fix 'onumuzdeki donemler' date wrap on small device and make visually appealing
-- move the course name above the date interval
-- half dersler half donemler takes full page, enable scrolling on overflow
+- 'egitim detaylari' button below course cards
+
  hakkimizda:
 - plan layout
 - teacher photo and bio
 - class photo? (preferably with students)
 - company history/description?
+
   iletisim:
 - decide whether to keep the same email
 - flex-col title and main, vertically center for visual improvement
