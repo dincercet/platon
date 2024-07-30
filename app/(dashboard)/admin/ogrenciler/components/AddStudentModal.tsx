@@ -95,6 +95,7 @@ export default function AddStudentModal({
             },
           ),
         );
+        setSelectedPeriodId(resParsed.periods[0].id);
       }
     } catch (e) {
       console.error("error fetching periods", e);

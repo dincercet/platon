@@ -101,6 +101,8 @@ export default function Page() {
             };
           }),
         );
+      } else {
+        setStudents([]);
       }
       setLoading(false);
     } catch (e) {
@@ -209,7 +211,7 @@ export default function Page() {
       {loading ? (
         <Loader mt={rem(8)} />
       ) : (
-        <Flex direction="column" miw={rem(220)} m={rem(8)}>
+        <Flex direction="column" miw={rem(220)} m={rem(8)} gap={rem(8)}>
           <Button
             leftSection={<IconPlus size={16} />}
             mb={rem(8)}

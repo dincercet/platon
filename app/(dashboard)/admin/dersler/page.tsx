@@ -8,21 +8,12 @@ import {
   Center,
   Radio,
   Text,
-  Box,
-  LoadingOverlay,
   Loader,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconEdit } from "@tabler/icons-react";
 import AddCourseModal from "./components/AddCourseModal";
 import EditCourseModal from "./components/EditCourseModal";
-
-//todo: load the initial courses for courses state (will be blocking hydration if not done correctly)
-// async function initialFetchCourses() {
-//   const res = await fetch("dersler/api/getCourses", { method: "GET" });
-//   const resParsed = await res.json();
-//   return resParsed.courses.length ? resParsed.courses : [];
-// }
 
 export default function CoursesPage() {
   //handlers to open and close modals
@@ -69,6 +60,7 @@ export default function CoursesPage() {
 
       //set courses state based on retrieved courses
       if (resParsed.courses.length > 0) setCourses(resParsed.courses);
+      else setCourses([]);
       setLoading(false);
     } catch (e) {
       console.error("error fetching courses", e);

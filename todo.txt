@@ -1,5 +1,3 @@
-- add error.ts files for fallback because even the panel errors fallback to the default root error page.
-
 - get rid of throw new Error() and change them to return; from functions instead.
 
 header:
@@ -37,7 +35,6 @@ actions:
 - throttling? debouncing?
   incorporate rate limiting to setCookies, deleteCookies, auth checkers?, and loggers called from client (within middleware? using lru-cache? (for in-memory storage?))
   maybe limit rate to all actions and api routes?
-- revise if any action should be called within a startTransition
 
 token expiration:
 - token expires when site is left for a while, so when admin panel is directly opened, it will first redirect to homepage and then refresh token.
@@ -50,21 +47,17 @@ admin:
 
   courses:
   -warn when making legacy
-  -test with empty list
 
   curriculums:
-  -curriculums[selectedCurriculum] is undefined when the last item of curriculums is deleted (none of the items becomes selected so 'remove' button throws error (after isCurriculumSelected &&))
   -warn when making legacy
-  -test with empty list
 
   periods:
-  -update periods list after removing (the single last one i removed was still there)
   -warn when deleting
   -change outdated periods' color to orange
-  -test with empty list
 
   students:
   -test remove student
-  -test with empty list
 
 - you used localstorage for passing email in download/getDocuments (admin and student panel), adjust it to whichever storage is used
+- when student logs in after setting password, storage values are not set (isLoggedIn, role vs.) 
+- after refresh within student panel, throws to homepage

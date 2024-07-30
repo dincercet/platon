@@ -91,6 +91,9 @@ export default function Page() {
             },
           ),
         );
+      } else {
+        setCurriculums([]);
+        setIsCurriculumSelected(false);
       }
       setLoading(false);
     } catch (e) {

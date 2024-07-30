@@ -89,6 +89,8 @@ export default function Page() {
             },
           ),
         );
+      } else {
+        setPeriods([]);
       }
       setLoading(false);
     } catch (e) {
