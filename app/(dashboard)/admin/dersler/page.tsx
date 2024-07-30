@@ -8,6 +8,9 @@ import {
   Center,
   Radio,
   Text,
+  Box,
+  LoadingOverlay,
+  Loader,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconEdit } from "@tabler/icons-react";
@@ -43,6 +46,9 @@ export default function CoursesPage() {
   //enable button when true
   const [isCourseSelected, setIsCourseSelected] = useState(false);
 
+  //loading state
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     fetchCourses();
     console.log("useEffect: fetchCourses called");
@@ -60,11 +66,13 @@ export default function CoursesPage() {
         console.error(resParsed.error);
         return;
       }
-      console.log(resParsed.courses);
+
       //set courses state based on retrieved courses
       if (resParsed.courses.length > 0) setCourses(resParsed.courses);
+      setLoading(false);
     } catch (e) {
       console.error("error fetching courses", e);
+      setLoading(false);
     }
   }
 
@@ -129,32 +137,36 @@ export default function CoursesPage() {
           fetchCourses={fetchCourses}
         />
       )}
-      <Flex direction="column" m={rem(8)}>
-        <Button
-          leftSection={<IconPlus size={16} />}
-          mb={rem(8)}
-          onClick={addCourseHandlers.open}
-        >
-          Ders Ekle
-        </Button>
+      {loading ? (
+        <Loader mt={rem(8)} />
+      ) : (
+        <Flex direction="column" m={rem(8)}>
+          <Button
+            leftSection={<IconPlus size={16} />}
+            mb={rem(8)}
+            onClick={addCourseHandlers.open}
+          >
+            Ders Ekle
+          </Button>
 
-        {courseList.length > 0 && (
-          <Accordion>
-            <Radio.Group>{courseList}</Radio.Group>
-          </Accordion>
-        )}
+          {courseList.length > 0 && (
+            <Accordion>
+              <Radio.Group>{courseList}</Radio.Group>
+            </Accordion>
+          )}
 
-        <Button
-          variant="outline"
-          disabled={!isCourseSelected}
-          mt={rem(8)}
-          onClick={() => {
-            editCourseHandlers.open();
-          }}
-        >
-          <IconEdit />
-        </Button>
-      </Flex>
+          <Button
+            variant="outline"
+            disabled={!isCourseSelected}
+            mt={rem(8)}
+            onClick={() => {
+              editCourseHandlers.open();
+            }}
+          >
+            <IconEdit />
+          </Button>
+        </Flex>
+      )}
     </>
   );
 }

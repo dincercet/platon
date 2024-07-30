@@ -1,7 +1,7 @@
 "use client";
 import "dayjs/locale/tr";
 import { useState, useEffect } from "react";
-import { Button, Flex, Group, Radio, Stack, rem } from "@mantine/core";
+import { Button, Flex, Group, Loader, Radio, Stack, rem } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconEdit, IconFiles } from "@tabler/icons-react";
 
@@ -41,6 +41,9 @@ export default function Page() {
 
   //holds the index of selected period
   const [selectedPeriod, setSelectedPeriod] = useState(0);
+
+  //loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchPeriods();
@@ -87,8 +90,10 @@ export default function Page() {
           ),
         );
       }
+      setLoading(false);
     } catch (e) {
       console.error("error fetching periods", e);
+      setLoading(false);
     }
   }
 
@@ -198,60 +203,64 @@ export default function Page() {
         />
       )}
 
-      <Flex direction="column" m={rem(8)}>
-        <Button
-          leftSection={<IconPlus size={16} />}
-          mb={rem(8)}
-          onClick={addPeriodHandlers.open}
-        >
-          Yeni Dönem
-        </Button>
-        <Radio.Group>
-          <Stack>{periodList}</Stack>
-        </Radio.Group>
-        <Group grow mt={rem(8)}>
-          <Button //show students button
-            variant="outline"
-            disabled={!isPeriodSelected}
-            onClick={showStudentsHandlers.open}
+      {loading ? (
+        <Loader mt={rem(8)} />
+      ) : (
+        <Flex direction="column" m={rem(8)}>
+          <Button
+            leftSection={<IconPlus size={16} />}
+            mb={rem(8)}
+            onClick={addPeriodHandlers.open}
           >
-            Öğrenciler
+            Yeni Dönem
           </Button>
-          <Button //show curriculum button
-            variant="outline"
-            disabled={!isPeriodSelected}
-            onClick={showCurriculumHandlers.open}
-          >
-            Müfredat
-          </Button>
-        </Group>
+          <Radio.Group>
+            <Stack>{periodList}</Stack>
+          </Radio.Group>
+          <Group grow mt={rem(8)}>
+            <Button //show students button
+              variant="outline"
+              disabled={!isPeriodSelected}
+              onClick={showStudentsHandlers.open}
+            >
+              Öğrenciler
+            </Button>
+            <Button //show curriculum button
+              variant="outline"
+              disabled={!isPeriodSelected}
+              onClick={showCurriculumHandlers.open}
+            >
+              Müfredat
+            </Button>
+          </Group>
 
-        <Button //show documents button
-          leftSection={<IconFiles size={16} />}
-          variant="outline"
-          disabled={!isPeriodSelected}
-          mt={rem(8)}
-          onClick={showDocumentsHandlers.open}
-        >
-          Dökümanlar
-        </Button>
-        <Group grow mt={rem(8)}>
-          <Button //edit button
+          <Button //show documents button
+            leftSection={<IconFiles size={16} />}
             variant="outline"
             disabled={!isPeriodSelected}
-            onClick={editPeriodHandlers.open}
+            mt={rem(8)}
+            onClick={showDocumentsHandlers.open}
           >
-            <IconEdit />
+            Dökümanlar
           </Button>
-          <Button //delete button
-            color="red"
-            disabled={!isPeriodSelected}
-            onClick={handleDeletePeriod}
-          >
-            Sil
-          </Button>
-        </Group>
-      </Flex>
+          <Group grow mt={rem(8)}>
+            <Button //edit button
+              variant="outline"
+              disabled={!isPeriodSelected}
+              onClick={editPeriodHandlers.open}
+            >
+              <IconEdit />
+            </Button>
+            <Button //delete button
+              color="red"
+              disabled={!isPeriodSelected}
+              onClick={handleDeletePeriod}
+            >
+              Sil
+            </Button>
+          </Group>
+        </Flex>
+      )}
     </>
   );
 }

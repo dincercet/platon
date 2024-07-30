@@ -10,6 +10,7 @@ import {
   Stack,
   Text,
   Group,
+  Loader,
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
@@ -56,6 +57,9 @@ export default function Page() {
     number | null
   >(null);
 
+  //loading state
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     fetchStudents();
     console.log("useEffect fetchStudents called");
@@ -98,8 +102,10 @@ export default function Page() {
           }),
         );
       }
+      setLoading(false);
     } catch (e) {
       console.error("error fetching students", e);
+      setLoading(false);
     }
   }
 
@@ -200,40 +206,44 @@ export default function Page() {
           />
         )}
 
-      <Flex direction="column" miw={rem(220)} m={rem(8)}>
-        <Button
-          leftSection={<IconPlus size={16} />}
-          mb={rem(8)}
-          onClick={addStudentHandlers.open}
-        >
-          Öğrenci Ekle
-        </Button>
-
-        {studentList.length > 0 && studentList}
-
-        <Group grow>
+      {loading ? (
+        <Loader mt={rem(8)} />
+      ) : (
+        <Flex direction="column" miw={rem(220)} m={rem(8)}>
           <Button
-            variant="outline"
-            disabled={!selectedStudentId}
-            mt={rem(8)}
-            onClick={() => {
-              editStudentHandlers.open();
-            }}
+            leftSection={<IconPlus size={16} />}
+            mb={rem(8)}
+            onClick={addStudentHandlers.open}
           >
-            Düzenle
+            Öğrenci Ekle
           </Button>
-          <Button
-            variant="outline"
-            disabled={!selectedStudentId}
-            mt={rem(8)}
-            onClick={() => {
-              showPeriodsHandlers.open();
-            }}
-          >
-            Dönemler
-          </Button>
-        </Group>
-      </Flex>
+
+          {studentList.length > 0 && studentList}
+
+          <Group grow>
+            <Button
+              variant="outline"
+              disabled={!selectedStudentId}
+              mt={rem(8)}
+              onClick={() => {
+                editStudentHandlers.open();
+              }}
+            >
+              Düzenle
+            </Button>
+            <Button
+              variant="outline"
+              disabled={!selectedStudentId}
+              mt={rem(8)}
+              onClick={() => {
+                showPeriodsHandlers.open();
+              }}
+            >
+              Dönemler
+            </Button>
+          </Group>
+        </Flex>
+      )}
     </>
   );
 }
