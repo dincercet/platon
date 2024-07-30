@@ -18,6 +18,7 @@ import {
   Paper,
   Button,
   Center,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
@@ -26,6 +27,7 @@ import studentSignedUp from "./actions/studentSignedUp";
 import { setAuthCookies } from "app/actions/setAuthCookies";
 import { deleteAuthCookies } from "app/actions/deleteAuthCookies";
 import clientLogger from "app/actions/clientLogger";
+import { useState } from "react";
 
 //form types
 type FormValues = {
@@ -69,6 +71,8 @@ export default function Page() {
     validate: zodResolver(schema),
   });
 
+  const [fatalError, setFatalError] = useState<string | null>(null);
+
   //handle form submit
   async function handleSignup(values: FormValues) {
     const email = values.email;
@@ -80,7 +84,8 @@ export default function Page() {
       console.log("persistence set to session");
     } catch (e) {
       console.error("error firebase setPersistence", e);
-      throw new Error("Error setting persistence");
+      setFatalError("Error setting persistence");
+      return;
     }
 
     //check if signing in through email link
@@ -99,9 +104,10 @@ export default function Page() {
         if (e.code === "auth/invalid-email")
           form.setFieldError("email", "Girdiğiniz eposta uyuşmuyor.");
         console.error("error firebase signInWithEmailLink", e);
-        throw new Error(
+        setFatalError(
           "Hesap yaratılırken bir hata oluştu. Lütfen yeniden link gönderilmesini talep ediniz.",
         );
+        return;
       }
 
       try {
@@ -117,33 +123,11 @@ export default function Page() {
             `error linking user with email ${email}, couldn't delete user from firebase afterwards. Will need to delete user manually from firebase.`,
           );
         }
-        throw new Error(
+        setFatalError(
           "E-postayı şifre ile bağdaştırırken bir hata oluştu. Lütfen yeniden link gönderilmesini talep ediniz.",
         );
+        return;
       }
-
-      // try {
-      //   console.log("inside linkWithCredential");
-      //   //associate the email with the password
-      //   user = await linkWithCredential(
-      //     signedInUser.user,
-      //     EmailAuthProvider.credential(email, password),
-      //   );
-      // } catch (e) {
-      //   console.error("error firebase linkWithCredential", e);
-      //   try {
-      //     //if couldn't link password, delete user from firebase
-      //     await deleteUser(signedInUser.user);
-      //   } catch {
-      //     //if couldn't delete user, log it
-      //     clientLogger(
-      //       `error linking user with email ${email}, couldn't delete user from firebase afterwards. Will need to delete user manually from firebase.`,
-      //     );
-      //   }
-      //   throw new Error(
-      //     "E-postayı şifre ile bağdaştırırken bir hata oluştu. Lütfen yeniden link gönderilmesini talep ediniz.",
-      //   );
-      // }
 
       //successfully signed in and linked with password
       let currentUser = signedInUser.user;
@@ -176,12 +160,14 @@ export default function Page() {
             await deleteAuthCookies();
           } catch (e) {
             console.error("error deleting auth cookies", e);
-            throw new Error("Çerezler temizlenirken bir hata oluştu.");
+            setFatalError("Çerezler temizlenirken bir hata oluştu.");
+            return;
           }
 
-          throw new Error(
+          setFatalError(
             "Üyelik işlemi tamamlanamadı. Lütfen yeniden link gönderilmesini talep ediniz.",
           );
+          return;
         }
       } catch (e) {
         console.error("error getIdToken, setAuthCookies or studentSignedUp", e);
@@ -201,17 +187,20 @@ export default function Page() {
           await deleteAuthCookies();
         } catch (e) {
           console.error("error deleting auth cookies", e);
-          throw new Error("Çerezler temizlenirken bir hata oluştu.");
+          setFatalError("Çerezler temizlenirken bir hata oluştu.");
+          return;
         }
 
-        throw new Error(
+        setFatalError(
           "Üyelik işlemi tamamlanamadı. Lütfen yeniden link gönderilmesini talep ediniz.",
         );
+        return;
       }
     } else {
       //if it's not a sign in with email link
       console.error("firebase error isSignInWithEmailLink, link not valid");
-      throw new Error("Email linki geçerli değil.");
+      setFatalError("Email linki geçerli değil.");
+      return;
     }
 
     //redirect to home
@@ -221,42 +210,55 @@ export default function Page() {
   return (
     <Container>
       <Center>
-        <Paper withBorder shadow="md" miw={rem(280)} p={20} mt={30} radius="md">
-          <form
-            onSubmit={form.onSubmit((values, e) => {
-              e?.preventDefault();
-              form.validate();
-              if (form.isValid()) handleSignup(values);
-            })}
+        {fatalError ? (
+          <Text size="xl" c="red" mt="xl">
+            {fatalError}
+          </Text>
+        ) : (
+          <Paper
+            withBorder
+            shadow="md"
+            miw={rem(280)}
+            p={20}
+            mt={30}
+            radius="md"
           >
-            <TextInput
-              label="E-posta"
-              placeholder="E-postanızı doğrulamak için giriniz"
-              required
-              {...form.getInputProps("email")}
-            />
+            <form
+              onSubmit={form.onSubmit((values, e) => {
+                e?.preventDefault();
+                form.validate();
+                if (form.isValid()) handleSignup(values);
+              })}
+            >
+              <TextInput
+                label="E-posta"
+                placeholder="E-postanızı doğrulamak için giriniz"
+                required
+                {...form.getInputProps("email")}
+              />
 
-            <PasswordInput
-              label="Şifre"
-              placeholder="Şifreniz"
-              required
-              mt="md"
-              {...form.getInputProps("password")}
-            />
+              <PasswordInput
+                label="Şifre"
+                placeholder="Şifreniz"
+                required
+                mt="md"
+                {...form.getInputProps("password")}
+              />
 
-            <PasswordInput
-              label="Şifre Tekrarı"
-              placeholder="Şifrenizi tekrar giriniz"
-              required
-              mt="md"
-              {...form.getInputProps("confirmPassword")}
-            />
+              <PasswordInput
+                label="Şifre Tekrarı"
+                placeholder="Şifrenizi tekrar giriniz"
+                required
+                mt="md"
+                {...form.getInputProps("confirmPassword")}
+              />
 
-            <Button type="submit" fullWidth mt="xl">
-              Kaydımı Tamamla
-            </Button>
-          </form>
-        </Paper>
+              <Button type="submit" fullWidth mt="xl">
+                Kaydımı Tamamla
+              </Button>
+            </form>
+          </Paper>
+        )}
       </Center>
     </Container>
   );

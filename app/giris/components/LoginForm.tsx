@@ -64,11 +64,9 @@ export default function LoginForm() {
     if (!remember) {
       try {
         await setPersistence(auth, browserSessionPersistence);
-        //delete later
-        console.log("persistence set to session");
       } catch (e) {
         console.error("error firebase setPersistence", e);
-        throw new Error("error firebase setPersistence");
+        return;
       }
     }
 
@@ -85,7 +83,7 @@ export default function LoginForm() {
       user = userCredential.user;
     } catch (e) {
       console.error("error firebase signInWithEmailAndPassword", e);
-      throw new Error("error firebase signInWithEmailAndPassword");
+      return;
     }
 
     let idToken;
@@ -94,7 +92,7 @@ export default function LoginForm() {
       idToken = await user.getIdToken(true);
     } catch (e) {
       console.error("error firebase getIdToken", e);
-      throw new Error("error firebase getIdToken");
+      return;
     }
 
     try {
@@ -102,7 +100,7 @@ export default function LoginForm() {
       await setAuthCookies(idToken);
     } catch (e) {
       console.error("error setting auth cookies", e);
-      throw new Error("error setting auth cookies");
+      return;
     }
 
     let roleResData;
@@ -118,12 +116,12 @@ export default function LoginForm() {
       //if res not ok, show the error returned from api
       if (!roleRes.ok) {
         console.error(roleResData.error);
-        throw new Error(roleResData.error);
+        return;
       }
     } catch (e) {
       //any other error
       console.error("unknown role fetch error", e);
-      throw new Error("unknown role fetch error");
+      return;
     }
 
     const role = roleResData.role;

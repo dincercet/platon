@@ -1,5 +1,3 @@
-- get rid of throw new Error() and change them to return; from functions instead.
-
 header:
 - why is onAuthStateChanged called 3 times on every useEffect execution?
 - logout button doesn't clear local storage but clears cookies.
