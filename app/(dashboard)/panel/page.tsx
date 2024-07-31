@@ -12,6 +12,14 @@ import { IconFileDownload } from "@tabler/icons-react";
 
 dayjs.extend(localizedFormat);
 
+//decide which storage is used for auth info
+function getStorage() {
+  if (window.localStorage.getItem("loggedIn") === "true")
+    return window.localStorage;
+  else if (window.sessionStorage.getItem("loggedIn") === "true")
+    return window.sessionStorage;
+}
+
 export default function StudentPage() {
   //handlers to open and close modals
   const [showDocumentsOpened, showDocumentsHandlers] = useDisclosure(false);
@@ -38,14 +46,15 @@ export default function StudentPage() {
   const [selectedPeriodId, setSelectedPeriodId] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchUserPeriods();
+    //pass the appropriate storage type
+    fetchUserPeriods(getStorage());
   }, []);
 
-  async function fetchUserPeriods() {
+  async function fetchUserPeriods(storage?: Storage) {
     try {
       //api call to get user's periods
       const res = await fetch(
-        `/panel/api/getUserPeriods?email=${window.localStorage.getItem("email")}`,
+        `/panel/api/getUserPeriods?email=${storage!.getItem("email")}`,
         {
           method: "GET",
         },
@@ -84,7 +93,7 @@ export default function StudentPage() {
   async function fetchDocuments(periodId: number) {
     try {
       const res = await fetch(
-        `/panel/api/getDocuments?periodId=${periodId}&email=${localStorage.getItem("email")}`,
+        `/panel/api/getDocuments?periodId=${periodId}&email=${getStorage()!.getItem("email")}`,
         { method: "GET" },
       );
       const resParsed = await res.json();
@@ -120,7 +129,7 @@ export default function StudentPage() {
   async function handleDownloadDocument(weekNo: number, fileName: string) {
     try {
       const res = await fetch(
-        `/panel/api/downloadDocument?email=${localStorage.getItem("email")}&periodId=${selectedPeriodId}&weekNo=${weekNo}&filename=${fileName}`,
+        `/panel/api/downloadDocument?email=${getStorage()!.getItem("email")}&periodId=${selectedPeriodId}&weekNo=${weekNo}&filename=${fileName}`,
         { method: "GET" },
       );
 

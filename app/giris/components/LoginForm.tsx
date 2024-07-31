@@ -20,6 +20,7 @@ import {
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
+import { useEffect } from "react";
 
 //form types
 type FormValues = {
@@ -43,6 +44,16 @@ const schema = z.object({
 
 export default function LoginForm() {
   const router = useRouter();
+
+  useEffect(() => {
+    //if user is logged in, redirect to home
+    if (
+      window.localStorage.getItem("loggedIn") === "true" ||
+      window.sessionStorage.getItem("loggedIn") === "true"
+    ) {
+      router.push("/");
+    }
+  });
 
   //mantine form hook
   const form = useForm<FormValues>({

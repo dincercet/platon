@@ -110,7 +110,7 @@ export default function AddStudentModal({
         values.email,
         values.firstName,
         values.lastName,
-        selectedPeriodId ? selectedPeriodId : undefined,
+        isPeriodSet ? selectedPeriodId! : undefined,
       );
 
       if (!res.success) {
@@ -149,15 +149,24 @@ export default function AddStudentModal({
         //error returned from firebase
         e.message ? e.message : e,
       );
-      //show error in form
-      form.setFieldError(
-        "email",
-        "Davet linki gönderilirken bir hata oluştu, fakat veritabanında kullanıcı oluşturuldu. Lütfen formu kapatın ve yeni kullanıcı oluşturmadan varolan kullanıcıya yeni link gönderin.",
-      );
+      if (e.code === "auth/quota-exceeded") {
+        //quota exceeded error
+        form.setFieldError(
+          "email",
+          "Davet linki kotası aşıldığı için link gönderilemedi, fakat veritabanında kullanıcı oluşturuldu. Lütfen öğrenciyi silin ve sınır kalkınca yeniden ekleyin.",
+        );
+        fetchStudents();
+      } else {
+        //any other error
+        form.setFieldError(
+          "email",
+          "Davet linki gönderilirken bir hata oluştu, fakat veritabanında kullanıcı oluşturuldu. Lütfen öğrenciyi silin ve yeniden ekleyin.",
+        );
+        fetchStudents();
+      }
       return;
     }
     //successful
-
     //close the modal
     close();
     //re-fetch students

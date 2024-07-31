@@ -101,12 +101,12 @@ export default function Page() {
           window.location.href,
         );
       } catch (e: any) {
-        if (e.code === "auth/invalid-email")
+        if (e.code === "auth/invalid-email") {
           form.setFieldError("email", "Girdiğiniz eposta uyuşmuyor.");
+        } else {
+          setFatalError("Hesap yaratılırken bir hata oluştu.");
+        }
         console.error("error firebase signInWithEmailLink", e);
-        setFatalError(
-          "Hesap yaratılırken bir hata oluştu. Lütfen yeniden link gönderilmesini talep ediniz.",
-        );
         return;
       }
 
@@ -202,6 +202,11 @@ export default function Page() {
       setFatalError("Email linki geçerli değil.");
       return;
     }
+
+    //set loggedIn state, email and role in session storage
+    window.sessionStorage.setItem("loggedIn", "true");
+    window.sessionStorage.setItem("email", email);
+    window.sessionStorage.setItem("role", "user");
 
     //redirect to home
     router.push("/");

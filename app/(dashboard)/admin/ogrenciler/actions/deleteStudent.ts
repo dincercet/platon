@@ -32,6 +32,9 @@ export default async function deleteStudent(
     //validation successful
 
     try {
+      //delete the many-to-many relationship entries
+      await prisma.users_periods.deleteMany({ where: { user_id: studentId } });
+
       //delete the student based on id
       const deletedUser = await prisma.users.delete({
         where: { id: studentId },

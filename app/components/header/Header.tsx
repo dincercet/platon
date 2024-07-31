@@ -29,11 +29,10 @@ import { cn } from "@/lib/utils";
 
 //decide which storage is used for auth info
 function getStorage() {
-  let storage;
-  return (storage =
-    window.localStorage.getItem("loggedIn") === "true"
-      ? window.localStorage
-      : window.sessionStorage);
+  if (window.localStorage.getItem("loggedIn") === "true")
+    return window.localStorage;
+  else if (window.sessionStorage.getItem("loggedIn") === "true")
+    return window.sessionStorage;
 }
 
 //Header component for navigation (used in root layout)
@@ -59,9 +58,9 @@ export default function Header() {
 
           setIsLoggedIn(true);
 
-          if (storage.getItem("role") === "user") {
+          if (storage!.getItem("role") === "user") {
             setRole("user");
-          } else if (storage.getItem("role") === "admin") {
+          } else if (storage!.getItem("role") === "admin") {
             setRole("admin");
           }
 
@@ -88,9 +87,7 @@ export default function Header() {
           console.log("(useEffect onAuthStateChanged executed)");
         } else {
           //logout: if not already logged out, call the logout handler
-          if (!storage.getItem("loggedIn")) {
-            await handleLogout(storage);
-          }
+          await handleLogout();
         }
       });
     } catch {
@@ -100,6 +97,7 @@ export default function Header() {
 
   //logout handler
   async function handleLogout(storage?: Storage) {
+    console.log(storage);
     try {
       //client call to firebase for logout
       await signOut(auth);
@@ -119,9 +117,10 @@ export default function Header() {
 
     //clear auth info from storage
     if (storage) {
-      storage.removeItem("loggedIn");
-      storage.removeItem("email");
-      storage.removeItem("role");
+      storage.clear();
+    } else {
+      window.localStorage.clear();
+      window.sessionStorage.clear();
     }
 
     setRole("");
@@ -198,7 +197,7 @@ export default function Header() {
                 <li>
                   <Link href="#" passHref legacyBehavior>
                     <NavigationMenuLink
-                      onSelect={async () => await handleLogout()}
+                      onSelect={async () => await handleLogout(getStorage())}
                       className={cn(
                         navigationMenuTriggerStyle(),
                         "w-full justify-start",

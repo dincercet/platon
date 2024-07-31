@@ -1,15 +1,7 @@
 import { useState } from "react";
 import "dayjs/locale/tr";
 import dayjs from "dayjs";
-import {
-  NativeSelect,
-  Button,
-  Stack,
-  Modal,
-  Radio,
-  Center,
-  rem,
-} from "@mantine/core";
+import { NativeSelect, Button, Stack, Modal, Radio, rem } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import deleteFromPeriod from "../actions/deleteFromPeriod";
 import addToPeriod from "../actions/addToPeriod";

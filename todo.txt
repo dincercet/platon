@@ -1,6 +1,5 @@
 header:
 - why is onAuthStateChanged called 3 times on every useEffect execution?
-- logout button doesn't clear local storage but clears cookies.
 
 ui:
  drawer:
@@ -29,16 +28,8 @@ panel:
 - check if the container component causes the layout.tsx to be rendered on the client. (security risk)
   will need to try GET request for unauthorized access to admin panel, to see whether the first render is allowed within admin/layout.tsx
 
-actions:
-- throttling? debouncing?
-  incorporate rate limiting to setCookies, deleteCookies, auth checkers?, and loggers called from client (within middleware? using lru-cache? (for in-memory storage?))
-  maybe limit rate to all actions and api routes?
-
 token expiration:
 - token expires when site is left for a while, so when admin panel is directly opened, it will first redirect to homepage and then refresh token.
-
-loginpage:
-- login page is reachable for logged in users, restrict it.
 
 admin:
  - will need pagination for every admin page, to prevent overloading.
@@ -56,6 +47,3 @@ admin:
   students:
   -test remove student
 
-- you used localstorage for passing email in download/getDocuments (admin and student panel), adjust it to whichever storage is used
-- when student logs in after setting password, storage values are not set (isLoggedIn, role vs.) 
-- after refresh within student panel, throws to homepage
