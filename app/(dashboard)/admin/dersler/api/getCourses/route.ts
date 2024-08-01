@@ -19,6 +19,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   const param = request.nextUrl.searchParams.get("cursor");
 
+  //if there is cursor passed
   let cursor;
   if (param) {
     cursor = parseInt(param);

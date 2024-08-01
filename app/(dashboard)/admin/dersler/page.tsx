@@ -49,7 +49,6 @@ export default function CoursesPage() {
   useEffect(() => {
     fetchCourses();
     console.log("useEffect: fetchCourses called");
-    //todo: fix the parameters for execution when new course added or edited
   }, []);
 
   //call to getCourses api, then set courses state

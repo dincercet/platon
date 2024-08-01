@@ -150,7 +150,14 @@ export default function EditCourseModal({
               <Button
                 color="yellow"
                 disabled={legacy}
-                onClick={handleMakeCourseLegacy}
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      "Eskitme işleminden geri dönülemez. Bir ders eskitilirse bu derse bağlı müfredatlar da eskitilecektir. Emin misiniz?",
+                    )
+                  )
+                    handleMakeCourseLegacy();
+                }}
               >
                 Eskit
               </Button>

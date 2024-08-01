@@ -19,6 +19,16 @@ import { useEffect, useState } from "react";
 import deleteCurriculum from "./actions/deleteCurriculum";
 import makeCurriculumLegacy from "./actions/makeCurriculumLegacy";
 
+//Type of each curriculum returned from database
+type DbCurriculum = {
+  id: number;
+  created_at: Date;
+  legacy: boolean;
+  course: { name: string };
+  weeks: { id: number; week_no: number; description: string }[];
+  isRelated: boolean;
+};
+
 export default function Page() {
   //handlers to open and close modals
   const [addCurriculumOpened, addCurriculumHandlers] = useDisclosure(false);
@@ -35,6 +45,12 @@ export default function Page() {
       isRelated: boolean;
     }[]
   >([]);
+
+  //to fetch gradually
+  const [cursor, setCursor] = useState<number | null>(null);
+
+  //true if there's no more to fetch
+  const [isFinal, setIsFinal] = useState(false);
 
   const [selectedCurriculum, setSelectedCurriculum] = useState(0);
   const [isCurriculumSelected, setIsCurriculumSelected] = useState(false);
@@ -63,34 +79,92 @@ export default function Page() {
         //set curriculums state array
         setCurriculums(
           //create a new array from response values
-          resParsed.curriculums.map(
-            (curriculum: {
-              id: number;
-              created_at: Date;
-              legacy: boolean;
-              course: { name: string };
-              weeks: { id: number; week_no: number; description: string }[];
-              isRelated: boolean;
-            }) => {
-              //array created is a little complicated because of nested query from database.
-              return {
-                curriculumId: curriculum.id,
-                createdAt: curriculum.created_at,
-                legacy: curriculum.legacy,
-                courseName: curriculum.course.name,
-                //create a new array of weeks related to the curriculum
-                weeks: curriculum.weeks.map((week) => {
-                  return {
-                    weekId: week.id,
-                    weekNo: week.week_no,
-                    weekDescription: week.description,
-                  };
-                }),
-                isRelated: curriculum.isRelated,
-              };
-            },
-          ),
+          resParsed.curriculums.map((curriculum: DbCurriculum) => {
+            //array created is a little complicated because of nested query from database.
+            return {
+              curriculumId: curriculum.id,
+              createdAt: curriculum.created_at,
+              legacy: curriculum.legacy,
+              courseName: curriculum.course.name,
+              //create a new array of weeks related to the curriculum
+              weeks: curriculum.weeks.map((week) => {
+                return {
+                  weekId: week.id,
+                  weekNo: week.week_no,
+                  weekDescription: week.description,
+                };
+              }),
+              isRelated: curriculum.isRelated,
+            };
+          }),
         );
+
+        //set cursor state for the next batch
+        setCursor(resParsed.nextCursor);
+
+        //if it's the final batch
+        setIsFinal(resParsed.isFinal);
+
+        //fix the error when any next fetched curriculum edit overlay is closed (curriculums(selectedCurriculum) is not set))
+        setSelectedCurriculum(0);
+        setIsCurriculumSelected(false);
+      } else {
+        setCurriculums([]);
+        setIsCurriculumSelected(false);
+      }
+      setLoading(false);
+    } catch (e) {
+      console.error("error fetching curriculums", e);
+
+      setLoading(false);
+    }
+  }
+
+  async function fetchNextCurriculums() {
+    try {
+      const res = await fetch(
+        `mufredatlar/api/getCurriculums?cursor=${cursor}`,
+        {
+          method: "GET",
+        },
+      );
+      const resParsed = await res.json();
+
+      if (!res.ok) {
+        //error returned from api
+        console.error(resParsed.error);
+        return;
+      }
+      if (resParsed.curriculums.length > 0) {
+        //set curriculums state array
+        setCurriculums((prev) => [
+          ...prev,
+          //create a new array from response values
+          ...resParsed.curriculums.map((curriculum: DbCurriculum) => {
+            //array created is a little complicated because of nested query from database.
+            return {
+              curriculumId: curriculum.id,
+              createdAt: curriculum.created_at,
+              legacy: curriculum.legacy,
+              courseName: curriculum.course.name,
+              //create a new array of weeks related to the curriculum
+              weeks: curriculum.weeks.map((week) => {
+                return {
+                  weekId: week.id,
+                  weekNo: week.week_no,
+                  weekDescription: week.description,
+                };
+              }),
+              isRelated: curriculum.isRelated,
+            };
+          }),
+        ]);
+
+        //set cursor state for the next batch
+        setCursor(resParsed.nextCursor);
+
+        //if it's the final batch
+        setIsFinal(resParsed.isFinal);
       } else {
         setCurriculums([]);
         setIsCurriculumSelected(false);
@@ -114,8 +188,6 @@ export default function Page() {
         console.error(res.error);
       }
 
-      // setSelectedCurriculum(0);
-      // setIsCurriculumSelected(false);
       //update the curriculums array
       await fetchCurriculums();
     } catch (e) {
@@ -134,8 +206,6 @@ export default function Page() {
         console.error(res.error);
       }
 
-      // setSelectedCurriculum(0);
-      // setIsCurriculumSelected(false);
       //update the curriculums array
       await fetchCurriculums();
     } catch (e) {
@@ -265,12 +335,28 @@ export default function Page() {
                 <Button
                   color="yellow"
                   disabled={curriculums[selectedCurriculum].legacy}
-                  onClick={handleMakeCurriculumLegacy}
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Eskitilen bir müfredat yeniden güncel hale getirilemez, tek çözümü yeni müfredat yaratmaktır. Emin misiniz?",
+                      )
+                    )
+                      handleMakeCurriculumLegacy();
+                  }}
                 >
                   Eskit
                 </Button>
               ))}
           </Group>
+
+          <Button
+            variant="outline"
+            disabled={!curriculums || isFinal}
+            mt={rem(8)}
+            onClick={() => fetchNextCurriculums()}
+          >
+            Daha fazla göster
+          </Button>
         </Flex>
       )}
     </>
