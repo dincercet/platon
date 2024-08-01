@@ -1,20 +1,35 @@
 "use client";
-import "dayjs/locale/tr";
 import { useState, useEffect } from "react";
-import { Button, Flex, Group, Loader, Radio, Stack, rem } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+
+import { Button, Flex, Group, Loader, Radio, Stack, rem } from "@mantine/core";
 import { IconPlus, IconEdit, IconFiles } from "@tabler/icons-react";
 
 import AddPeriodModal from "./components/AddPeriodModal";
 import EditPeriodModal from "./components/EditPeriodModal";
-import dayjs from "dayjs";
 import ShowCurriculumModal from "./components/ShowCurriculumModal";
 import ShowStudentsModal from "./components/ShowStudentsModal";
-
-import localizedFormat from "dayjs/plugin/localizedFormat";
 import ShowDocumentsModal from "./components/ShowDocumentsModal";
+
 import deletePeriod from "./actions/deletePeriod";
+import classes from "./styles/radio.module.css";
+
+import dayjs from "dayjs";
+import "dayjs/locale/tr";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 dayjs.extend(localizedFormat);
+
+//Type of each period returned from database
+type DbPeriod = {
+  id: number;
+  begins_at: Date;
+  ends_at: Date;
+  curriculum: {
+    id: number;
+    created_at: Date;
+    course: { name: string };
+  };
+};
 
 export default function Page() {
   //handlers to open and close modals
@@ -36,6 +51,12 @@ export default function Page() {
     }[]
   >([]);
 
+  //to fetch gradually
+  const [cursor, setCursor] = useState<number | null>(null);
+
+  //true if there's no more to fetch
+  const [isFinal, setIsFinal] = useState(false);
+
   //to enable buttons when radio is selected
   const [isPeriodSelected, setIsPeriodSelected] = useState(false);
 
@@ -56,7 +77,7 @@ export default function Page() {
         method: "GET",
       });
       const resParsed = await res.json();
-      console.log("inside fetchPeriods");
+
       if (!res.ok) {
         //error returned from api
         console.error(resParsed.error);
@@ -67,28 +88,69 @@ export default function Page() {
         //set periods state array
         setPeriods(
           //create a new array from response values
-          resParsed.periods.map(
-            (period: {
-              id: number;
-              begins_at: Date;
-              ends_at: Date;
-              curriculum: {
-                id: number;
-                created_at: Date;
-                course: { name: string };
-              };
-            }) => {
-              return {
-                periodId: period.id,
-                beginsAt: period.begins_at,
-                endsAt: period.ends_at,
-                courseName: period.curriculum.course.name,
-                curriculumId: period.curriculum.id,
-                curriculumCreatedAt: period.curriculum.created_at,
-              };
-            },
-          ),
+          resParsed.periods.map((period: DbPeriod) => {
+            return {
+              periodId: period.id,
+              beginsAt: period.begins_at,
+              endsAt: period.ends_at,
+              courseName: period.curriculum.course.name,
+              curriculumId: period.curriculum.id,
+              curriculumCreatedAt: period.curriculum.created_at,
+            };
+          }),
         );
+
+        //set cursor state for the next batch
+        setCursor(resParsed.nextCursor);
+
+        //if it's the final batch
+        setIsFinal(resParsed.isFinal);
+      } else {
+        setPeriods([]);
+      }
+      setLoading(false);
+    } catch (e) {
+      console.error("error fetching periods", e);
+      setLoading(false);
+    }
+  }
+
+  async function fetchNextPeriods() {
+    try {
+      //call to getPeriods api
+      const res = await fetch(`donemler/api/getPeriods?cursor=${cursor}`, {
+        method: "GET",
+      });
+      const resParsed = await res.json();
+
+      if (!res.ok) {
+        //error returned from api
+        console.error(resParsed.error);
+        return;
+      }
+
+      if (resParsed.periods.length > 0) {
+        //set periods state array
+        setPeriods((prev) => [
+          ...prev,
+          //create a new array from response values
+          ...resParsed.periods.map((period: DbPeriod) => {
+            return {
+              periodId: period.id,
+              beginsAt: period.begins_at,
+              endsAt: period.ends_at,
+              courseName: period.curriculum.course.name,
+              curriculumId: period.curriculum.id,
+              curriculumCreatedAt: period.curriculum.created_at,
+            };
+          }),
+        ]);
+
+        //set cursor state for the next batch
+        setCursor(resParsed.nextCursor);
+
+        //if it's the final batch
+        setIsFinal(resParsed.isFinal);
       } else {
         setPeriods([]);
       }
@@ -153,6 +215,9 @@ export default function Page() {
           getCurriculumDate(period.curriculumCreatedAt) +
           " Müfredatı: " +
           period.courseName
+        }
+        className={
+          dayjs().isAfter(new Date(period.endsAt)) ? classes.label : undefined
         }
         onClick={() => {
           setSelectedPeriod(index);
@@ -256,11 +321,27 @@ export default function Page() {
             <Button //delete button
               color="red"
               disabled={!isPeriodSelected}
-              onClick={handleDeletePeriod}
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Dönemi silmek beraberinde dökümanları da siler. Ayrıca döneme bağlı öğrenciler koparılır ve panelde dönem bilgisini artık göremezler. Emin misiniz?",
+                  )
+                )
+                  handleDeletePeriod();
+              }}
             >
               Sil
             </Button>
           </Group>
+
+          <Button
+            variant="outline"
+            disabled={!periods || isFinal}
+            mt={rem(8)}
+            onClick={() => fetchNextPeriods()}
+          >
+            Daha fazla göster
+          </Button>
         </Flex>
       )}
     </>

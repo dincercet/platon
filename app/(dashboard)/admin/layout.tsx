@@ -8,7 +8,7 @@ import isAdminAuth from "./actions/isAdminAuth";
 import { redirect } from "next/navigation";
 import { Navbar } from "./components/Navbar";
 import { Container, rem } from "@mantine/core";
-import MantineHeader from "../../components/header/MantineHeader";
+import MantineHeaderAdmin from "./components/MantineHeaderAdmin";
 import logger from "@/winston-config";
 
 //todo: convert into async?
@@ -32,7 +32,7 @@ export default async function AdminLayout({
   //else continue rendering
   return (
     <MantineProvider theme={theme} forceColorScheme="light">
-      <MantineHeader />
+      <MantineHeaderAdmin />
       <Container display="flex" px={rem(3)}>
         <Navbar />
         <Flex justify="center" w="100%">

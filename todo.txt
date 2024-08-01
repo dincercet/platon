@@ -11,13 +11,16 @@ ui:
 - mention certification?
 - 'egitim detaylari' button below course cards
 
+ egitimler:
+- sort periods by beginning date
+
  hakkimizda:
 - plan layout
 - teacher photo and bio
 - class photo? (preferably with students)
 - company history/description?
 
-  iletisim:
+ iletisim:
 - decide whether to keep the same email
 - flex-col title and main, vertically center for visual improvement
   footer:
@@ -31,19 +34,10 @@ panel:
 token expiration:
 - token expires when site is left for a while, so when admin panel is directly opened, it will first redirect to homepage and then refresh token.
 
-admin:
- - will need pagination for every admin page, to prevent overloading.
+student panel:
+- throws to homepage after refresh (tested in newly registered, session storage)
 
-  courses:
-  -warn when making legacy
-
-  curriculums:
-  -warn when making legacy
-
-  periods:
-  -warn when deleting
-  -change outdated periods' color to orange
-
-  students:
-  -test remove student
-
+bugs not to be bothered with:
+-'show more' button in admin page is not disabled when there's factors of exactly 5 items (would cause overhead to db query if fixed)
+-in admin page wrong radio button might appear to be selected when the list items are changed
+-students list with more than 5 is not tested yet, 'show more' in students is yet to be tested

@@ -47,6 +47,12 @@ export default function Page() {
     }[]
   >([]);
 
+  //to fetch gradually
+  const [cursor, setCursor] = useState<number | null>(null);
+
+  //true if there's no more to fetch
+  const [isFinal, setIsFinal] = useState(false);
+
   //selected student's id
   const [selectedStudentId, setSelectedStudentId] = useState<number | null>(
     null,
@@ -101,6 +107,65 @@ export default function Page() {
             };
           }),
         );
+
+        //set cursor state for the next batch
+        setCursor(resParsed.nextCursor);
+
+        //if it's the final batch
+        setIsFinal(resParsed.isFinal);
+      } else {
+        setStudents([]);
+      }
+      setLoading(false);
+    } catch (e) {
+      console.error("error fetching students", e);
+      setLoading(false);
+    }
+  }
+
+  async function fetchNextStudents() {
+    try {
+      //api call to get all students
+      const res = await fetch(`ogrenciler/api/getStudents?cursor=${cursor}`, {
+        method: "GET",
+      });
+      const resParsed = await res.json();
+
+      if (!res.ok) {
+        //error returned from api
+        console.error(resParsed.error);
+        return;
+      }
+
+      if (resParsed.students.length > 0) {
+        //set students state array
+        setStudents((prev) => [
+          ...prev,
+          ...resParsed.students.map((student: any) => {
+            return {
+              id: student.id,
+              email: student.email,
+              firstName: student.first_name,
+              lastName: student.last_name,
+              didRegister: student.did_register,
+              //nested array of periods that user is linked to
+              periods: student.users_periods.map((userPeriod: any) => {
+                return {
+                  id: userPeriod.period.id,
+                  beginsAt: new Date(userPeriod.period.begins_at),
+                  endsAt: new Date(userPeriod.period.ends_at),
+                  courseName: userPeriod.period.curriculum.course.name,
+                };
+              }),
+            };
+          }),
+        ]);
+
+        //set cursor state for the next batch
+        setCursor(resParsed.nextCursor);
+
+        //if it's the final batch
+        setIsFinal(resParsed.isFinal);
       } else {
         setStudents([]);
       }
@@ -211,7 +276,7 @@ export default function Page() {
       {loading ? (
         <Loader mt={rem(8)} />
       ) : (
-        <Flex direction="column" miw={rem(220)} m={rem(8)} gap={rem(8)}>
+        <Flex direction="column" miw={rem(220)} m={rem(8)}>
           <Button
             leftSection={<IconPlus size={16} />}
             mb={rem(8)}
@@ -220,7 +285,9 @@ export default function Page() {
             Öğrenci Ekle
           </Button>
 
-          {studentList.length > 0 && studentList}
+          <Flex direction="column" gap="xs">
+            {studentList.length > 0 && studentList}
+          </Flex>
 
           <Group grow>
             <Button
@@ -244,6 +311,15 @@ export default function Page() {
               Dönemler
             </Button>
           </Group>
+
+          <Button
+            variant="outline"
+            disabled={!students || isFinal}
+            mt={rem(8)}
+            onClick={() => fetchNextStudents()}
+          >
+            Daha fazla göster
+          </Button>
         </Flex>
       )}
     </>

@@ -198,7 +198,7 @@ export default function AddCurriculumModal({
             handleInitiateCurriculum();
           }}
         >
-          <Group>
+          <Group align="end">
             <NativeSelect
               label="Dersi Seçiniz"
               value={selectedCourseId.toString()}
