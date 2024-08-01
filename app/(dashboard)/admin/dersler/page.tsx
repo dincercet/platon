@@ -31,6 +31,12 @@ export default function CoursesPage() {
     }[]
   >([]);
 
+  //to fetch gradually
+  const [cursor, setCursor] = useState<number | null>(null);
+
+  //true if there's no more to fetch
+  const [isFinal, setIsFinal] = useState(false);
+
   //the values to be passed to EditCourseModal
   const [selectedCourse, setSelectedCourse] = useState<number>(0);
 
@@ -49,7 +55,9 @@ export default function CoursesPage() {
   //call to getCourses api, then set courses state
   async function fetchCourses() {
     try {
-      const res = await fetch("dersler/api/getCourses", { method: "GET" });
+      const res = await fetch("dersler/api/getCourses", {
+        method: "GET",
+      });
       const resParsed = await res.json();
 
       if (!res.ok) {
@@ -61,6 +69,46 @@ export default function CoursesPage() {
       //set courses state based on retrieved courses
       if (resParsed.courses.length > 0) setCourses(resParsed.courses);
       else setCourses([]);
+
+      //set cursor state for the next batch
+      setCursor(resParsed.nextCursor);
+
+      //if it's the final batch
+      setIsFinal(resParsed.isFinal);
+
+      setIsCourseSelected(false);
+      setLoading(false);
+    } catch (e) {
+      console.error("error fetching courses", e);
+      setLoading(false);
+    }
+  }
+
+  //fetch the next batch
+  async function fetchNextCourses() {
+    try {
+      const res = await fetch(`dersler/api/getCourses?cursor=${cursor}`, {
+        method: "GET",
+      });
+      const resParsed = await res.json();
+
+      if (!res.ok) {
+        //error returned from api
+        console.error(resParsed.error);
+        return;
+      }
+
+      //set courses state based on retrieved courses
+      if (resParsed.courses.length > 0)
+        setCourses((prev) => [...prev, ...resParsed.courses]);
+      else setCourses([]);
+
+      //set cursor state for the next batch
+      setCursor(resParsed.nextCursor);
+
+      //if it's the final batch
+      setIsFinal(resParsed.isFinal);
+
       setLoading(false);
     } catch (e) {
       console.error("error fetching courses", e);
@@ -156,6 +204,15 @@ export default function CoursesPage() {
             }}
           >
             <IconEdit />
+          </Button>
+
+          <Button
+            variant="outline"
+            disabled={!courses || isFinal}
+            mt={rem(8)}
+            onClick={() => fetchNextCourses()}
+          >
+            Daha fazla göster
           </Button>
         </Flex>
       )}

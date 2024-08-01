@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import isAdminAuth from "app/(dashboard)/admin/actions/isAdminAuth";
 import z from "zod";
+import logger from "@/winston-config";
 
 const prisma = new PrismaClient();
 
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   } catch (e) {
-    console.error("isAdminAuth error", e);
+    logger.error("isAdminAuth error", e);
   }
 
   const param = request.nextUrl.searchParams.get("periodId");
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   //validate parameters
   const validation = schema.safeParse({ periodId: periodId });
   if (!validation.success) {
-    console.error("Form validation failed.");
+    logger.error("Form validation failed.");
     return NextResponse.json(
       { error: "Form validation failed." },
       { status: 400 },
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         documents: { select: { id: true, file_name: true } },
       },
     });
-    console.log(documents);
+    logger.log(documents);
 
     //check if documents is null
     if (!documents)
@@ -61,7 +62,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     else return NextResponse.json({ documents: documents }, { status: 200 });
   } catch (e) {
     //db error
-    console.error("error fetching documents", e);
+    logger.error("error fetching documents", e);
     return NextResponse.json(
       { error: "Database error: Couldn't fetch documents." },
       { status: 500 },

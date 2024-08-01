@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import isAdminAuth from "app/(dashboard)/admin/actions/isAdminAuth";
 import { z } from "zod";
+import logger from "@/winston-config";
 
 const prisma = new PrismaClient();
 
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   } catch (e) {
-    console.error("isAdminAuth error", e);
+    logger.error("isAdminAuth error", e);
   }
 
   const param = request.nextUrl.searchParams.get("periodId");
@@ -38,7 +39,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (!validation.success) {
     //validation failed
 
-    console.error("Form validation failed.");
+    logger.error("Form validation failed.");
     return NextResponse.json(
       { error: "Form validation failed." },
       { status: 400 },
@@ -70,7 +71,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       else return NextResponse.json({ students: students }, { status: 200 });
     } catch (e) {
       //db error
-      console.error("error fetching students", e);
+      logger.error("error fetching students", e);
       return NextResponse.json(
         { error: "Database error: Couldn't fetch students" },
         { status: 500 },

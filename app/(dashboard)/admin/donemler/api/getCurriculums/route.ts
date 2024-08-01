@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import isAdminAuth from "app/(dashboard)/admin/actions/isAdminAuth";
+import logger from "@/winston-config";
 
 const prisma = new PrismaClient();
 
@@ -12,7 +13,7 @@ export async function GET(): Promise<NextResponse> {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   } catch (e) {
-    console.error("isAdminAuth error", e);
+    logger.error("isAdminAuth error", e);
   }
 
   try {
@@ -38,7 +39,7 @@ export async function GET(): Promise<NextResponse> {
       return NextResponse.json({ curriculums: curriculums }, { status: 200 });
   } catch (e) {
     //db error
-    console.error("error fetching curriculums", e);
+    logger.error("error fetching curriculums", e);
     return NextResponse.json(
       { error: "Database error: Couldn't fetch curriculums" },
       { status: 500 },
