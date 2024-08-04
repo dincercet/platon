@@ -1,11 +1,10 @@
-import "../globals.css";
 import Header from "../components/header/Header";
 import { IconMail, IconMapPin, IconPhone, IconUser } from "@tabler/icons-react";
 import { Separator } from "@/components/ui/separator";
 
 export default function Page() {
   return (
-    <>
+    <div className="min-h-dvh bg-background">
       <Header />
       <main className="container flex flex-col justify-center">
         <p className="text-4xl font-bold text-center my-16">Bize ulaşın</p>
@@ -50,6 +49,6 @@ export default function Page() {
           </div>
         </div>
       </main>
-    </>
+    </div>
   );
 }

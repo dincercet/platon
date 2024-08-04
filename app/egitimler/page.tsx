@@ -1,6 +1,5 @@
 "use client";
-import "../globals.css";
-import { cn } from "@/lib/utils";
+
 import "dayjs/locale/tr";
 import dayjs from "dayjs";
 import Header from "../components/header/Header";
@@ -19,7 +18,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { CaretDownIcon } from "@radix-ui/react-icons";
@@ -188,7 +186,7 @@ export default function Page() {
   });
 
   return (
-    <>
+    <div className="bg-background">
       <div className="h-dvh flex flex-col">
         <Header />
         <main className="grow flex flex-col">
@@ -265,6 +263,6 @@ export default function Page() {
           </div>
         </div>
       ) : null}
-    </>
+    </div>
   );
 }

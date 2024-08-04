@@ -1,4 +1,4 @@
-import { Flex, rem, Text, Divider, Paper } from "@mantine/core";
+import { Flex, rem, Text, Divider, Paper, Center } from "@mantine/core";
 
 export default function Page() {
   return (
@@ -21,9 +21,11 @@ export default function Page() {
       <Divider my="md" />
 
       <Paper shadow="xs" radius="lg" withBorder p="lg">
-        <Text size="lg" c="blue">
-          Dersler:
-        </Text>
+        <Center>
+          <Text size="xl" pb={rem(6)} c="blue">
+            Dersler
+          </Text>
+        </Center>
         <Text>
           Sistemde müfredat ve dönemden önce bir ders eklenmesi gerek.
         </Text>
@@ -67,9 +69,11 @@ export default function Page() {
       <Divider my="md" />
 
       <Paper shadow="xs" radius="lg" withBorder p="lg">
-        <Text size="lg" c="blue">
-          Müfredatlar:
-        </Text>
+        <Center>
+          <Text size="xl" pb={rem(6)} c="blue">
+            Müfredatlar
+          </Text>
+        </Center>
         <Text>Ders ekledikten sonra sırada ders müfredatı eklemek var.</Text>
         <Text>
           Her bir müfredat, o müfredata eklenen haftalarda ne yapılacağını
@@ -108,9 +112,11 @@ export default function Page() {
       <Divider my="md" />
 
       <Paper shadow="xs" radius="lg" withBorder p="lg">
-        <Text size="lg" c="blue">
-          Dönemler:
-        </Text>
+        <Center>
+          <Text size="xl" pb={rem(6)} c="blue">
+            Dönemler
+          </Text>
+        </Center>
         <Text>
           Ders müfredatlarını ekledikten sonra sırada öğrencilerin atanacağı
           dönemleri eklemek var.
@@ -151,9 +157,11 @@ export default function Page() {
       <Divider my="md" />
 
       <Paper shadow="xs" radius="lg" withBorder p="lg">
-        <Text size="lg" c="blue">
-          Öğrenciler:
-        </Text>
+        <Center>
+          <Text size="xl" pb={rem(6)} c="blue">
+            Öğrenciler
+          </Text>
+        </Center>
         <Text>
           Öğrenci eklemek için bir ön gereksinim yok. Öğrenci eklendikten sonra
           da bir veya birden fazla döneme atanılabilir.

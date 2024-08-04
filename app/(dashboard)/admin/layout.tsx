@@ -1,24 +1,21 @@
 "use server";
 
-import "@mantine/core/styles.css";
-import "@mantine/dates/styles.css";
-import { Flex, MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.layer.css";
+import "@mantine/dates/styles.layer.css";
+
+import { Container, rem, Flex, MantineProvider } from "@mantine/core";
 import { theme } from "theme";
 import isAdminAuth from "./actions/isAdminAuth";
 import { redirect } from "next/navigation";
 import { Navbar } from "./components/Navbar";
-import { Container, rem } from "@mantine/core";
 import MantineHeaderAdmin from "./components/MantineHeaderAdmin";
 import logger from "@/winston-config";
 
-//todo: convert into async?
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  //todo: test with a user account
-
   try {
     //if auth fails redirect
     if (!(await isAdminAuth())) {
@@ -31,7 +28,7 @@ export default async function AdminLayout({
 
   //else continue rendering
   return (
-    <MantineProvider theme={theme} forceColorScheme="light">
+    <MantineProvider theme={theme} forceColorScheme="dark">
       <MantineHeaderAdmin />
       <Container display="flex" px={rem(3)}>
         <Navbar />

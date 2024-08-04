@@ -1,5 +1,6 @@
 "server only";
 
+import "./tailwind.css";
 import React from "react";
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -31,12 +32,7 @@ export default function RootLayout({
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
       </head>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          font.variable,
-        )}
-      >
+      <body className={cn("font-sans antialiased", font.variable)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

@@ -6,8 +6,6 @@ ui:
 - change dark mode slider indicator color
 
  homepage:
-- check stats initial high-gap issue on small device when in production
-- change min-h-screen to min-h-dvh
 - mention certification?
 - 'egitim detaylari' button below course cards
 

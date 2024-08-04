@@ -10,6 +10,7 @@ const {
 module.exports = {
   //load preflight manually (button reset conflicts with mantine)
   // corePlugins: { preflight: false },
+  // prefix: "tw-",
   darkMode: ["class"],
   content: [
     "./app/**/*.{ts,tsx}",
