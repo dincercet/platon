@@ -32,7 +32,7 @@ export default function RootLayout({
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
       </head>
-      <body className={cn("font-sans antialiased", font.variable)}>
+      <body className={cn("antialiased font-sans", font.variable)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

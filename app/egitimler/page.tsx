@@ -158,7 +158,7 @@ export default function Page() {
 
           <div className="text-center mt-2">
             <DialogTrigger asChild>
-              <Button variant="outline">Müfredatı Gör</Button>
+              <Button variant="default">Müfredatı Gör</Button>
             </DialogTrigger>
           </div>
         </AccordionContent>
@@ -187,7 +187,7 @@ export default function Page() {
 
   return (
     <div className="bg-background">
-      <div className="h-dvh flex flex-col">
+      <div className="min-h-dvh flex flex-col">
         <Header />
         <main className="grow flex flex-col">
           {curriculums.length > 0 ? (

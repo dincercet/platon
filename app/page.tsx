@@ -13,7 +13,7 @@ export default function Page() {
         <Header />
         <main className="flex-grow flex flex-col px-2 sm:px-4">
           <div className="flex-grow flex flex-col items-center justify-center py-16">
-            <p className="text-center pb-6 sm:pb-4 md:pb-0 text-lg text-foreground mb-2">
+            <p className="text-center pb-8 sm:pb-4 md:pb-0 text-lg text-foreground">
               Adana&apos;nın köklü eğitim merkezi
             </p>
             <TypewriterEffect
@@ -77,7 +77,7 @@ export default function Page() {
         </main>
       </div>
 
-      <div className="min-h-screen block justify-center dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
+      <div className="min-h-dvh block justify-center dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
         <CourseCards />
       </div>
     </div>

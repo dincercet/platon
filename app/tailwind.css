@@ -4,9 +4,6 @@
 @import "tailwindcss/components" layer(tw_components);
 @import "tailwindcss/utilities" layer(tw_utilities);
 
-/*@import "@mantine/core/styles.layer.css";*/
-/*@import "@mantine/dates/styles.layer.css";*/
-
 /* mantine core styles break .body of tailwind pages, it has to be tweaked */
 @layer reset {
   body {
@@ -26,6 +23,9 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 243 75% 59%; /*indigo 500*/
 
+    --accent: 228 96% 89%; /*indigo 200*/
+    --accent-foreground: 242 47% 34%; /*indigo 900*/
+
     --popover: 230 94% 82%; /*indigo 300*/
     --popover-foreground: 242 47% 34%; /*indigo 900*/
 
@@ -35,14 +35,11 @@
     --card: 0 0% 100%;
     --card-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 242 47% 34%; /*indigo 900*/
+    --primary-foreground: 230 94% 82%; /*indigo 300*/
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --accent: 228 96% 89%; /*indigo 200*/
-    --accent-foreground: 242 47% 34%; /*indigo 900*/
 
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
@@ -71,8 +68,8 @@
     --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 1.2%;
+    --primary: 230 94% 82%; /*indigo 300*/
+    --primary-foreground: 244 47% 20%; /*indigo 950*/
 
     --secondary: 222.2 47.4% 11.2%;
     --secondary-foreground: 210 40% 98%;
@@ -97,9 +94,3 @@
       "calt" 1;
   }
 }
-
-/* @layer components { */
-/*   .mantine-UnstyledButton-root { */
-/*     background-color: #228be6 !important; */
-/*   } */
-/* } */

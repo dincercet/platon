@@ -7,7 +7,7 @@ export default function Page() {
     <div className="min-h-dvh bg-background">
       <Header />
       <main className="container flex flex-col justify-center">
-        <p className="text-4xl font-bold text-center my-16">Bize ulaşın</p>
+        <p className="text-5xl text-center my-16">Bize ulaşın</p>
         <div className="flex flex-wrap sm:flex-nowrap">
           <div className="sm:w-1/2 z-10 flex justify-center">
             <div className="flex flex-col gap-2 sm:place-content-center">

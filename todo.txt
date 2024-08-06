@@ -1,15 +1,12 @@
-header:
-- why is onAuthStateChanged called 3 times on every useEffect execution?
 
 ui:
- drawer:
-- change dark mode slider indicator color
-
  homepage:
-- mention certification?
 - 'egitim detaylari' button below course cards
+ (mention):
+  - CERTIFICATION - REFERENCES - B2B SEMINARS - IT SERVICES
 
  egitimler:
+- prevent overflow of courses
 - sort periods by beginning date
 
  hakkimizda:
@@ -18,12 +15,28 @@ ui:
 - class photo? (preferably with students)
 - company history/description?
 
- iletisim:
-- decide whether to keep the same email
-- flex-col title and main, vertically center for visual improvement
-  footer:
+ footer:
 - add copyright
 
+
+student panel:
+- throws to homepage after refresh (tested in newly registered, session storage)
+- ui rendering problem that happened some time ago?
+- change password
+
+admin panel:
+- change password
+
+
+bugs not to be bothered with:
+-'show more' button in admin page is not disabled when there's factors of exactly 5 items (would cause overhead to db query if fixed)
+-in admin page wrong radio button might appear to be selected when the list items are changed
+-students list with more than 5 is not tested yet, 'show more' in students is yet to be tested
+
+SEE LATER:
+
+header:
+- why is onAuthStateChanged called 3 times on every useEffect execution?
 
 panel:
 - check if the container component causes the layout.tsx to be rendered on the client. (security risk)
@@ -31,11 +44,3 @@ panel:
 
 token expiration:
 - token expires when site is left for a while, so when admin panel is directly opened, it will first redirect to homepage and then refresh token.
-
-student panel:
-- throws to homepage after refresh (tested in newly registered, session storage)
-
-bugs not to be bothered with:
--'show more' button in admin page is not disabled when there's factors of exactly 5 items (would cause overhead to db query if fixed)
--in admin page wrong radio button might appear to be selected when the list items are changed
--students list with more than 5 is not tested yet, 'show more' in students is yet to be tested
