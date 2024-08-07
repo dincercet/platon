@@ -3,11 +3,8 @@ ui:
  homepage:
 - 'egitim detaylari' button below course cards
  (mention):
-  - CERTIFICATION - REFERENCES - B2B SEMINARS - IT SERVICES
+  CERTIFICATION - REFERENCES - B2B SEMINARS - B2B IT SERVICES
 
- egitimler:
-- prevent overflow of courses
-- sort periods by beginning date
 
  hakkimizda:
 - plan layout

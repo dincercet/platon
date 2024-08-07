@@ -233,6 +233,7 @@ export default function Page() {
                     onValueChange={(value) => {
                       setSelectedCurriculumIndex(Number(value));
                     }}
+                    className="max-h-[400px] md:max-h-[500px] overflow-y-auto"
                   >
                     {courseList}
                   </Accordion>

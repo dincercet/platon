@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.11",
+    "embla-carousel-react": "^8.1.8",
     "firebase": "^10.12.2",
     "firebase-admin": "^12.1.1",
     "framer-motion": "^11.2.10",

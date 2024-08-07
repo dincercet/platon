@@ -20,6 +20,7 @@ export async function GET(): Promise<NextResponse> {
           },
         },
       },
+      orderBy: { begins_at: "asc" },
     });
 
     //check if periods is null
