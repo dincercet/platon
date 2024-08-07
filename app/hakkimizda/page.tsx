@@ -43,7 +43,7 @@ export default function Page() {
 
         <Carousel className="w-full max-w-md self-center">
           <CarouselContent>
-            <CarouselItem>
+            <CarouselItem className="sm:basis-1/2 md:basis-1/3">
               <div className="p-1 sm:p-0">
                 <Card>
                   <CardContent className="flex items-center justify-center p-6">
@@ -57,7 +57,7 @@ export default function Page() {
                 </Card>
               </div>
             </CarouselItem>
-            <CarouselItem>
+            <CarouselItem className="sm:basis-1/2 md:basis-1/3">
               <div className="p-1">
                 <Card>
                   <CardContent className="flex items-center justify-center p-6">
@@ -71,7 +71,7 @@ export default function Page() {
                 </Card>
               </div>
             </CarouselItem>
-            <CarouselItem>
+            <CarouselItem className="sm:basis-1/2 md:basis-1/3">
               <div className="p-1">
                 <Card>
                   <CardContent className="flex items-center justify-center p-6">
