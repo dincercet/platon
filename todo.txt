@@ -7,10 +7,9 @@ ui:
 
 
  hakkimizda:
-- plan layout
-- teacher photo and bio
-- class photo? (preferably with students)
-- company history/description?
+- edit teacher bio
+- edit company bio
+- add photos to the carousel
 
  footer:
 - add copyright
