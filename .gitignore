@@ -1,11 +1,20 @@
+#overhead
 node_modules/
 .next/
 .yarn/
 .git/
 prisma/migrations/
 yarn.lock
+
+#sensitive
 .env.local
 .env
 firebaseClientConfig.js
 firebaseAdminConfig.json
+
+#project-specific overhead
 app/documents/
+
+#idx ignore
+.idx/
+mysql/
