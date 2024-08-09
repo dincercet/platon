@@ -1,4 +1,3 @@
-
 ui:
  homepage:
 - 'egitim detaylari' button below course cards
@@ -10,6 +9,7 @@ ui:
 - edit teacher bio
 - edit company bio
 - add photos to the carousel
+- fix carousel half-slide
 
  footer:
 - add copyright
