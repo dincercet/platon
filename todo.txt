@@ -14,6 +14,8 @@ ui:
  footer:
 - add copyright
 
+- after login, css problem occurs again when redirected to homepage
+
 
 student panel:
 - throws to homepage after refresh (tested in newly registered, session storage)
