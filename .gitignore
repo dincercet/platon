@@ -16,5 +16,5 @@ firebaseAdminConfig.json
 app/documents/
 
 #idx ignore
-.idx/
-mysql/
+.idx/.data/
+package-lock.json
