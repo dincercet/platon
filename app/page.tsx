@@ -5,6 +5,8 @@ import Header from "./components/header/Header";
 import CourseCards from "./components/CourseCards";
 import CountUp from "react-countup";
 import { CaretDownIcon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -70,7 +72,7 @@ export default function Page() {
               </p>
             </div>
             <div className="flex flex-col text-blue-700 dark:text-blue-400">
-              <p className="text-lg text-center italic">derslere göz atın</p>
+              <p className="text-lg text-center italic">eğitimlere göz atın</p>
               <CaretDownIcon className="self-center w-16 h-16 animate-bounce" />
             </div>
           </div>
@@ -78,7 +80,14 @@ export default function Page() {
       </div>
 
       <div className="min-h-dvh block justify-center dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
-        <CourseCards />
+        <div className="flex flex-col items-center gap-5 py-10 md:pt-16">
+          <CourseCards />
+          <Link href="/egitimler" legacyBehavior passHref>
+            <Button variant="outline" size="lg" className="text-lg">
+              Eğitim Detayları
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );

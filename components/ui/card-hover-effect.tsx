@@ -18,12 +18,7 @@ export const HoverEffect = ({
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div
-      className={cn(
-        "flex flex-wrap py-10 mt-10 justify-center w-full ",
-        className,
-      )}
-    >
+    <div className={cn("flex flex-wrap justify-center w-full ", className)}>
       {items.map((item, idx) => (
         <div className="w-[350px]" key={item?.title}>
           <Link

@@ -1,8 +1,7 @@
 ui:
  homepage:
-- 'egitim detaylari' button below course cards
  (mention):
-  CERTIFICATION - REFERENCES - B2B SEMINARS - B2B IT SERVICES
+  CERTIFICATION - REFERENCES - B2B SEMINARS
 
 
  hakkimizda:
@@ -24,6 +23,9 @@ student panel:
 
 admin panel:
 - change password
+
+
+
 
 
 bugs not to be bothered with:
