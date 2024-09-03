@@ -1,7 +1,9 @@
 ui:
  homepage:
  (mention):
-  CERTIFICATION - REFERENCES - B2B SEMINARS
+  student placements (change color)
+  seminars for businesses
+  completion certificate
 
 
  hakkimizda:

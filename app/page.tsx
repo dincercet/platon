@@ -7,6 +7,35 @@ import CountUp from "react-countup";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
+
+const graduates = [
+  {
+    quote: "Koç Sistem",
+    name: "Ali Utku Beyaz",
+    title: "Network-Sistem Uzmanlığı",
+  },
+  {
+    quote: "Koç Sistem",
+    name: "Ali Utku Beyaz",
+    title: "Network-Sistem Uzmanlığı",
+  },
+  {
+    quote: "Koç Sistem",
+    name: "Ali Utku Beyaz",
+    title: "Network-Sistem Uzmanlığı",
+  },
+  {
+    quote: "Koç Sistem",
+    name: "Ali Utku Beyaz",
+    title: "Network-Sistem Uzmanlığı",
+  },
+  {
+    quote: "Koç Sistem",
+    name: "Ali Utku Beyaz",
+    title: "Network-Sistem Uzmanlığı",
+  },
+];
 
 export default function Page() {
   return (
@@ -79,7 +108,7 @@ export default function Page() {
         </main>
       </div>
 
-      <div className="min-h-dvh block justify-center dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
+      <div className="block justify-center dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
         <div className="flex flex-col items-center gap-5 py-10 md:pt-16">
           <CourseCards />
           <Link href="/egitimler" legacyBehavior passHref>
@@ -87,6 +116,14 @@ export default function Page() {
               Eğitim Detayları
             </Button>
           </Link>
+        </div>
+      </div>
+      <div className="flex flex-col justify-center items-center gap-5 py-8 dark:bg-indigo-950 dark:shadow-inner dark:shadow-zinc-950">
+        <p className="text-foreground text-2xl font-semibold text-center">
+          Mezunlarımızdan Bazıları
+        </p>
+        <div className="max-w-full relative overflow-hidden">
+          <InfiniteMovingCards items={graduates} />
         </div>
       </div>
     </div>
