@@ -70,7 +70,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     });
 
     //use the last student's id as cursor
-    const nextCursor = students[students.length - 1].id;
+    const nextCursor = students[students.length - 1]?.id;
     //true if there's no more students to fetch
     const isFinal = students.length < 5 ? true : false;
 

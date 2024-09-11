@@ -62,7 +62,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     });
 
     //use the last period's id as cursor
-    const nextCursor = periods[periods.length - 1].id;
+    const nextCursor = periods[periods.length - 1]?.id;
     //true if there's no more periods to fetch
     const isFinal = periods.length < 5 ? true : false;
 

@@ -58,7 +58,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     });
 
     //use the last course's id as cursor
-    const nextCursor = courses[courses.length - 1].id;
+    const nextCursor = courses[courses.length - 1]?.id;
     //true if there's no more courses to fetch
     const isFinal = courses.length < 5 ? true : false;
 

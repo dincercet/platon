@@ -1,9 +1,12 @@
 ui:
  homepage:
+ -trim lines of courses
+ -distribute cards evenly when multiple rows
  (mention):
-  student placements (change color)
-  seminars for businesses
-  completion certificate
+  student placements (change color, add all graduates to the list)
+  mention seminars for businesses (picture of a seminar as well?)
+  mention completion certificate (Tüm eğitimler sonucunda mezuniyet sertifikası verilir.)
+ 
 
 
  hakkimizda:

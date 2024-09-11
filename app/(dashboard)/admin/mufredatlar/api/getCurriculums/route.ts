@@ -105,7 +105,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       }
 
       //use the last curriculum's id as cursor
-      const nextCursor = curriculums[curriculums.length - 1].id;
+      const nextCursor = curriculums[curriculums.length - 1]?.id;
       //true if there's no more curriculums to fetch
       const isFinal = curriculums.length < 5 ? true : false;
 
