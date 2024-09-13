@@ -16,24 +16,79 @@ const graduates = [
     title: "Network-Sistem Uzmanlığı",
   },
   {
-    quote: "Koç Sistem",
-    name: "Ali Utku Beyaz",
+    quote: "Gaziantep Belediyesi",
+    name: "Elif Çilingir",
+    title: "CCNA-Network",
+  },
+  {
+    quote: "DCL Bilgisayar",
+    name: "Mehmet Burak Demiray",
+    title: "MCSE-Sistem Uzmanlığı",
+  },
+  {
+    quote: "Alcatel",
+    name: "Sinan Çagatay",
     title: "Network-Sistem Uzmanlığı",
   },
   {
-    quote: "Koç Sistem",
-    name: "Ali Utku Beyaz",
+    quote: "Borusan Oto",
+    name: "Mesut Ulas",
+    title: "MCSE-Sistem Uzmanlığı",
+  },
+  {
+    quote: "Gündogdu Okullari",
+    name: "Ahmet Yavuz",
+    title: "MCSE-Sistem Uzmanlığı",
+  },
+  {
+    quote: "BSD Bilgisayar",
+    name: "Ufuk Murat Yildirim",
     title: "Network-Sistem Uzmanlığı",
   },
   {
-    quote: "Koç Sistem",
-    name: "Ali Utku Beyaz",
-    title: "Network-Sistem Uzmanlığı",
+    quote: "Keynet",
+    name: "Ali Rıza Öztürk",
+    title: "CVOICE-Netowrk-Sistem Uzmanlığı",
   },
   {
-    quote: "Koç Sistem",
-    name: "Ali Utku Beyaz",
-    title: "Network-Sistem Uzmanlığı",
+    quote: "BOSSA",
+    name: "Eser Yücel",
+    title: "Ag Yöneticiligi - CCNA",
+  },
+  {
+    quote: "Gaziantep Üniversitesi",
+    name: "Ibrahim Gül",
+    title: "Yazilim Uzmani - MCPD",
+  },
+  {
+    quote: "TEMSA",
+    name: "Veysel Yünlüel",
+    title: "Network Uzmanlığı",
+  },
+  {
+    quote: "Şehir Hastanesi-Adana",
+    name: "Fatih Önür",
+    title: "Sistem Uzmani",
+  },
+  {
+    quote: "Alcatel",
+    name: "Yalçin Kulaklioglu",
+    title: "Ag Yöneticisi",
+  },
+  {
+    quote: "Yapi Kredi",
+    name: "Ayhan Tunç",
+    title: "Ag Yöneticisi",
+  },
+  {
+    quote: "Tekstil Bank",
+    name: "Melih Teke",
+    title: "Ag Yöneticisi",
+  },
+  {
+    quote: "LOGO Team",
+    name: "Osman Özer",
+    title: "Sistem Uzmanı",
   },
 ];
 
@@ -109,8 +164,12 @@ export default function Page() {
       </div>
 
       <div className="block justify-center dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
-        <div className="flex flex-col items-center gap-5 py-10 md:pt-16">
+        <div className="container flex flex-col items-center gap-5 py-10 md:pt-16">
           <CourseCards />
+          <p className="text-foreground text-center">
+            Eğitimi başarıyla tamamlayan öğrencilerimiz mezuniyet sertifikası
+            edinir.
+          </p>
           <Link href="/egitimler" legacyBehavior passHref>
             <Button variant="outline" size="lg" className="text-lg">
               Eğitim Detayları
@@ -123,7 +182,7 @@ export default function Page() {
           Mezunlarımızdan Bazıları
         </p>
         <div className="max-w-full relative overflow-hidden">
-          <InfiniteMovingCards items={graduates} />
+          <InfiniteMovingCards items={graduates} speed={"normal"} />
         </div>
       </div>
     </div>

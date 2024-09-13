@@ -1,5 +1,8 @@
 "use client";
-import { HoverEffect } from "@/components/ui/card-hover-effect";
+import {
+  CardDescription,
+  HoverEffect,
+} from "@/components/ui/card-hover-effect";
 
 import { useEffect, useState } from "react";
 
