@@ -1,9 +1,11 @@
 ui:
  homepage:
+ speed up counters
  (mention):
-  mention seminars for businesses (picture of a seminar as well?)
- 
-
+  personal lecture - business lecture (accommodate lecture length and content to meet demands of a business)
+  picture of a seminar as well
+ add:
+  footer
 
  hakkimizda:
 - edit teacher bio
@@ -11,18 +13,21 @@ ui:
 - add photos to the carousel
 - fix carousel half-slide
 
- footer:
-- add copyright
 
+bugs:
 - after login, css problem occurs again when redirected to homepage
 
 
 student panel:
+ bugs:
 - throws to homepage after refresh (tested in newly registered, session storage)
 - ui rendering problem that happened some time ago?
+
+ add:
 - change password
 
 admin panel:
+ add:
 - change password
 
 
