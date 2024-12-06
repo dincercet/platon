@@ -7,7 +7,9 @@ import CountUp from "react-countup";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
+import Footer from "./components/footer/Footer";
 
 const graduates = [
   {
@@ -177,6 +179,7 @@ export default function Page() {
           </Link>
         </div>
       </div>
+
       <div className="flex flex-col justify-center items-center gap-5 py-8 dark:bg-indigo-950 dark:shadow-inner dark:shadow-zinc-950">
         <p className="text-foreground text-2xl font-semibold text-center">
           Mezunlarımızdan Bazıları
@@ -185,6 +188,24 @@ export default function Page() {
           <InfiniteMovingCards items={graduates} speed={"normal"} />
         </div>
       </div>
+      <div className="flex flex-col justify-center items-center gap-8 py-8 dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
+        <p className="text-foreground text-2xl font-semibold text-center">
+          Size Özel Eğitim
+        </p>
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+          <p className="text-foreground text-center max-w-80">
+            Eğitimin uzunluğunu ve içeriğini şirketinizin ihtiyacına göre
+            ayarlayalım.
+          </p>
+          <Image
+            src="/conference.jpg"
+            alt="Konferans resmi"
+            width={350}
+            height={350}
+          />
+        </div>
+      </div>
+      <Footer primary={true} />
     </div>
   );
 }

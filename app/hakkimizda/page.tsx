@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { CaretDownIcon } from "@radix-ui/react-icons";
+import Footer from "../components/footer/Footer";
 
 export default function Page() {
   return (
@@ -98,6 +99,7 @@ export default function Page() {
           </div>
         </div>
       </div>
+      <Footer primary={true} />
     </>
   );
 }

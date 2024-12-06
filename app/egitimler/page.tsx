@@ -22,6 +22,7 @@ import {
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { IconClock, IconSchool } from "@tabler/icons-react";
+import Footer from "../components/footer/Footer";
 dayjs.extend(localizedFormat);
 
 export default function Page() {
@@ -264,6 +265,7 @@ export default function Page() {
           </div>
         </div>
       ) : null}
+      <Footer primary={true} />
     </div>
   );
 }

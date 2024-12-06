@@ -1,11 +1,7 @@
 ui:
  homepage:
- speed up counters
- (mention):
-  personal lecture - business lecture (accommodate lecture length and content to meet demands of a business)
-  picture of a seminar as well
- add:
-  footer
+- speed up counters
+- edit picture of seminar
 
  hakkimizda:
 - edit teacher bio
