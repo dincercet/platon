@@ -125,7 +125,7 @@ export default function Page() {
                   <CountUp
                     start={0}
                     end={20}
-                    duration={7}
+                    duration={3}
                     delay={3}
                     prefix="+"
                   />
@@ -136,9 +136,9 @@ export default function Page() {
                 <span className="border-4 rounded-full border-blue-700 dark:border-blue-400 p-2">
                   <CountUp
                     start={0}
-                    delay={3}
                     end={500}
                     duration={5}
+                    delay={3}
                     prefix="+"
                   />
                 </span>{" "}
@@ -149,8 +149,8 @@ export default function Page() {
                   <CountUp
                     start={0}
                     end={8}
+                    duration={4}
                     delay={3}
-                    duration={7}
                     prefix="~"
                   />
                 </span>{" "}

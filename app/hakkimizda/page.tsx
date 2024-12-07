@@ -63,34 +63,37 @@ export default function Page() {
           </div>
 
           <div className="grow">
-            <Carousel className="mx-6 sm:mx-12">
+            <Carousel className="mx-6 sm:mx-12 ">
               <CarouselContent>
                 <CarouselItem className="md:basis-1/2">
-                  <Image
-                    src="/car1.jpg"
-                    alt="car1"
-                    width={750}
-                    height={750}
-                    className="object-cover rounded-xl"
-                  />
+                  <div className="relative w-full h-72">
+                    <Image
+                      src="/car1.jpg"
+                      alt="car1"
+                      fill={true}
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
                 </CarouselItem>
-                <CarouselItem className="md:basis-1/2">
-                  <Image
-                    src="/car2.jpg"
-                    alt="car2"
-                    width={750}
-                    height={750}
-                    className="object-cover rounded-xl"
-                  />
+                <CarouselItem className="md:basis-1/2 ">
+                  <div className="relative w-full h-72">
+                    <Image
+                      src="/car2.jpg"
+                      alt="car2"
+                      fill={true}
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
                 </CarouselItem>
-                <CarouselItem className="md:basis-1/2">
-                  <Image
-                    src="/car3.jpg"
-                    alt="car3"
-                    width={750}
-                    height={750}
-                    className="object-cover rounded-xl"
-                  />
+                <CarouselItem className="md:basis-1/2 ">
+                  <div className="relative w-full h-72">
+                    <Image
+                      src="/car3.jpg"
+                      alt="car3"
+                      fill={true}
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
                 </CarouselItem>
               </CarouselContent>
               <CarouselPrevious />

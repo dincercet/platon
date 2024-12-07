@@ -1,13 +1,11 @@
 ui:
  homepage:
-- speed up counters
 - edit picture of seminar
 
  hakkimizda:
 - edit teacher bio
 - edit company bio
 - add photos to the carousel
-- fix carousel half-slide
 
 
 bugs:
