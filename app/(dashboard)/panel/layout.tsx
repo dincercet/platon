@@ -29,7 +29,7 @@ export default async function AdminLayout({
   return (
     <MantineProvider theme={theme} forceColorScheme="light">
       <MantineHeader />
-      <Container display="flex" px={rem(3)}>
+      <Container display="flex-column" px={rem(3)}>
         {children}
       </Container>
     </MantineProvider>

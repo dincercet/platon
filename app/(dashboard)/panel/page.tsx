@@ -1,5 +1,5 @@
 "use client";
-import { Button, Flex, Paper, Stack, Text, rem } from "@mantine/core";
+import { Button, Center, Flex, Paper, Stack, Text, rem } from "@mantine/core";
 import { useEffect, useState } from "react";
 import "dayjs/locale/tr";
 import dayjs from "dayjs";
@@ -23,6 +23,7 @@ function getStorage() {
 export default function StudentPage() {
   //handlers to open and close modals
   const [showDocumentsOpened, showDocumentsHandlers] = useDisclosure(false);
+  const [changePasswordOpened, changePasswordHandlers] = useDisclosure(false);
 
   //state to keep an array of periods that the user is assigned to
   const [userPeriods, setUserPeriods] = useState<
@@ -249,6 +250,15 @@ export default function StudentPage() {
           )}
         </Stack>
       </Modal>
+
+      <Modal
+        opened={changePasswordOpened}
+        onClose={() => {
+          changePasswordHandlers.close();
+        }}
+        title="Dökümanlar"
+        centered
+      ></Modal>
       <Flex wrap="wrap" gap="md" mt="md" justify="center">
         {periodList.length > 0 ? (
           periodList
@@ -256,6 +266,11 @@ export default function StudentPage() {
           <Text size="lg">Henüz bir derse atanmadınız.</Text>
         )}
       </Flex>
+      <Center my="md">
+        <Button fullWidth={false} variant="outline">
+          Şifremi Değiştir
+        </Button>
+      </Center>
     </>
   );
 }
