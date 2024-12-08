@@ -17,15 +17,15 @@ student panel:
 - throws to homepage after refresh (tested in newly registered, session storage)
 - ui rendering problem that happened some time ago?
 
- add:
-- change password
-  (doesn't validate old password)
 
 admin panel:
  add:
 - change password
+  useForm is not a function
 
-
+login:
+-auth/invalid-credential no error message
+ also auth/too-many-requests
 
 
 

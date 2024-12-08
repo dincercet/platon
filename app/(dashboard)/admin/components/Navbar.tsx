@@ -9,7 +9,7 @@ import {
   IconCalendarTime, //Curriculum
   IconSchoolBell, //Schedules
   IconSchool, //Students
-  // IconFileUpload, //File upload (if needed)
+  IconKey, //Change password
 } from "@tabler/icons-react";
 import classes from "./Navbar.module.css";
 
@@ -70,6 +70,26 @@ export function Navbar() {
     <nav className={classes.navbar}>
       <Stack justify="center" gap={rem(3)} mt={rem(3)}>
         {links}
+
+        <Tooltip
+          label={"Şifremi değiştir"}
+          position="right"
+          transitionProps={{ duration: 0 }}
+        >
+          <UnstyledButton
+            component={Link}
+            href={"/admin/sifremi-degistir"}
+            onClick={() => setActive("/admin/sifremi-degistir")}
+            className={classes.link}
+            data-active={active === "/admin/sifremi-degistir" || undefined}
+          >
+            <IconKey
+              style={{ width: rem(20), height: rem(20) }}
+              color="orange"
+              stroke={1.5}
+            />
+          </UnstyledButton>
+        </Tooltip>
       </Stack>
     </nav>
   );

@@ -1,4 +1,4 @@
-import { Button, Modal, PasswordInput } from "@mantine/core";
+import { Button, PasswordInput } from "@mantine/core";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
@@ -28,13 +28,7 @@ const schema = z
     path: ["confirmPassword"],
   });
 
-export default function ChangePasswordModal({
-  opened,
-  close,
-}: {
-  opened: boolean;
-  close: () => void;
-}) {
+export default function Page() {
   //mantine form hook
   const form = useForm<FormValues>({
     initialValues: {
@@ -71,7 +65,7 @@ export default function ChangePasswordModal({
   }
 
   return (
-    <Modal opened={opened} onClose={close} title="Şifremi Değiştir" centered>
+    <div>
       <form
         onSubmit={form.onSubmit((values, e) => {
           e?.preventDefault();
@@ -99,6 +93,6 @@ export default function ChangePasswordModal({
           Şifreyi güncelle
         </Button>
       </form>
-    </Modal>
+    </div>
   );
 }
