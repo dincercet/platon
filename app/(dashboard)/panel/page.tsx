@@ -9,6 +9,7 @@ import { useDisclosure } from "@mantine/hooks";
 
 import { ActionIcon, Group, Modal } from "@mantine/core";
 import { IconFileDownload } from "@tabler/icons-react";
+import ChangePasswordModal from "./components/ChangePasswordModal";
 
 dayjs.extend(localizedFormat);
 
@@ -232,33 +233,34 @@ export default function StudentPage() {
 
   return (
     <>
-      <Modal
-        opened={showDocumentsOpened}
-        onClose={() => {
-          setWeeks([]);
-          setSelectedPeriodId(null);
-          showDocumentsHandlers.close();
-        }}
-        title="Dökümanlar"
-        centered
-      >
-        <Stack>
-          {weekList.length > 0 ? (
-            weekList
-          ) : (
-            <Text>Henüz döküman yüklenmedi.</Text>
-          )}
-        </Stack>
-      </Modal>
+      {showDocumentsOpened && (
+        <Modal
+          opened={showDocumentsOpened}
+          onClose={() => {
+            setWeeks([]);
+            setSelectedPeriodId(null);
+            showDocumentsHandlers.close();
+          }}
+          title="Dökümanlar"
+          centered
+        >
+          <Stack>
+            {weekList.length > 0 ? (
+              weekList
+            ) : (
+              <Text>Henüz döküman yüklenmedi.</Text>
+            )}
+          </Stack>
+        </Modal>
+      )}
 
-      <Modal
-        opened={changePasswordOpened}
-        onClose={() => {
-          changePasswordHandlers.close();
-        }}
-        title="Dökümanlar"
-        centered
-      ></Modal>
+      {changePasswordOpened && (
+        <ChangePasswordModal
+          opened={changePasswordOpened}
+          close={changePasswordHandlers.close}
+        />
+      )}
+
       <Flex wrap="wrap" gap="md" mt="md" justify="center">
         {periodList.length > 0 ? (
           periodList
@@ -267,7 +269,11 @@ export default function StudentPage() {
         )}
       </Flex>
       <Center my="md">
-        <Button fullWidth={false} variant="outline">
+        <Button
+          fullWidth={false}
+          variant="outline"
+          onClick={changePasswordHandlers.open}
+        >
           Şifremi Değiştir
         </Button>
       </Center>

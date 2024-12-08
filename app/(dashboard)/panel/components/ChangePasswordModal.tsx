@@ -1,9 +1,8 @@
-import { Stack, Button, Modal, TextInput, Textarea } from "@mantine/core";
+import { Button, Modal, Paper, PasswordInput, rem } from "@mantine/core";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
-import addCourse from "../actions/addCourse";
-import { validatePassword } from "firebase/auth";
+import { updatePassword, validatePassword } from "firebase/auth";
 import auth from "firebase.init.js";
 
 //form types
@@ -53,51 +52,71 @@ export default function ChangePasswordModal({
 
   async function handleChangePassword(values: FormValues) {
     try {
+      //validate old password
       const status = await validatePassword(auth, values.oldPassword);
       if (!status.isValid) {
-        //show error
-      }
+        //if old password is wrong
+        form.setFieldError("oldPassword", "Eski şifre yanlış.");
+        return;
+      } else {
+        if (auth.currentUser) {
+          //update the password
+          updatePassword(auth.currentUser, values.password).catch((error) => {
+            //show error if any
+            form.setFieldError(
+              "confirmPassword",
+              "Bir sorun oluştu ve şifre güncellenemedi.",
+            );
 
-      // if (!res.success) {
-      //   //error returned from addCourse action
-      //   console.error(res.error);
-      // }
-      //close the modal
-      close();
+            console.error(error.message);
+          });
+        }
+
+        //close the modal
+        close();
+      }
     } catch (e) {
-      console.error("unknown error addCourse", e);
+      console.error("unknown error handleChangePassword", e);
       close();
     }
   }
 
   return (
-    <Modal opened={opened} onClose={close} title="Ders Ekle" centered>
+    <Modal opened={opened} onClose={close} title="Şifremi Değiştir" centered>
       <form
         onSubmit={form.onSubmit((values, e) => {
           e?.preventDefault();
-          //validate the form, form.errors will be set if validation fails
           form.validate();
-          //if valid, continue
-          if (form.isValid()) handleAddCourse(values);
+          if (form.isValid()) handleChangePassword(values);
         })}
       >
-        <Stack>
-          <TextInput label="Ders ismi" {...form.getInputProps("name")} />
+        <PasswordInput
+          label="Eski Şifre"
+          placeholder="Eski Şifreniz"
+          required
+          mt="md"
+          {...form.getInputProps("oldPassword")}
+        />
 
-          <Textarea
-            label="Ders açıklaması"
-            autosize
-            minRows={3}
-            {...form.getInputProps("description")}
-          />
+        <PasswordInput
+          label="Yeni Şifre"
+          placeholder="Yeni Şifreniz"
+          required
+          mt="md"
+          {...form.getInputProps("password")}
+        />
 
-          <Button
-            type="submit"
-            disabled={!form.isDirty("name") || !form.isDirty("description")}
-          >
-            Ekle
-          </Button>
-        </Stack>
+        <PasswordInput
+          label="Yeni Şifre Tekrarı"
+          placeholder="Yeni şifreyi tekrar giriniz"
+          required
+          mt="md"
+          {...form.getInputProps("confirmPassword")}
+        />
+
+        <Button type="submit" fullWidth mt="xl">
+          Şifreyi güncelle
+        </Button>
       </form>
     </Modal>
   );

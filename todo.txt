@@ -19,6 +19,7 @@ student panel:
 
  add:
 - change password
+  (doesn't validate old password)
 
 admin panel:
  add:
