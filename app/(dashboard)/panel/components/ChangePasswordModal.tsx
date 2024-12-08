@@ -50,15 +50,17 @@ export default function ChangePasswordModal({
       try {
         await updatePassword(auth.currentUser, values.password);
       } catch (e: any) {
-        //show error if any
-        form.setFieldError(
-          "confirmPassword",
-          "Bir sorun oluştu ve şifre güncellenemedi.",
-        );
         if (e.code === "auth/requires-recent-login") {
+          //must login recently error
           form.setFieldError(
             "confirmPassword",
             "Yeniden giriş yapmanız gerekli.",
+          );
+        } else {
+          //every other error
+          form.setFieldError(
+            "confirmPassword",
+            "Bir sorun oluştu ve şifre güncellenemedi.",
           );
         }
         console.error(e.message);

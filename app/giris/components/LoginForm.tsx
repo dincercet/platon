@@ -92,7 +92,17 @@ export default function LoginForm() {
 
       // signed in
       user = userCredential.user;
-    } catch (e) {
+    } catch (e: any) {
+      if (e.code === "auth/invalid-credential") {
+        //wrong credential error
+        form.setFieldError("password", "Girilen bilgiler yanlış.");
+      } else if (e.code === "auth/too-many-requests") {
+        //sent too many requests error
+        form.setFieldError(
+          "password",
+          "Çok fazla deneme yapıldı, biraz bekleyin.",
+        );
+      }
       console.error("error firebase signInWithEmailAndPassword", e);
       return;
     }

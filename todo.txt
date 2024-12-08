@@ -1,6 +1,7 @@
 ui:
  homepage:
 - edit picture of seminar
+  add certification part?
 
  hakkimizda:
 - edit teacher bio
@@ -18,15 +19,7 @@ student panel:
 - ui rendering problem that happened some time ago?
 
 
-admin panel:
- add:
-- change password
-  useForm is not a function
-
-login:
--auth/invalid-credential no error message
- also auth/too-many-requests
-
+------
 
 
 bugs not to be bothered with:

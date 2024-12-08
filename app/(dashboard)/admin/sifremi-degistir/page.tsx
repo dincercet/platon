@@ -1,4 +1,6 @@
-import { Button, PasswordInput } from "@mantine/core";
+"use client";
+
+import { Button, rem, Paper, PasswordInput } from "@mantine/core";
 import { z } from "zod";
 import { useForm } from "@mantine/form";
 import { zodResolver } from "mantine-form-zod-resolver";
@@ -28,7 +30,7 @@ const schema = z
     path: ["confirmPassword"],
   });
 
-export default function Page() {
+export default function ChangePasswordPage() {
   //mantine form hook
   const form = useForm<FormValues>({
     initialValues: {
@@ -44,28 +46,30 @@ export default function Page() {
       try {
         await updatePassword(auth.currentUser, values.password);
       } catch (e: any) {
-        //show error if any
-        form.setFieldError(
-          "confirmPassword",
-          "Bir sorun oluştu ve şifre güncellenemedi.",
-        );
         if (e.code === "auth/requires-recent-login") {
+          //must login recently error
           form.setFieldError(
             "confirmPassword",
             "Yeniden giriş yapmanız gerekli.",
           );
+        } else {
+          //every other error
+          form.setFieldError(
+            "confirmPassword",
+            "Bir sorun oluştu ve şifre güncellenemedi.",
+          );
         }
+
         console.error(e.message);
         return;
       }
 
-      //close the modal
-      close();
+      form.reset();
     }
   }
 
   return (
-    <div>
+    <Paper withBorder shadow="md" miw={rem(280)} p={20} mt={30} radius="md">
       <form
         onSubmit={form.onSubmit((values, e) => {
           e?.preventDefault();
@@ -93,6 +97,6 @@ export default function Page() {
           Şifreyi güncelle
         </Button>
       </form>
-    </div>
+    </Paper>
   );
 }
