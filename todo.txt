@@ -1,7 +1,6 @@
 ui:
  homepage:
 - edit picture of seminar
-  add certification part?
 
  hakkimizda:
 - edit teacher bio
@@ -10,7 +9,7 @@ ui:
 
 
 bugs:
-- after login, css problem occurs again when redirected to homepage
+- problem with reading storage after login
 
 
 student panel:

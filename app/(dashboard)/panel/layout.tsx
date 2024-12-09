@@ -1,6 +1,7 @@
 "use server";
 
-import "@mantine/core/styles.css";
+import "@mantine/core/styles.layer.css";
+
 import { MantineProvider } from "@mantine/core";
 import { theme } from "theme";
 import isUserAuth from "./actions/isUserAuth";
@@ -27,7 +28,7 @@ export default async function AdminLayout({
 
   //else continue rendering
   return (
-    <MantineProvider theme={theme} forceColorScheme="light">
+    <MantineProvider theme={theme} forceColorScheme="dark">
       <MantineHeader />
       <Container display="flex-column" px={rem(3)}>
         {children}

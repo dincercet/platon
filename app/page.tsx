@@ -168,10 +168,6 @@ export default function Page() {
       <div className="block justify-center dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
         <div className="container flex flex-col items-center gap-5 py-10 md:pt-16">
           <CourseCards />
-          <p className="text-foreground text-center">
-            Eğitimi başarıyla tamamlayan öğrencilerimiz mezuniyet sertifikası
-            edinir.
-          </p>
           <Link href="/egitimler" legacyBehavior passHref>
             <Button variant="outline" size="lg" className="text-lg">
               Eğitim Detayları
@@ -192,8 +188,8 @@ export default function Page() {
         <p className="text-foreground text-2xl font-semibold text-center">
           Size Özel Eğitim
         </p>
-        <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-          <p className="text-foreground text-center max-w-80">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+          <p className="text-foreground text-center md:text-left max-w-80">
             Eğitimin uzunluğunu ve içeriğini şirketinizin ihtiyacına göre
             ayarlayalım.
           </p>
@@ -202,10 +198,43 @@ export default function Page() {
             alt="Konferans resmi"
             width={350}
             height={350}
+            className="rounded-3xl"
           />
         </div>
       </div>
-      <Footer primary={true} />
+
+      <div className="flex flex-col justify-center items-center gap-8 py-8 dark:bg-indigo-950 dark:shadow-inner dark:shadow-zinc-950">
+        <p className="text-foreground text-2xl font-semibold text-center">
+          Sertifikasyon
+        </p>
+
+        <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+          <div className="relative h-56 w-56">
+            <Image
+              src="/ms_certified.jpg"
+              alt="Microsoft sertifikasyon logo"
+              fill
+              className="object-cover rounded-3xl"
+            />
+          </div>
+
+          <p className="text-foreground text-center max-w-80">
+            Katılım sertifikasının yanında,
+            <br /> Microsoft ve Cisco gibi sektör liderlerinin sınavlarına
+            hazırlanın.
+          </p>
+
+          <div className="relative h-56 w-56">
+            <Image
+              src="/cisco_certified.jpg"
+              alt="Cisco sertifikasyon logo"
+              fill
+              className="object-cover rounded-lg"
+            />
+          </div>
+        </div>
+      </div>
+      <Footer primary={false} />
     </div>
   );
 }
