@@ -8,16 +8,6 @@ ui:
 - add photos to the carousel
 
 
-bugs:
-- problem with reading storage after login
-
-
-student panel:
- bugs:
-- throws to homepage after refresh (tested in newly registered, session storage)
-- ui rendering problem that happened some time ago?
-
-
 ------
 
 

@@ -161,7 +161,7 @@ export default function StudentPage() {
     const ends = dayjs(new Date(period.ends)).locale("tr").format("LL");
 
     return (
-      <Paper key={period.id} shadow="md" p="md" withBorder miw={rem(288)}>
+      <Paper key={period.id} shadow="md" p="md" withBorder w={rem(300)}>
         <Stack>
           <Text size="lg" fw="bold" c="blue">
             {period.courseName}
