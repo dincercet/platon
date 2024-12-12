@@ -4,7 +4,7 @@
 # If you need more help, visit the Dockerfile reference guide at
 # https://docs.docker.com/go/dockerfile-reference/
 
-ARG NODE_VERSION=20.10.0
+ARG NODE_VERSION=22.11.0
 
 FROM node:${NODE_VERSION}-alpine
 
@@ -33,4 +33,4 @@ COPY . .
 EXPOSE 3000
 
 # Run the application.
-CMD yarn run dev
+CMD yarn start
