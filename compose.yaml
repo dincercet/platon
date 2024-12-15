@@ -15,16 +15,19 @@ services:
     env_file: ./.env
     restart: unless-stopped
     environment:
-      NODE_ENV: production
-      MYSQL_HOST=db
-      MYSQL_USER=$DB_USER
-      MYSQL_PASSWORD=$DB_PASSWORD
-      MYSQL_DB=$DB_NAME
+      # - NODE_ENV=production
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_USER=$DB_USER
+      - MYSQL_PASSWORD=$DB_PASSWORD
     ports:
       - 3000:3000
       - 9229:9229
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
-      - ./:/usr/src/app
+      - ./app:/usr/src/app/app
 
     # The commented out section below is an example of how to define a PostgreSQL
     # database that your application can use. `depends_on` tells Docker Compose to
@@ -32,21 +35,23 @@ services:
     # database data between container restarts. The `db-password` secret is used
     # to set the database password. You must create `db/password.txt` and add
     # a password of your choosing to it before running `docker-compose up`.
-  depends_on:
-    db:
-      condition: service_healthy
   db:
-    image: mysql:8.3.0
-    container_name: mysql-db
+    image: mysql
     restart: unless-stopped
     env_file: ./.env
     environment:
-      MYSQL_DB=$DB_NAME
-      MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
     ports:
-      - "3306:3306"
+      - "13306:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./mysql-config:/etc/mysql/conf.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 2
+      start_period: 0s
 volumes:
   db_data:

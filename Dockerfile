@@ -4,10 +4,10 @@
 # If you need more help, visit the Dockerfile reference guide at
 # https://docs.docker.com/go/dockerfile-reference/
 
-ARG NODE_VERSION=22.11.0
+ARG NODE_VERSION=22.12
 
 FROM node:${NODE_VERSION}-alpine as base
-WORKDIR /usr/src/app
+WORKDIR usr/src/app
 # Expose the port that the application listens on.
 EXPOSE 3000
 
@@ -21,13 +21,15 @@ FROM base as dev
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=yarn.lock,target=yarn.lock \
     --mount=type=cache,target=/root/.yarn \
-    yarn install --production --frozen-lockfile
+    yarn install
+#to get rid of the permissions error
+RUN mkdir -p .next && chmod -R 777 .next
 # Run the application as a non-root user.
 USER node
 # Copy the rest of the source files into the image.
 COPY . .
 # Run the application.
-CMD yarn dev
+CMD yarn run dev
 
 
 # production container
@@ -38,4 +40,4 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     yarn install --production --frozen-lockfile
 USER node
 COPY . .
-CMD yarn start
+CMD node src/index.js
