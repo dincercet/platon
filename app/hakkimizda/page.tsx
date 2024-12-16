@@ -68,8 +68,8 @@ export default function Page() {
                 <CarouselItem className="md:basis-1/2">
                   <div className="relative w-full h-72">
                     <Image
-                      src="/car1.jpg"
-                      alt="car1"
+                      src="/platon2.jpeg"
+                      alt="platon öğrencileri fotoğraf"
                       fill={true}
                       className="object-cover rounded-xl"
                     />
@@ -78,8 +78,8 @@ export default function Page() {
                 <CarouselItem className="md:basis-1/2 ">
                   <div className="relative w-full h-72">
                     <Image
-                      src="/car2.jpg"
-                      alt="car2"
+                      src="/platon4.jpg"
+                      alt="platon öğrencileri fotoğraf"
                       fill={true}
                       className="object-cover rounded-xl"
                     />
@@ -88,8 +88,8 @@ export default function Page() {
                 <CarouselItem className="md:basis-1/2 ">
                   <div className="relative w-full h-72">
                     <Image
-                      src="/car3.jpg"
-                      alt="car3"
+                      src="/platon5.jpg"
+                      alt="platon öğrencileri fotoğraf"
                       fill={true}
                       className="object-cover rounded-xl"
                     />

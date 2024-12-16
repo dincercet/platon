@@ -159,7 +159,7 @@ export default function Page() {
 
           <div className="text-center mt-2">
             <DialogTrigger asChild>
-              <Button variant="default">Müfredatı Gör</Button>
+              <Button variant="default">İçeriği Gör</Button>
             </DialogTrigger>
           </div>
         </AccordionContent>
@@ -225,7 +225,7 @@ export default function Page() {
                   <div className="flex flex-col gap-1 sm:gap-2 items-center">
                     <IconSchool size={36} />
                     <p className="text-2xl sm:text-4xl text-center font-semibold mb-4">
-                      Dersler ve Müfredatları
+                      Dersler ve İçerikleri
                     </p>
                   </div>
                   <Accordion

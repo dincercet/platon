@@ -1,12 +1,13 @@
 ui:
- homepage:
-- edit picture of seminar
-
  hakkimizda:
 - edit teacher bio
 - edit company bio
-- add photos to the carousel
 
+egitimler:
+unique key periods
+
+docker:
+generate prisma
 
 ------
 

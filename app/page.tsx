@@ -102,7 +102,7 @@ export default function Page() {
         <main className="flex-grow flex flex-col px-2 sm:px-4">
           <div className="flex-grow flex flex-col items-center justify-center py-16">
             <p className="text-center pb-8 sm:pb-4 md:pb-0 text-lg text-foreground">
-              Adana&apos;nın köklü eğitim merkezi
+              Adana&apos;nın bilişim eğitim merkezi
             </p>
             <TypewriterEffect
               words={[
@@ -136,8 +136,8 @@ export default function Page() {
                 <span className="border-4 rounded-full border-blue-700 dark:border-blue-400 p-2">
                   <CountUp
                     start={0}
-                    end={500}
-                    duration={5}
+                    end={1500}
+                    duration={4}
                     delay={3}
                     prefix="+"
                   />
@@ -148,7 +148,7 @@ export default function Page() {
                 <span className="border-4 rounded-full border-blue-700 dark:border-blue-400 p-2">
                   <CountUp
                     start={0}
-                    end={8}
+                    end={10}
                     duration={4}
                     delay={3}
                     prefix="~"
@@ -170,40 +170,13 @@ export default function Page() {
           <CourseCards />
           <Link href="/egitimler" legacyBehavior passHref>
             <Button variant="outline" size="lg" className="text-lg">
-              Eğitim Detayları
+              İçerikler
             </Button>
           </Link>
         </div>
       </div>
 
       <div className="flex flex-col justify-center items-center gap-5 py-8 dark:bg-indigo-950 dark:shadow-inner dark:shadow-zinc-950">
-        <p className="text-foreground text-2xl font-semibold text-center">
-          Mezunlarımızdan Bazıları
-        </p>
-        <div className="max-w-full relative overflow-hidden">
-          <InfiniteMovingCards items={graduates} speed={"normal"} />
-        </div>
-      </div>
-      <div className="flex flex-col justify-center items-center gap-8 py-8 dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
-        <p className="text-foreground text-2xl font-semibold text-center">
-          Size Özel Eğitim
-        </p>
-        <div className="flex flex-col md:flex-row justify-center items-center gap-8">
-          <p className="text-foreground text-center md:text-left max-w-80">
-            Eğitimin uzunluğunu ve içeriğini şirketinizin ihtiyacına göre
-            ayarlayalım.
-          </p>
-          <Image
-            src="/conference.jpg"
-            alt="Konferans resmi"
-            width={350}
-            height={350}
-            className="rounded-3xl"
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-col justify-center items-center gap-8 py-8 dark:bg-indigo-950 dark:shadow-inner dark:shadow-zinc-950">
         <p className="text-foreground text-2xl font-semibold text-center">
           Sertifikasyon
         </p>
@@ -232,6 +205,35 @@ export default function Page() {
               className="object-cover rounded-lg"
             />
           </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col justify-center items-center gap-8 py-8 dark:bg-zinc-950 dark:shadow-inner dark:shadow-indigo-950">
+        <p className="text-foreground text-2xl font-semibold text-center">
+          Size Özel Eğitim
+        </p>
+        <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+          <p className="text-foreground text-center md:text-left max-w-80">
+            Derslerin uzunluğunu ve içeriğini şirketinizin ihtiyacına göre
+            ayarlayalım.
+          </p>
+          <div className="relative h-56 w-80">
+            <Image
+              src="/platon1.jpg"
+              alt="Konferans resmi"
+              fill
+              className="rounded-3xl object-cover"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col justify-center items-center gap-8 py-8 dark:bg-indigo-950 dark:shadow-inner dark:shadow-zinc-950">
+        <p className="text-foreground text-2xl font-semibold text-center">
+          Mezunlarımızdan Bazıları
+        </p>
+        <div className="max-w-full relative overflow-hidden">
+          <InfiniteMovingCards items={graduates} speed={"normal"} />
         </div>
       </div>
       <Footer primary={false} />
