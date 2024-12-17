@@ -3,9 +3,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
+// generator client {
+//   provider = "prisma-client-js"
+// }
 
 // !!!
 // Note that this schema is defined in snake_case instead of the prisma default PascalCase

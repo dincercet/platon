@@ -6,7 +6,10 @@
 
 ARG NODE_VERSION=22.12
 
-FROM node:${NODE_VERSION}-alpine as base
+FROM node:${NODE_VERSION}-alpine AS base
+# install openssl for prisma
+RUN apk add --no-cache openssl
+
 WORKDIR usr/src/app
 # Expose the port that the application listens on.
 EXPOSE 3000
@@ -17,23 +20,25 @@ EXPOSE 3000
 # into this layer.
 #
 # development container
-FROM base as dev
+FROM base AS dev
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=yarn.lock,target=yarn.lock \
     --mount=type=cache,target=/root/.yarn \
     yarn install
-#to get rid of the permissions error
+# to get rid of the permissions error
 RUN mkdir -p .next && chmod -R 777 .next
 # Run the application as a non-root user.
 USER node
 # Copy the rest of the source files into the image.
 COPY . .
+# generate prisma client
+# RUN npx prisma migrate dev --name init
 # Run the application.
 CMD yarn run dev
 
 
 # production container
-FROM base as prod
+FROM base AS prod
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=yarn.lock,target=yarn.lock \
     --mount=type=cache,target=/root/.yarn \
@@ -41,3 +46,5 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 USER node
 COPY . .
 CMD node src/index.js
+
+# note: run "docker exec platon-server-1 npx prisma migrate dev --name init" after creating first image.

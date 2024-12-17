@@ -11,6 +11,7 @@ yarn.lock
 .env
 firebaseClientConfig.js
 firebaseAdminConfig.json
+platonbackup.sql
 
 #project-specific overhead
 app/documents/
