@@ -27,12 +27,12 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     yarn install
 # to get rid of the permissions error
 RUN mkdir -p .next && chmod -R 777 .next
+RUN chown -R node:node node_modules/prisma
+RUN chown -R node:node node_modules/.prisma
 # Run the application as a non-root user.
 USER node
 # Copy the rest of the source files into the image.
 COPY . .
-# generate prisma client
-# RUN npx prisma migrate dev --name init
 # Run the application.
 CMD yarn run dev
 
