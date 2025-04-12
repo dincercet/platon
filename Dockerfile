@@ -43,6 +43,9 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=yarn.lock,target=yarn.lock \
     --mount=type=cache,target=/root/.yarn \
     yarn install --production --frozen-lockfile
+RUN mkdir -p .next && chmod -R 777 .next
+RUN chown -R node:node node_modules/prisma
+RUN chown -R node:node node_modules/.prisma
 USER node
 COPY . .
 CMD node src/index.js
