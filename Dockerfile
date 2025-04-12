@@ -51,4 +51,4 @@ COPY . .
 RUN yarn build
 CMD ["yarn", "start"]
 
-# note: run "docker exec platon-server-1 npx prisma migrate dev --name init" after creating first image.
+#docker exec -it platon-platonapp-1 sh -c "npx prisma generate"
