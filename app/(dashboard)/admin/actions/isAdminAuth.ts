@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import logger from "winston-config";
 
 export default async function isAdminAuth(): Promise<boolean> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   //retrieve idToken cookie
   const idToken = cookieStore.get("idToken")?.value;

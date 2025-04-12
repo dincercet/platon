@@ -48,6 +48,7 @@ RUN chown -R node:node node_modules/prisma
 RUN chown -R node:node node_modules/.prisma
 USER node
 COPY . .
-CMD node src/index.js
+RUN yarn build
+CMD ["yarn", "start"]
 
 # note: run "docker exec platon-server-1 npx prisma migrate dev --name init" after creating first image.
