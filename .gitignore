@@ -2,9 +2,9 @@
 node_modules/
 .next/
 .yarn/
+.yarnrc*
 .git/
 prisma/migrations/
-yarn.lock
 
 #sensitive
 .env.local
