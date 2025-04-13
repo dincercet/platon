@@ -1,5 +1,6 @@
 services:
   platonapp:
+    container_name: appcontainer
     build:
       context: .
       target: dev
@@ -18,6 +19,7 @@ services:
         condition: service_healthy
     volumes:
       - ./app:/usr/src/app/app
+      - prisma_client:/usr/src/app/prisma/generated
 
   platondb:
     image: mysql:8.0.40
@@ -42,3 +44,4 @@ services:
       start_period: 0s
 volumes:
   db_data:
+  prisma_client:

@@ -6,5 +6,6 @@ import { cookies } from "next/headers";
 
 //delete auth cookies on logout
 export async function deleteAuthCookies() {
-  await cookies().delete({ name: "idToken", sameSite: "strict" });
+  const cookieStore = await cookies();
+  cookieStore.delete({ name: "idToken", sameSite: "strict" });
 }
