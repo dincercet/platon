@@ -37,20 +37,35 @@ COPY . .
 # Run the application.
 CMD yarn run dev
 
+#linter stage
+FROM base AS linter
+RUN yarn lint
 
-# production container
-FROM base AS prod
+#build stage
+FROM linter AS builder
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=yarn.lock,target=yarn.lock \
     --mount=type=cache,target=/root/.yarn \
-    yarn install --production --frozen-lockfile
+    yarn install --frozen-lockfile
 RUN mkdir -p .next prisma/client && chmod -R 777 .next prisma
 RUN chown -R node:node prisma/
 RUN chown -R node:node node_modules/prisma
 RUN chown -R node:node node_modules/.prisma
-USER node
-COPY . .
 RUN yarn build
+RUN npx prisma generate
+
+# production container
+FROM base AS prod
+COPY --from=builder /usr/src/app/.next .next
+COPY --from=builder /usr/src/app/node_modules node_modules
+COPY --from=builder /usr/src/app/prisma prisma
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=yarn.lock,target=yarn.lock \
+    --mount=type=cache,target=/root/.yarn \
+    yarn install --production --frozen-lockfile
+RUN chown -R node:node prisma/
+RUN chown -R node:node node_modules/prisma
+RUN chown -R node:node node_modules/.prisma
 CMD ["yarn", "start"]
 
 #docker exec -it appcontainer sh -c "npx prisma generate"
