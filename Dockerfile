@@ -37,20 +37,18 @@ COPY . .
 # Run the application.
 CMD yarn run dev
 
-#linter stage
-FROM base AS linter
+#build stage
+FROM base AS builder
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=yarn.lock,target=yarn.lock \
     --mount=type=cache,target=/root/.yarn \
     yarn install --frozen-lockfile
-RUN yarn lint
-
-#build stage
-FROM linter AS builder
 RUN mkdir -p .next prisma/client && chmod -R 777 .next prisma
 RUN chown -R node:node prisma/
 RUN chown -R node:node node_modules/prisma
 RUN chown -R node:node node_modules/.prisma
+USER node
+COPY . .
 RUN yarn build
 RUN npx prisma generate
 
