@@ -44,7 +44,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=yarn.lock,target=yarn.lock \
     --mount=type=cache,target=/root/.yarn \
     yarn install --production --frozen-lockfile
-RUN mkdir -p .next prisma && chmod -R 777 .next
+RUN mkdir -p .next prisma/client && chmod -R 777 .next prisma
 RUN chown -R node:node prisma/
 RUN chown -R node:node node_modules/prisma
 RUN chown -R node:node node_modules/.prisma
@@ -53,4 +53,4 @@ COPY . .
 RUN yarn build
 CMD ["yarn", "start"]
 
-#docker exec -it platon-platonapp-1 sh -c "npx prisma generate"
+#docker exec -it appcontainer sh -c "npx prisma generate"
