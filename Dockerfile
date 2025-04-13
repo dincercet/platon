@@ -26,7 +26,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.yarn \
     yarn install
 # to get rid of the permissions error
-RUN mkdir -p .next prisma && chmod -R 777 .next
+RUN mkdir -p .next prisma && chmod -R 777 .next prisma
 RUN chown -R node:node prisma/
 RUN chown -R node:node node_modules/prisma
 RUN chown -R node:node node_modules/.prisma
@@ -37,20 +37,38 @@ COPY . .
 # Run the application.
 CMD yarn run dev
 
+#prisma generation
+FROM base AS prisma-gen
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=yarn.lock,target=yarn.lock \
+    --mount=type=cache,target=/root/.yarn \
+    yarn install --frozen-lockfile
+RUN mkdir -p .next prisma && chmod -R 777 .next prisma
+RUN chown -R node:node prisma/
+RUN chown -R node:node node_modules/prisma
+RUN chown -R node:node node_modules/.prisma
+USER node
+COPY . .
+RUN yarn db:deploy
+
 #build stage
 FROM base AS builder
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=yarn.lock,target=yarn.lock \
     --mount=type=cache,target=/root/.yarn \
     yarn install --frozen-lockfile
-RUN mkdir -p .next prisma/client && chmod -R 777 .next prisma
+RUN mkdir -p .next prisma && chmod -R 777 .next prisma
 RUN chown -R node:node prisma/
 RUN chown -R node:node node_modules/prisma
 RUN chown -R node:node node_modules/.prisma
+# COPY scripts/wait-for.sh /usr/src/app/wait-for.sh
+# RUN chmod +x /usr/src/app/wait-for.sh
+# RUN chown node:node /usr/src/app/wait-for.sh
 USER node
 COPY . .
-RUN yarn build
-RUN npx prisma generate
+CMD ["npx", "prisma", "generate", "&&", "yarn", "build"]
+# RUN /usr/src/app/wait-for.sh mysqlcontainer 3306 yarn build
+# CMD ["/usr/src/app/wait-for.sh", "mysqlcontainer", "3306", "--", "yarn", "build"]
 
 # production container
 FROM base AS prod

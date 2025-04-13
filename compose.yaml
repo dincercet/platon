@@ -3,7 +3,7 @@ services:
     container_name: appcontainer
     build:
       context: .
-      target: dev
+      target: builder
     env_file: ./.env
     restart: unless-stopped
     environment:
@@ -19,7 +19,9 @@ services:
         condition: service_healthy
     volumes:
       - ./app:/usr/src/app/app
-      - prisma_client:/usr/src/app/prisma/generated
+      - prisma_client:/usr/src/app/prisma/client
+    networks:
+      - prisma-network
 
   platondb:
     image: mysql:8.0.40
@@ -36,12 +38,18 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./mysql-config:/etc/mysql/conf.d
+    networks:
+      - prisma-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
       interval: 5s
       timeout: 3s
       retries: 2
       start_period: 0s
+
 volumes:
   db_data:
   prisma_client:
+
+networks:
+  prisma-network:

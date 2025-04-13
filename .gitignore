@@ -5,6 +5,7 @@ node_modules/
 .yarnrc*
 .git/
 prisma/migrations/
+prisma/client/
 
 #sensitive
 .env.local
