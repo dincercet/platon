@@ -325,8 +325,10 @@ export default function EditCurriculumModal({
                 weekForm.validate();
                 //if valid, continue
                 if (weekForm.isValid())
-                  //choose between edit or add submission
-                  isEdit ? handleEditWeek(values) : handleAddWeek(values);
+                  if (isEdit)
+                    //choose between edit or add submission
+                    handleEditWeek(values);
+                  else handleAddWeek(values);
               })}
             >
               <Textarea

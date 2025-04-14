@@ -151,15 +151,13 @@ export default function LoginForm() {
     if (remember) {
       window.localStorage.setItem("loggedIn", "true");
       window.localStorage.setItem("email", email);
-      role === "STUDENT"
-        ? window.localStorage.setItem("role", "user")
-        : window.localStorage.setItem("role", "admin");
+      if (role === "STUDENT") window.localStorage.setItem("role", "user");
+      else window.localStorage.setItem("role", "admin");
     } else {
       window.sessionStorage.setItem("loggedIn", "true");
       window.sessionStorage.setItem("email", email);
-      role === "STUDENT"
-        ? window.sessionStorage.setItem("role", "user")
-        : window.sessionStorage.setItem("role", "admin");
+      if (role === "STUDENT") window.sessionStorage.setItem("role", "user");
+      else window.sessionStorage.setItem("role", "admin");
     }
 
     //redirect to home

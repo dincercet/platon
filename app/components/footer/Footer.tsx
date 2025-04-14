@@ -1,6 +1,6 @@
 const footer = "Copyright © 2024";
 
-export default function Footer({ primary }: { primary: Boolean }) {
+export default function Footer({ primary }: { primary: boolean }) {
   return (
     <div className="text-center">
       {primary ? (

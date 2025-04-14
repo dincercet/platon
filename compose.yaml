@@ -3,9 +3,9 @@ services:
     container_name: appcontainer
     build:
       context: .
-      target: builder
+      target: prod
     env_file: ./.env
-    restart: unless-stopped
+    # restart: unless-stopped
     environment:
       - MYSQL_HOST=platondb
       - MYSQL_DATABASE=$DB_NAME
@@ -19,9 +19,9 @@ services:
         condition: service_healthy
     volumes:
       - ./app:/usr/src/app/app
-      - prisma_client:/usr/src/app/prisma/client
-    networks:
-      - prisma-network
+      # - prisma_client:/usr/src/app/prisma/client
+    # networks:
+    #   - prisma-network
 
   platondb:
     image: mysql:8.0.40
@@ -30,16 +30,16 @@ services:
     env_file: ./.env
     environment:
       - MYSQL_DATABASE=$DB_NAME
-      - MYSQL_USER=$DB_USER
-      - MYSQL_PASSWORD=$DB_PASS
+      # - MYSQL_USER=$DB_USER
+      # - MYSQL_PASSWORD=$DB_PASS
       - MYSQL_ROOT_PASSWORD=$DB_PASS
     ports:
       - "13306:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./mysql-config:/etc/mysql/conf.d
-    networks:
-      - prisma-network
+    # networks:
+    #   - prisma-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
       interval: 5s
@@ -49,7 +49,6 @@ services:
 
 volumes:
   db_data:
-  prisma_client:
-
-networks:
-  prisma-network:
+  # prisma_client:
+# networks:
+#   prisma-network:

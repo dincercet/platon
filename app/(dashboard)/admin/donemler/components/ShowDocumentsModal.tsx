@@ -80,7 +80,7 @@ export default function ShowDocumentsModal({
   }
 
   async function handleAddWeek() {
-    const weekNo = weeks.length > 0 ? weeks.at(-1)?.weekNo! + 1 : 1;
+    const weekNo = weeks.length > 0 ? weeks.at(-1)?.weekNo + 1 : 1;
 
     try {
       //addDocumentWeek action call
