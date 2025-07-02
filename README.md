@@ -1,3 +1,5 @@
+## Fully Responsive Eğitim Merkezi Yönetim ve Tanıtım Sistemi  
+  
 Admin panelinden eğitim merkezinize sınıflar ekleyin, bu sınıflara öğrencileri atayın.  
 Öğrencileriniz e-posta ile gönderilen davet linki ile kayıt olur ve öğrenci panelinden dönem bilgilerini görmekle birlikte paylaşılan dosyaları indirebilir.  
 Müfredatlar yaratın ve hafta hafta işlediğiniz konuları belirtin.  
