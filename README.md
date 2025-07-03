@@ -8,7 +8,29 @@ Dönemler oluşturun ve hangi sınıfın ne zaman başlayıp bittiğini, hangi m
 ### *You should produce your own config files:*  
 #### .env
 (Prisma connection, Docker Compose MySQL environment variables)  
+``` sh
+DATABASE_URL="mysql://username:userpass@mysqlcontainer:3306/dbname?schema=public"
+
+DB_NAME="dbname"
+DB_USER="username"
+DB_PASS="userpass"
+```
 #### firebaseAdminConfig.json
 (acquire from Firebase Console)  
+``` json
+{
+  "type": "service_account",
+  "rest_of_the_config": "provided from Firebase",
+  "universe_domain": "googleapis.com"
+}
+```
+
 #### firebaseClientConfig.js
 (acquire from Firebase Console)  
+``` js
+const firebaseClientConfig = {
+  // config provided from Firebase
+};
+
+export default firebaseClientConfig;
+```
