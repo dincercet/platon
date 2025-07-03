@@ -6,30 +6,31 @@ Müfredatlar yaratın ve hafta hafta işlediğiniz konuları belirtin.
 Dönemler oluşturun ve hangi sınıfın ne zaman başlayıp bittiğini, hangi müfredatı içerdiğini misafirlerin de görebileceği şekilde sunun.  
   
 ### *You should produce your own config files:*  
-#### .env
-(Prisma connection, Docker Compose MySQL environment variables)  
+#### Create .env 
 ``` sh
+# Prisma connection ("mysqlcontainer" is a db container defined in Docker's compose.yaml file)
 DATABASE_URL="mysql://root:userpass@mysqlcontainer:3306/dbname?schema=public"
 
+# Docker environment variables needed to create containers within compose.yaml file.
 DB_NAME="dbname"
 DB_USER="root"
 DB_PASS="userpass"
 ```
-#### firebaseAdminConfig.json
-(acquire from Firebase Console)  
+#### Create firebaseAdminConfig.json 
 ``` json
 {
   "type": "service_account",
-  "rest_of_the_config": "provided from Firebase",
-  "universe_domain": "googleapis.com"
+  "universe_domain": "googleapis.com",
+  "all_the_config": "...provided from Firebase Console",
 }
 ```
 
-#### firebaseClientConfig.js
-(acquire from Firebase Console)  
+#### Create firebaseClientConfig.js
 ``` js
 const firebaseClientConfig = {
-  // config provided from Firebase
+  apiKey: "AIxxxxxxxxSyC7mxxxxxxxxqfFEf5xxxxxxxBMCw",
+  authDomain: "xxxxx.firebaseapp.com",
+  // ...all the config provided from Firebase Console
 };
 
 export default firebaseClientConfig;
