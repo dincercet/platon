@@ -9,10 +9,10 @@ Dönemler oluşturun ve hangi sınıfın ne zaman başlayıp bittiğini, hangi m
 #### .env
 (Prisma connection, Docker Compose MySQL environment variables)  
 ``` sh
-DATABASE_URL="mysql://username:userpass@mysqlcontainer:3306/dbname?schema=public"
+DATABASE_URL="mysql://root:userpass@mysqlcontainer:3306/dbname?schema=public"
 
 DB_NAME="dbname"
-DB_USER="username"
+DB_USER="root"
 DB_PASS="userpass"
 ```
 #### firebaseAdminConfig.json
